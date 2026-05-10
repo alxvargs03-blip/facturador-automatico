@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facturador Automático</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- HEADER -->
+    <header>
+      <div class="logo">🧾 Facturador Automático</div>
+      <p class="subtitle">Sube tu recibo y nosotros hacemos la factura</p>
+    </header>
+
+    <!-- STEPS INDICATOR -->
+    <nav class="steps" id="stepsNav">
+      <div class="step active" data-step="1">
+        <span class="step-num">1</span>
+        <span class="step-label">Mis datos</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" data-step="2">
+        <span class="step-num">2</span>
+        <span class="step-label">Mi recibo</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" data-step="3">
+        <span class="step-num">3</span>
+        <span class="step-label">Facturando</span>
+      </div>
+    </nav>
+
+    <!-- ───────────────────────────────────────────────── -->
+    <!-- PASO 1: DATOS FISCALES                           -->
+    <!-- ───────────────────────────────────────────────── -->
+    <section class="card" id="step1">
+      <h2>Tus datos fiscales</h2>
+      <p class="card-desc">Solo los pides una vez. Quedan guardados en este dispositivo.</p>
+
+      <form id="formDatos" autocomplete="on">
+
+        <div class="row2">
+          <div class="field">
+            <label for="rfc">RFC *</label>
+            <input type="text" id="rfc" placeholder="XAXX010101000" maxlength="13" required />
+          </div>
+          <div class="field">
+            <label for="codigoPostal">Código Postal *</label>
+            <input type="text" id="codigoPostal" placeholder="06600" maxlength="5" required />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="razonSocial">Razón Social / Nombre Fiscal *</label>
+          <input type="text" id="razonSocial" placeholder="Como aparece en tu Constancia de Situación Fiscal" required />
+        </div>
+
+        <div class="field">
+          <label for="email">Correo electrónico *</label>
+          <input type="email" id="email" placeholder="tu@correo.com" required />
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="regimenFiscal">Régimen Fiscal *</label>
+            <select id="regimenFiscal" required>
+              <option value="">— Selecciona —</option>
+              <option value="605">605 – Sueldos y Salarios</option>
+              <option value="606">606 – Arrendamiento</option>
+              <option value="608">608 – Demás ingresos</option>
+              <option value="612">612 – Actividades Empresariales y Profesionales</option>
+              <option value="616">616 – Sin obligaciones fiscales</option>
+              <option value="621">621 – Incorporación Fiscal</option>
+              <option value="625">625 – Plataformas Tecnológicas</option>
+              <option value="626">626 – RESICO (Simplificado de Confianza)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="usoCfdi">Uso del CFDI *</label>
+            <select id="usoCfdi" required>
+              <option value="">— Selecciona —</option>
+              <option value="G01">G01 – Adquisición de mercancías</option>
+              <option value="G03">G03 – Gastos en general</option>
+              <option value="S01">S01 – Sin efectos fiscales</option>
+              <option value="CP01">CP01 – Pagos</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          Guardar y continuar →
+        </button>
+      </form>
+    </section>
+
+    <!-- ───────────────────────────────────────────────── -->
+    <!-- PASO 2: SUBIR RECIBO                             -->
+    <!-- ───────────────────────────────────────────────── -->
+    <section class="card hidden" id="step2">
+      <h2>Sube tu recibo</h2>
+      <p class="card-desc">Foto clara del ticket. Se acepta JPG, PNG o HEIC.</p>
+
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">📷</div>
+        <p>Arrastra tu foto aquí<br /><span>o haz clic para seleccionar</span></p>
+        <input type="file" id="fileInput" accept="image/*" />
+      </div>
+
+      <div class="preview-box hidden" id="previewBox">
+        <img id="previewImg" alt="Vista previa del recibo" />
+      </div>
+
+      <div class="datos-detectados hidden" id="datosDetectados">
+        <h3>Datos detectados</h3>
+        <table class="info-table">
+          <tr><td>Tienda</td><td id="dtTienda">—</td></tr>
+          <tr><td>TC #</td><td id="dtTC">—</td></tr>
+          <tr><td>TR #</td><td id="dtTR">—</td></tr>
+          <tr><td>Folio</td><td id="dtFolio">—</td></tr>
+          <tr><td>Total</td><td id="dtTotal">—</td></tr>
+          <tr><td>Fecha</td><td id="dtFecha">—</td></tr>
+        </table>
+        <p class="tip">¿Los datos son correctos? Si algo está mal, vuelve a subir una foto más clara.</p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" id="btnVolver1">← Volver</button>
+        <button class="btn-primary hidden" id="btnFacturar">Facturar ahora →</button>
+      </div>
+
+      <div class="loading hidden" id="loadingOCR">
+        <div class="spinner"></div>
+        <span>Leyendo recibo con IA...</span>
+      </div>
+    </section>
+
+    <!-- ───────────────────────────────────────────────── -->
+    <!-- PASO 3: PROCESANDO                               -->
+    <!-- ───────────────────────────────────────────────── -->
+    <section class="card hidden" id="step3">
+      <h2 id="step3Title">Facturando...</h2>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <ul class="pasos-list" id="pasosList"></ul>
+
+      <div class="resultado hidden" id="resultadoExito">
+        <div class="result-icon">✅</div>
+        <h3>¡Factura solicitada!</h3>
+        <p id="resultMsg"></p>
+        <button class="btn-primary" id="btnNueva">Facturar otro recibo</button>
+      </div>
+
+      <div class="resultado hidden" id="resultadoError">
+        <div class="result-icon">❌</div>
+        <h3>Algo salió mal</h3>
+        <p id="errorMsg"></p>
+        <div class="btn-row">
+          <button class="btn-secondary" id="btnReintento">← Volver e intentar</button>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /app -->
+
+  <script src="app.js"></script>
+</body>
+</html>
