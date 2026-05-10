@@ -84,5 +84,10 @@ app.post('/api/facturar', async (req, res) => {
   res.end()
 })
 
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => console.log(`✓ Facturador en http://localhost:${PORT}`))
+// En local arranca el servidor; en Vercel se exporta el app para que lo maneje la plataforma
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 3000
+  app.listen(PORT, () => console.log(`✓ Facturador en http://localhost:${PORT}`))
+}
+
+export default app
