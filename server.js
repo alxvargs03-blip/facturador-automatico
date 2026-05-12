@@ -11,6 +11,7 @@ import nodemailer from 'nodemailer'
 import { v4 as uuidv4 } from 'uuid'
 import { fileURLToPath } from 'url'
 import path from 'path'
+import fs from 'fs'
 import Anthropic from '@anthropic-ai/sdk'
 import {
   getAllProductsGrouped, getProductByHandle,
@@ -25,7 +26,16 @@ const ADMIN_PASS = '123456'
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const app = express()
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 15 * 1024 * 1024 } })
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+// Lazy Anthropic client — avoids crash at startup if ANTHROPIC_API_KEY is missing
+let _anthropic = null
+function getAnthropic() {
+  if (!_anthropic) {
+    if (!process.env.ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY no configurado en Vercel')
+    _anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  }
+  return _anthropic
+}
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 
@@ -239,15 +249,24 @@ function buildWhatsAppMessage(order) {
 // ─── Health check ─────────────────────────────────────────────────────────────
 
 app.get('/api/health', (req, res) => {
+  const csvPath = path.join(__dirname, 'data', 'products.csv')
+  const htmlPath = path.join(__dirname, 'web-unicuna.html')
   res.json({
     ok: true,
     env: {
       mongodb: !!process.env.MONGODB_URI,
       session: !!process.env.SESSION_SECRET,
-      vercel: !!process.env.VERCEL
+      vercel: !!process.env.VERCEL,
+      anthropic: !!process.env.ANTHROPIC_API_KEY,
     },
-    dirname: __dirname,
-    cwd: process.cwd()
+    paths: {
+      dirname: __dirname,
+      cwd: process.cwd(),
+      csvPath,
+      csvExists: fs.existsSync(csvPath),
+      htmlPath,
+      htmlExists: fs.existsSync(htmlPath),
+    }
   })
 })
 
@@ -506,7 +525,7 @@ app.post('/api/leer-recibo', upload.single('recibo'), async (req, res) => {
   try {
     const imageBase64 = req.file.buffer.toString('base64')
     const mimeType = req.file.mimetype
-    const msg = await anthropic.messages.create({
+    const msg = await getAnthropic().messages.create({
       model: 'claude-sonnet-4-6',
       max_tokens: 1024,
       messages: [{

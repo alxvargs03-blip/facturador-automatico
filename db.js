@@ -143,7 +143,10 @@ let _db = null
 async function getDb() {
   if (_db) return _db
   if (!_client) {
-    _client = new MongoClient(process.env.MONGODB_URI)
+    _client = new MongoClient(process.env.MONGODB_URI, {
+      connectTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 10000,
+    })
     await _client.connect()
   }
   _db = _client.db('unicuna')
