@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Mi cuenta — UNICUNA®</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--primary:#1e2d52;--gold:#c9a96e;--bg:#fdf9f5;--white:#fff;--gray:#6b7280;--border:#e8e0d5;--error:#dc2626}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--primary);min-height:100vh;display:flex;flex-direction:column}
+
+    nav{background:var(--primary);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;flex-shrink:0}
+    .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold);font-weight:600;text-decoration:none}
+    .nav-links a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.85rem;margin-left:1.5rem}
+    .nav-links a:hover{color:var(--gold)}
+
+    .page{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
+
+    .card{background:var(--white);border-radius:16px;box-shadow:0 6px 32px rgba(30,45,82,.1);padding:2.4rem;width:100%;max-width:420px}
+
+    .logo{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;text-align:center;color:var(--primary);margin-bottom:.3rem}
+    .logo span{color:var(--gold)}
+    .logo-sub{text-align:center;font-size:.8rem;color:var(--gray);margin-bottom:1.8rem}
+
+    .tabs{display:flex;background:#f5f0ea;border-radius:8px;padding:3px;margin-bottom:1.6rem}
+    .tab{flex:1;text-align:center;padding:.55rem;cursor:pointer;font-weight:500;font-size:.88rem;color:var(--gray);border-radius:6px;transition:all .2s}
+    .tab.active{background:var(--white);color:var(--primary);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+
+    .panel{display:none}
+    .panel.active{display:block}
+
+    .field{margin-bottom:1rem}
+    label{display:block;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem;color:var(--primary)}
+    input{width:100%;padding:.72rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;background:var(--white);color:var(--primary)}
+    input:focus{border-color:var(--gold)}
+    input.has-error{border-color:var(--error)}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+    @media(max-width:480px){.row2{grid-template-columns:1fr}}
+
+    .msg{border-radius:8px;font-size:.85rem;padding:.7rem 1rem;margin-bottom:1rem;display:none}
+    .msg.error{background:#fef2f2;border:1.5px solid #fecaca;color:#b91c1c}
+    .msg.success{background:#dcfce7;border:1.5px solid #bbf7d0;color:#15803d}
+    .msg.visible{display:block}
+
+    .btn{width:100%;padding:.85rem;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;margin-top:.3rem}
+    .btn-main{background:var(--primary);color:var(--white)}
+    .btn-main:hover{background:#2a4175}
+    .btn-main:disabled{opacity:.6;cursor:not-allowed}
+    .btn-main.loading{background:#2a4175}
+
+    .divider{border:none;border-top:1px solid var(--border);margin:1.2rem 0}
+    .switch-link{text-align:center;font-size:.83rem;color:var(--gray)}
+    .switch-link a{color:var(--gold);text-decoration:none;font-weight:600;cursor:pointer}
+    .switch-link a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">UNICUNA®</a>
+  <div class="nav-links">
+    <a href="/tienda.html">Tienda</a>
+    <a href="/checkout.html">Mi carrito</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="card">
+    <div class="logo">UNICUNA<span>®</span></div>
+    <div class="logo-sub">Colchones premium para bebé</div>
+
+    <div class="tabs" id="tabs">
+      <div class="tab active" onclick="showPanel('login')">Iniciar sesión</div>
+      <div class="tab" onclick="showPanel('register')">Crear cuenta</div>
+    </div>
+
+    <!-- ── LOGIN ── -->
+    <div class="panel active" id="panelLogin">
+      <div class="msg" id="loginMsg"></div>
+      <div class="field">
+        <label for="loginEmail">Correo electrónico</label>
+        <input type="email" id="loginEmail" placeholder="tu@correo.com" autocomplete="email"/>
+      </div>
+      <div class="field">
+        <label for="loginPass">Contraseña</label>
+        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+      <button class="btn btn-main" id="btnLogin" onclick="doLogin()">Iniciar sesión</button>
+      <div class="divider"></div>
+      <div class="switch-link">¿No tienes cuenta? <a onclick="showPanel('register')">Crear cuenta gratis</a></div>
+    </div>
+
+    <!-- ── REGISTER ── -->
+    <div class="panel" id="panelRegister">
+      <div class="msg" id="registerMsg"></div>
+      <div class="row2">
+        <div class="field">
+          <label for="regName">Nombre completo *</label>
+          <input type="text" id="regName" placeholder="Tu nombre" autocomplete="name"/>
+        </div>
+        <div class="field">
+          <label for="regPhone">Teléfono</label>
+          <input type="tel" id="regPhone" placeholder="55 1234 5678" autocomplete="tel"/>
+        </div>
+      </div>
+      <div class="field">
+        <label for="regEmail">Correo electrónico *</label>
+        <input type="email" id="regEmail" placeholder="tu@correo.com" autocomplete="email"/>
+      </div>
+      <div class="field">
+        <label for="regPass">Contraseña * <span style="font-size:.72rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray)">(mínimo 6 caracteres)</span></label>
+        <input type="password" id="regPass" placeholder="••••••••" autocomplete="new-password"/>
+      </div>
+      <button class="btn btn-main" id="btnRegister" onclick="doRegister()">Crear cuenta</button>
+      <div class="divider"></div>
+      <div class="switch-link">¿Ya tienes cuenta? <a onclick="showPanel('login')">Iniciar sesión</a></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const redirect = new URLSearchParams(location.search).get('redirect') || '/tienda.html'
+
+function showPanel(which) {
+  // Tabs
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0) === (which === 'login'))
+  })
+  // Panels
+  document.getElementById('panelLogin').classList.toggle('active', which === 'login')
+  document.getElementById('panelRegister').classList.toggle('active', which === 'register')
+}
+
+function showMsg(id, type, text) {
+  const el = document.getElementById(id)
+  el.className = `msg ${type} visible`
+  el.textContent = text
+}
+function clearMsg(id) {
+  const el = document.getElementById(id)
+  el.className = 'msg'
+  el.textContent = ''
+}
+
+/* ─── LOGIN ─────────────────────────────────── */
+async function doLogin() {
+  const email    = document.getElementById('loginEmail').value.trim()
+  const password = document.getElementById('loginPass').value
+  clearMsg('loginMsg')
+
+  if (!email) { showMsg('loginMsg','error','Ingresa tu correo electrónico'); return }
+  if (!password) { showMsg('loginMsg','error','Ingresa tu contraseña'); return }
+
+  const btn = document.getElementById('btnLogin')
+  btn.disabled = true
+  btn.textContent = 'Iniciando sesión...'
+  btn.classList.add('loading')
+
+  try {
+    const res  = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+    const data = await res.json()
+
+    if (!data.ok) {
+      showMsg('loginMsg', 'error', data.error || 'Email o contraseña incorrectos')
+      return
+    }
+
+    showMsg('loginMsg', 'success', `¡Bienvenido, ${data.user.name.split(' ')[0]}! Redirigiendo...`)
+    setTimeout(() => { location.href = redirect }, 900)
+
+  } catch (e) {
+    showMsg('loginMsg', 'error', 'Error de conexión. Verifica tu internet e intenta de nuevo.')
+  } finally {
+    btn.disabled = false
+    btn.textContent = 'Iniciar sesión'
+    btn.classList.remove('loading')
+  }
+}
+
+/* ─── REGISTER ──────────────────────────────── */
+async function doRegister() {
+  const name     = document.getElementById('regName').value.trim()
+  const phone    = document.getElementById('regPhone').value.trim()
+  const email    = document.getElementById('regEmail').value.trim()
+  const password = document.getElementById('regPass').value
+  clearMsg('registerMsg')
+
+  if (!name)     { showMsg('registerMsg','error','Ingresa tu nombre'); return }
+  if (!email)    { showMsg('registerMsg','error','Ingresa tu correo electrónico'); return }
+  if (!/\S+@\S+\.\S+/.test(email)) { showMsg('registerMsg','error','El correo no es válido'); return }
+  if (!password) { showMsg('registerMsg','error','Crea una contraseña'); return }
+  if (password.length < 6) { showMsg('registerMsg','error','La contraseña debe tener al menos 6 caracteres'); return }
+
+  const btn = document.getElementById('btnRegister')
+  btn.disabled = true
+  btn.textContent = 'Creando cuenta...'
+  btn.classList.add('loading')
+
+  try {
+    const res  = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password, phone })
+    })
+    const data = await res.json()
+
+    if (!data.ok) {
+      showMsg('registerMsg', 'error', data.error || 'No se pudo crear la cuenta')
+      return
+    }
+
+    showMsg('registerMsg', 'success', `¡Cuenta creada! Bienvenido, ${data.user.name.split(' ')[0]}. Redirigiendo...`)
+    setTimeout(() => { location.href = redirect }, 1000)
+
+  } catch (e) {
+    showMsg('registerMsg', 'error', 'Error de conexión. Verifica tu internet e intenta de nuevo.')
+  } finally {
+    btn.disabled = false
+    btn.textContent = 'Crear cuenta'
+    btn.classList.remove('loading')
+  }
+}
+
+/* ─── Enter key ─────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return
+  const loginActive = document.getElementById('panelLogin').classList.contains('active')
+  if (loginActive) doLogin(); else doRegister()
+})
+
+/* ─── Auto-redirect if already logged in ────── */
+;(async () => {
+  try {
+    const r = await fetch('/api/auth/me')
+    const d = await r.json()
+    if (d.user) {
+      showMsg('loginMsg', 'success', `Ya estás conectado como ${d.user.name.split(' ')[0]}. Redirigiendo...`)
+      setTimeout(() => { location.href = redirect }, 1000)
+    }
+  } catch {}
+})()
+</script>
+</body>
+</html>

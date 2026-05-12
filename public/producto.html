@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Producto — UNICUNA®</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--primary:#1e2d52;--gold:#c9a96e;--bg:#fdf9f5;--white:#fff;--gray:#6b7280;--border:#e8e0d5}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--primary)}
+
+    nav{background:var(--primary);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100}
+    .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold);font-weight:600;text-decoration:none}
+    .nav-links{display:flex;gap:1.5rem;align-items:center}
+    .nav-links a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.85rem}
+    .nav-links a:hover{color:var(--gold)}
+    .cart-btn{background:var(--gold);color:var(--primary);border:none;padding:.5rem 1rem;border-radius:6px;cursor:pointer;font-size:.85rem;font-weight:600;min-height:40px}
+    .cart-count{background:var(--primary);color:var(--white);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:.5rem;flex-direction:column;gap:5px;min-width:44px;min-height:44px;align-items:center;justify-content:center}
+    .nav-hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,.9);border-radius:2px;transition:all .3s}
+
+    .breadcrumb{padding:1rem 2rem;font-size:.82rem;color:var(--gray)}
+    .breadcrumb a{color:var(--gray);text-decoration:none}
+    .breadcrumb a:hover{color:var(--gold)}
+    .breadcrumb span{margin:0 .4rem}
+
+    .product-layout{display:grid;grid-template-columns:1fr 1fr;gap:3rem;max-width:1000px;margin:0 auto;padding:1.5rem 2rem 4rem}
+
+    .product-image{background:linear-gradient(135deg,#e8eff8,#d0dff0);border-radius:16px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:6rem}
+
+    .product-info{}
+    .product-name{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;line-height:1.2;margin-bottom:.5rem}
+    .product-sku{font-size:.78rem;color:var(--gray);margin-bottom:1.2rem}
+    .product-price{font-size:1.7rem;font-weight:700;color:var(--gold);margin-bottom:1.5rem}
+    .product-price.consult{font-size:1.2rem;color:var(--gray)}
+
+    .selector-label{font-size:.82rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.6rem;color:var(--primary)}
+    .options{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.4rem}
+
+    .option-btn{padding:.45rem .9rem;border:2px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;font-size:.85rem;font-family:'Inter',sans-serif;transition:all .2s;color:var(--primary)}
+    .option-btn:hover{border-color:var(--gold)}
+    .option-btn.selected{border-color:var(--primary);background:var(--primary);color:var(--white)}
+    .option-btn.unavailable{opacity:.35;cursor:not-allowed}
+
+    .color-option{display:flex;align-items:center;gap:.5rem;padding:.45rem .9rem}
+    .color-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(0,0,0,.15)}
+
+    .qty-row{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
+    .qty-label{font-size:.82rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+    .qty-control{display:flex;align-items:center;gap:.5rem}
+    .qty-btn{width:44px;height:44px;border:1.5px solid var(--border);border-radius:6px;background:var(--white);cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center}
+    .qty-val{font-size:1rem;font-weight:600;min-width:28px;text-align:center}
+
+    .btn-add{width:100%;padding:1rem;background:var(--primary);color:var(--white);border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:background .2s;margin-bottom:.7rem}
+    .btn-add:hover{background:var(--gold);color:var(--primary)}
+    .btn-add:disabled{opacity:.5;cursor:not-allowed}
+    .btn-cart{width:100%;padding:.8rem;background:transparent;color:var(--primary);border:2px solid var(--primary);border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+    .btn-cart:hover{background:var(--primary);color:var(--white)}
+
+    .notice{font-size:.82rem;color:var(--gray);margin-top:.5rem;text-align:center}
+    .added-msg{background:#dcfce7;color:#166534;padding:.6rem 1rem;border-radius:8px;text-align:center;font-size:.88rem;margin-top:.7rem;display:none}
+
+    .loader{display:flex;justify-content:center;align-items:center;min-height:60vh}
+    .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Cart drawer */
+    .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+    .cart-overlay.open{opacity:1;pointer-events:all}
+    .cart-drawer{position:fixed;right:0;top:0;height:100%;width:min(380px,100vw);background:var(--white);z-index:201;transform:translateX(100%);transition:transform .3s ease;display:flex;flex-direction:column}
+    .cart-drawer.open{transform:translateX(0)}
+    .cart-header{padding:1.2rem 1.4rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .cart-header h3{font-family:'Cormorant Garamond',serif;font-size:1.3rem}
+    .cart-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--gray)}
+    .cart-items{flex:1;overflow-y:auto;padding:1rem 1.4rem}
+    .cart-item{display:flex;gap:.8rem;padding:.8rem 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .cart-item-info{flex:1}
+    .cart-item-name{font-size:.88rem;font-weight:500;margin-bottom:.2rem}
+    .cart-item-meta{font-size:.78rem;color:var(--gray)}
+    .cart-item-price{font-weight:600;font-size:.9rem;color:var(--gold)}
+    .cart-item-remove{background:none;border:none;color:var(--gray);cursor:pointer}
+    .cart-footer{padding:1.2rem 1.4rem;border-top:1px solid var(--border)}
+    .cart-total{display:flex;justify-content:space-between;font-weight:600;font-size:1.05rem;margin-bottom:1rem}
+    .cart-total span:last-child{color:var(--gold)}
+    .btn-checkout{display:block;background:var(--primary);color:var(--white);text-align:center;padding:.85rem;border-radius:8px;font-weight:600;text-decoration:none}
+    .btn-checkout:hover{background:var(--gold);color:var(--primary)}
+    .cart-empty-msg{text-align:center;padding:2rem;color:var(--gray);font-size:.9rem}
+
+    /* Mobile nav overlay */
+    @media(max-width:768px){
+      .nav-hamburger{display:flex}
+      .nav-links{display:none;position:fixed;inset:64px 0 0 0;background:var(--primary);flex-direction:column;align-items:center;justify-content:center;gap:2rem;z-index:99}
+      .nav-links.open{display:flex}
+      .nav-links a{font-size:1.1rem;color:rgba(255,255,255,.9)}
+      .cart-btn{font-size:1rem;padding:.7rem 1.4rem}
+    }
+    /* Tablet */
+    @media(max-width:768px){
+      .product-layout{grid-template-columns:1fr;gap:2rem;padding:1rem 1.5rem 3rem}
+      .product-name{font-size:1.6rem}
+      .product-price{font-size:1.4rem}
+      .breadcrumb{padding:.8rem 1.5rem}
+    }
+    /* Phone */
+    @media(max-width:480px){
+      .product-layout{padding:.8rem 1rem 2.5rem;gap:1.5rem}
+      .product-name{font-size:1.35rem}
+      .product-price{font-size:1.25rem}
+      .breadcrumb{padding:.6rem 1rem;font-size:.78rem}
+      .option-btn{padding:.5rem .75rem;font-size:.82rem;min-height:44px}
+      .btn-add,.btn-cart{font-size:.95rem;padding:.9rem}
+      .nav-logo{font-size:1.2rem}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">UNICUNA®</a>
+  <div class="nav-links" id="navLinks">
+    <a href="/tienda.html" onclick="closeMenu()">Tienda</a>
+    <a href="/login.html" id="navAuthLink" onclick="closeMenu()">Mi cuenta</a>
+    <button class="cart-btn" onclick="closeMenu();toggleCart()">
+      🛒 <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" onclick="toggleMenu()" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="breadcrumb">
+  <a href="/">Inicio</a><span>›</span>
+  <a href="/tienda.html">Tienda</a><span>›</span>
+  <span id="breadName">Producto</span>
+</div>
+
+<div id="mainContent">
+  <div class="loader"><div class="spinner"></div></div>
+</div>
+
+<!-- Cart Drawer -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>Tu carrito</h3>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cartTotal">$0 MXN</span></div>
+    <a href="/checkout.html" class="btn-checkout">Continuar con el pedido →</a>
+  </div>
+</div>
+
+<script>
+const COLOR_MAP = {
+  'Agua':'#b2d8d8','Rosa':'#f4a7b9','Azul Claro':'#a8c8e8','Amarillo':'#f7e08a',
+  'Verde Claro':'#a8d5a2','Blanco':'#f5f5f5','Rosa Claro':'#ffd6e0','Gris':'#c8c8c8',
+  'Beige':'#f5e6d0','Morado':'#d4a8d8','Naranja':'#f5c27a','Azul Acero':'#7db5d6',
+  'Verde':'#6dbf6d','Rojo':'#e87878','Negro':'#555','Café':'#a0785a','Lila':'#c9a8e8',
+  'Crema':'#f8f0dc','Rosa Palido':'#fce4ec','Coral Claro':'#ffb5a7','Blancoguinda':'#f5d5d5',
+  'Blancovino':'#e8cdd5','Blanco Con Azul':'#d8eaf5','Azul Marino':'#2d4d8a',
+  'Rosa Claro Unicuna Baby':'#ffc4d0','Colchon Especial':'#c9a96e'
+}
+
+const IMG_MAP = {
+  'supreme-Agua':       '/assets/colchones/supreme-verde.png',
+  'supreme-Verde':      '/assets/colchones/supreme-verde.png',
+  'supreme-Verde Claro':'/assets/colchones/supreme-verde.png',
+  'supreme-Amarillo':   '/assets/colchones/supreme-amarillo.png',
+  'supreme-Azul Claro': '/assets/colchones/supreme-azul.png',
+  'supreme-Azul Acero': '/assets/colchones/supreme-azul.png',
+  'supreme-Rosa':       '/assets/colchones/supreme-rosa.png',
+  'supreme-Rosa Claro': '/assets/colchones/supreme-rosa.png',
+  'memory-Agua':        '/assets/colchones/memory-agua.png',
+  'memory-Verde':       '/assets/colchones/memory-agua.png',
+  'normal-Agua':        '/assets/colchones/normal-agua.png',
+  'normal-Verde':       '/assets/colchones/normal-agua.png',
+  'impermeable-Agua':   '/assets/colchones/impermeable-agua.png',
+  'impermeable-Verde':  '/assets/colchones/impermeable-agua.png',
+}
+
+function getImg(model, color) {
+  if (!model || !color) return null
+  const key = `${model.toLowerCase()}-${color}`
+  return IMG_MAP[key] || null
+}
+
+function normalizeSize(s) {
+  if (!s) return null
+  const m = s.match(/^(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)$/i)
+  if (!m) return s
+  let a = parseFloat(m[1]), b = parseFloat(m[2])
+  if (a >= 1 && a < 10) a = Math.round(a * 100)
+  if (b >= 1 && b < 10) b = Math.round(b * 100)
+  return `${Math.min(a,b)}x${Math.max(a,b)}`
+}
+function displaySize(s) {
+  if (!s) return '—'
+  const m = s.match(/^(\d+)x(\d+)$/)
+  return m ? `${m[1]} × ${m[2]} cm` : s
+}
+
+const params = new URLSearchParams(location.search)
+const handle = params.get('h')
+let product = null
+let selectedColor = null
+let selectedSize = null
+let qty = 1
+
+if (!handle) { location.href = '/tienda.html' }
+
+async function loadProduct() {
+  try {
+    const res = await fetch(`/api/products/${encodeURIComponent(handle)}`)
+    const data = await res.json()
+    if (!data.ok) throw new Error(data.error)
+    product = data.product
+    renderProduct()
+  } catch(e) {
+    document.getElementById('mainContent').innerHTML =
+      '<div style="text-align:center;padding:4rem;color:#6b7280"><h2>Producto no encontrado</h2><a href="/tienda.html">← Volver a la tienda</a></div>'
+  }
+}
+
+function getColors() {
+  return [...new Set(product.variants.map(v => v.color).filter(Boolean))]
+}
+function getSizesForColor(color) {
+  // Return normalized unique sizes available for this color
+  const raw = product.variants.filter(v => v.color === color).map(v => v.size).filter(Boolean)
+  const normed = [...new Set(raw.map(normalizeSize))]
+  return normed.sort((a,b) => {
+    const [a1,a2]=a.split('x').map(Number),[b1,b2]=b.split('x').map(Number)
+    return a1-b1||a2-b2
+  })
+}
+function getAllUniqueSizes() {
+  const raw = product.variants.map(v => v.size).filter(Boolean)
+  const normed = [...new Set(raw.map(normalizeSize))]
+  return normed.sort((a,b) => {
+    const [a1,a2]=a.split('x').map(Number),[b1,b2]=b.split('x').map(Number)
+    return a1-b1||a2-b2
+  })
+}
+// Find variant by color + normalized size
+function getVariant(color, normSize) {
+  return product.variants.find(v => v.color === color && normalizeSize(v.size) === normSize)
+}
+
+function renderProduct() {
+  document.title = `${product.name} — UNICUNA®`
+  document.getElementById('breadName').textContent = product.name
+
+  const colors   = getColors()
+  const sizes    = getAllUniqueSizes()
+  const hasColors = colors.length > 0
+  const hasSizes  = sizes.length > 0
+  const imgUrl   = getImg(product.model, colors[0])
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="product-layout">
+      <div class="product-image" id="productImgWrap">
+        ${imgUrl
+          ? `<img id="productImg" src="${imgUrl}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;border-radius:16px" onerror="this.parentElement.innerHTML='🛏️'">`
+          : '🛏️'}
+      </div>
+      <div class="product-info">
+        <div style="margin-bottom:.4rem">
+          <span style="background:${modelBgColor(product.model)};color:#fff;padding:.2rem .6rem;border-radius:4px;font-size:.72rem;font-weight:700;text-transform:uppercase">${product.model||'Normal'}</span>
+        </div>
+        <h1 class="product-name">${product.name}</h1>
+        <div class="product-sku" id="variantSku"></div>
+        <div class="product-price" id="variantPrice">Selecciona color y medida</div>
+
+        ${hasColors ? `
+          <div class="selector-label">Color</div>
+          <div class="options" id="colorOptions">
+            ${colors.map(c => `
+              <button class="option-btn color-option" data-color="${c}" onclick="selectColor('${c}')">
+                <span class="color-dot" style="background:${COLOR_MAP[c]||'#ccc'}"></span>${c}
+              </button>`).join('')}
+          </div>` : ''}
+
+        ${hasSizes ? `
+          <div class="selector-label">Medida</div>
+          <div class="options" id="sizeOptions">
+            ${sizes.map(s => `
+              <button class="option-btn" data-size="${s}" onclick="selectSize('${s}')">${displaySize(s)}</button>`
+            ).join('')}
+          </div>` : ''}
+
+        <div class="qty-row">
+          <span class="qty-label">Cantidad</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <span class="qty-val" id="qtyDisplay">1</span>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+
+        <button class="btn-add" id="btnAdd" onclick="addToCart()" disabled>
+          Agregar al carrito
+        </button>
+        <a href="/checkout.html" class="btn-cart">Ir al carrito →</a>
+        <div class="added-msg" id="addedMsg">✅ Agregado al carrito</div>
+        <p class="notice">Envíos a toda la República · Pago con tarjeta</p>
+      </div>
+    </div>`
+
+  // Auto-select if single option
+  if (colors.length === 1) selectColor(colors[0])
+  updateCartCount()
+}
+
+function modelBgColor(m) {
+  return {Supreme:'#7c3aed',Memory:'#0369a1',Impermeable:'#047857',Normal:'#1e2d52'}[m]||'#1e2d52'
+}
+
+function selectColor(color) {
+  selectedColor = color
+  selectedSize = null
+
+  document.querySelectorAll('[data-color]').forEach(b => {
+    b.classList.toggle('selected', b.dataset.color === color)
+  })
+
+  // Update product image for this color
+  const imgWrap = document.getElementById('productImgWrap')
+  if (imgWrap) {
+    const imgUrl = getImg(product.model, color)
+    if (imgUrl) {
+      imgWrap.innerHTML = `<img src="${imgUrl}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;border-radius:16px" onerror="this.parentElement.innerHTML='🛏️'">`
+    }
+  }
+
+  // Update available sizes (using normalized size keys)
+  const available = getSizesForColor(color)
+  document.querySelectorAll('[data-size]').forEach(b => {
+    const avail = available.includes(b.dataset.size)
+    b.classList.remove('selected', 'unavailable')
+    if (!avail) b.classList.add('unavailable')
+  })
+
+  if (available.length === 1) selectSize(available[0])
+  updatePrice()
+}
+
+function selectSize(size) {
+  const btn = document.querySelector(`[data-size="${size}"]`)
+  if (btn && btn.classList.contains('unavailable')) return
+  selectedSize = size
+  document.querySelectorAll('[data-size]').forEach(b => {
+    b.classList.toggle('selected', b.dataset.size === size)
+  })
+  updatePrice()
+}
+
+function updatePrice() {
+  const priceEl = document.getElementById('variantPrice')
+  const skuEl   = document.getElementById('variantSku')
+  const btnAdd  = document.getElementById('btnAdd')
+
+  if (!selectedColor || !selectedSize) {
+    priceEl.textContent = 'Selecciona color y medida'
+    priceEl.className = 'product-price consult'
+    skuEl.textContent = ''
+    btnAdd.disabled = true
+    return
+  }
+
+  const v = getVariant(selectedColor, selectedSize)
+  if (!v) {
+    priceEl.textContent = 'No disponible en esta combinación'
+    priceEl.className = 'product-price consult'
+    skuEl.textContent = ''
+    btnAdd.disabled = true
+    return
+  }
+
+  if (v.price) {
+    priceEl.textContent = `$${v.price.toLocaleString('es-MX')} MXN`
+    priceEl.className = 'product-price'
+  } else {
+    priceEl.textContent = 'Consultar precio'
+    priceEl.className = 'product-price consult'
+  }
+  skuEl.textContent = `SKU: ${v.sku}`
+  btnAdd.disabled = false
+}
+
+function changeQty(delta) {
+  qty = Math.max(1, qty + delta)
+  document.getElementById('qtyDisplay').textContent = qty
+}
+
+function addToCart() {
+  if (!selectedColor || !selectedSize) return
+  const v = getVariant(selectedColor, selectedSize)
+  if (!v) return
+
+  const cart = JSON.parse(localStorage.getItem('unicuna_cart') || '[]')
+  const existing = cart.find(i => i.sku === v.sku)
+  if (existing) {
+    existing.qty += qty
+  } else {
+    cart.push({
+      sku: v.sku, name: product.name,
+      color: selectedColor, size: selectedSize,
+      price: v.price, qty
+    })
+  }
+  localStorage.setItem('unicuna_cart', JSON.stringify(cart))
+  updateCartCount()
+
+  const msg = document.getElementById('addedMsg')
+  msg.style.display = 'block'
+  setTimeout(() => msg.style.display = 'none', 2500)
+}
+
+// Cart drawer
+function getCart() { return JSON.parse(localStorage.getItem('unicuna_cart') || '[]') }
+function toggleCart() {
+  document.getElementById('cartDrawer').classList.toggle('open')
+  document.getElementById('cartOverlay').classList.toggle('open')
+  renderCart()
+}
+function renderCart() {
+  const cart = getCart()
+  const total = cart.reduce((s,i)=>s+i.price*i.qty,0)
+  document.getElementById('cartTotal').textContent = `$${total.toLocaleString('es-MX')} MXN`
+  const el = document.getElementById('cartItems')
+  if (!cart.length) { el.innerHTML='<div class="cart-empty-msg">Tu carrito está vacío</div>'; return }
+  el.innerHTML = cart.map((item,idx)=>`
+    <div class="cart-item">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-meta">${item.color||''} ${item.size?'· '+item.size:''}</div>
+      </div>
+      <div>
+        <div class="cart-item-price">$${(item.price*item.qty).toLocaleString('es-MX')}</div>
+        <button class="cart-item-remove" onclick="removeItem(${idx})">🗑</button>
+      </div>
+    </div>`).join('')
+}
+function removeItem(idx) {
+  const cart = getCart(); cart.splice(idx,1)
+  localStorage.setItem('unicuna_cart', JSON.stringify(cart)); updateCartCount(); renderCart()
+}
+function updateCartCount() {
+  const cart = getCart()
+  document.getElementById('cartCount').textContent = cart.reduce((s,i)=>s+i.qty,0)
+}
+
+async function initAuth() {
+  try {
+    const r = await fetch('/api/auth/me'); const d = await r.json()
+    if (d.user) { const l=document.getElementById('navAuthLink'); l.textContent=d.user.name.split(' ')[0]; l.href='/cuenta.html' }
+  } catch {}
+}
+
+function toggleMenu(){
+  document.getElementById('navLinks').classList.toggle('open')
+}
+function closeMenu(){
+  document.getElementById('navLinks').classList.remove('open')
+}
+
+loadProduct()
+initAuth()
+updateCartCount()
+</script>
+</body>
+</html>

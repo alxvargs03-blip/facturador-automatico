@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Tienda — UNICUNA®</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--primary:#1e2d52;--gold:#c9a96e;--bg:#fdf9f5;--white:#fff;--gray:#6b7280;--border:#e8e0d5}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--primary);min-height:100vh}
+
+    nav{background:var(--primary);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100}
+    .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold);font-weight:600;text-decoration:none}
+    .nav-links{display:flex;gap:1.2rem;align-items:center}
+    .nav-links a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.85rem;transition:color .2s}
+    .nav-links a:hover{color:var(--gold)}
+    .nav-login{background:rgba(201,169,110,.15);border:1px solid rgba(201,169,110,.4);color:var(--gold)!important;padding:.4rem .9rem;border-radius:6px;font-size:.82rem!important;font-weight:600}
+    .nav-login:hover{background:var(--gold)!important;color:var(--primary)!important}
+    .cart-btn{background:var(--gold);color:var(--primary);border:none;padding:.5rem 1rem;border-radius:6px;cursor:pointer;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:.4rem;min-height:40px}
+    .cart-count{background:var(--primary);color:var(--white);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:.5rem;flex-direction:column;gap:5px;min-width:40px;min-height:40px;align-items:center;justify-content:center}
+    .nav-hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,.9);border-radius:2px;transition:all .3s}
+
+    /* STORE HERO */
+    .store-hero{background:linear-gradient(135deg,#1e2d52 0%,#2a4175 50%,#1a3460 100%);position:relative;overflow:hidden;padding:4rem 2rem 3.5rem;text-align:center;color:#fff}
+    .store-hero::before,.store-hero::after{content:'';position:absolute;border-radius:50%;background:rgba(201,169,110,.07);pointer-events:none;animation:fl 9s ease-in-out infinite}
+    .store-hero::before{width:480px;height:480px;top:-160px;right:-100px}
+    .store-hero::after{width:300px;height:300px;bottom:-80px;left:-80px;animation-delay:4s}
+    @keyframes fl{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-16px) scale(1.02)}}
+    .hero-inner{position:relative;z-index:2;max-width:700px;margin:0 auto}
+    .hero-badge{display:inline-block;background:rgba(201,169,110,.18);border:1px solid rgba(201,169,110,.35);color:#e8d5b0;padding:.3rem .9rem;border-radius:100px;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.2rem}
+    .hero-logo{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:600;line-height:1.1;margin-bottom:.7rem;letter-spacing:.03em}
+    .hero-logo span{color:#c9a96e}
+    .hero-sub{font-size:1rem;opacity:.78;font-weight:300;line-height:1.7;margin-bottom:1.8rem;max-width:500px;margin-left:auto;margin-right:auto}
+    .hero-pills{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap}
+    .hero-pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.85);padding:.28rem .8rem;border-radius:100px;font-size:.76rem;font-weight:500}
+    .hero-line{width:48px;height:2px;background:linear-gradient(90deg,transparent,#c9a96e,transparent);margin:0 auto 1.4rem}
+
+    /* MODEL TABS */
+    .model-tabs{display:flex;justify-content:center;gap:.5rem;padding:0 2rem 1.2rem;flex-wrap:wrap}
+    .model-tab{padding:.5rem 1.2rem;border:1.5px solid var(--border);border-radius:20px;background:var(--white);cursor:pointer;font-size:.84rem;font-weight:500;transition:all .2s;color:var(--gray)}
+    .model-tab:hover{border-color:var(--gold);color:var(--primary)}
+    .model-tab.active{background:var(--primary);border-color:var(--primary);color:var(--white)}
+    .model-tab[data-model="Supreme"].active{background:#7c3aed;border-color:#7c3aed}
+    .model-tab[data-model="Memory"].active{background:#0369a1;border-color:#0369a1}
+    .model-tab[data-model="Impermeable"].active{background:#047857;border-color:#047857}
+
+    /* FILTERS */
+    .filters{padding:0 2rem 1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;max-width:900px;margin:0 auto}
+    .search-wrap{position:relative;flex:1;min-width:200px;max-width:320px}
+    .search-wrap input{width:100%;padding:.6rem 1rem .6rem 2.4rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;background:var(--white);outline:none;font-family:'Inter',sans-serif}
+    .search-wrap input:focus{border-color:var(--gold)}
+    .search-icon{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:var(--gray);font-size:.85rem;pointer-events:none}
+    select.filter-select{padding:.6rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.84rem;background:var(--white);outline:none;cursor:pointer;font-family:'Inter',sans-serif}
+    select.filter-select:focus{border-color:var(--gold)}
+    .results-count{font-size:.82rem;color:var(--gray);padding:0 2rem .8rem;text-align:center}
+
+    /* GRID */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem;padding:0 2rem 4rem;max-width:1200px;margin:0 auto}
+
+    /* CARD */
+    .card{background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:transform .25s,box-shadow .25s;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+    .card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(30,45,82,.13)}
+    .card-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+    .card-img-placeholder{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:3.5rem}
+    .model-badge{position:absolute;top:.6rem;left:.6rem;padding:.2rem .55rem;border-radius:4px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+    .badge-Supreme{background:#7c3aed;color:#fff}
+    .badge-Memory{background:#0369a1;color:#fff}
+    .badge-Impermeable{background:#047857;color:#fff}
+    .badge-Normal{background:#7c3aed;color:#fff}
+    .card-img-wrap{position:relative}
+    .card-body{padding:.9rem 1rem 1.1rem;flex:1;display:flex;flex-direction:column}
+    .card-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;margin-bottom:.35rem;line-height:1.3;flex:1}
+    .card-price{color:var(--gold);font-weight:700;font-size:.95rem;margin-bottom:.5rem}
+    .card-colors{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.6rem}
+    .color-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(0,0,0,.12);flex-shrink:0}
+    .card-sizes{font-size:.72rem;color:var(--gray);margin-bottom:.7rem;line-height:1.4}
+    .card-btn{display:block;text-align:center;background:var(--primary);color:var(--white);padding:.45rem;border-radius:6px;font-size:.8rem;font-weight:500;transition:background .2s;margin-top:auto}
+    .card:hover .card-btn{background:var(--gold);color:var(--primary)}
+
+    .empty{grid-column:1/-1;text-align:center;padding:3rem;color:var(--gray)}
+    .empty span{font-size:3rem;display:block;margin-bottom:1rem}
+    .loader{display:flex;justify-content:center;align-items:center;padding:4rem;grid-column:1/-1}
+    .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Cart drawer */
+    .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+    .cart-overlay.open{opacity:1;pointer-events:all}
+    .cart-drawer{position:fixed;right:0;top:0;height:100%;width:min(380px,100vw);background:var(--white);z-index:201;transform:translateX(100%);transition:transform .3s ease;display:flex;flex-direction:column}
+    .cart-drawer.open{transform:translateX(0)}
+    .cart-header{padding:1.2rem 1.4rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .cart-header h3{font-family:'Cormorant Garamond',serif;font-size:1.3rem}
+    .cart-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--gray)}
+    .cart-items{flex:1;overflow-y:auto;padding:1rem 1.4rem}
+    .cart-item{display:flex;gap:.8rem;padding:.8rem 0;border-bottom:1px solid var(--border);align-items:center}
+    .cart-item-info{flex:1}
+    .cart-item-name{font-size:.87rem;font-weight:500;margin-bottom:.2rem}
+    .cart-item-meta{font-size:.76rem;color:var(--gray)}
+    .cart-item-price{font-weight:600;font-size:.88rem;color:var(--gold)}
+    .cart-item-remove{background:none;border:none;color:var(--gray);cursor:pointer;font-size:1rem;padding:.2rem}
+    .qty-control{display:flex;align-items:center;gap:.4rem;margin-top:.3rem}
+    .qty-btn{background:var(--border);border:none;width:22px;height:22px;border-radius:4px;cursor:pointer;font-size:.85rem}
+    .qty-val{font-size:.84rem;font-weight:600;min-width:20px;text-align:center}
+    .cart-footer{padding:1.2rem 1.4rem;border-top:1px solid var(--border)}
+    .cart-total{display:flex;justify-content:space-between;font-weight:600;font-size:1.05rem;margin-bottom:1rem}
+    .cart-total span:last-child{color:var(--gold)}
+    .btn-checkout{display:block;background:var(--primary);color:var(--white);text-align:center;padding:.85rem;border-radius:8px;font-weight:600;text-decoration:none;transition:background .2s}
+    .btn-checkout:hover{background:var(--gold);color:var(--primary)}
+    .cart-empty-msg{text-align:center;padding:2rem;color:var(--gray);font-size:.9rem}
+
+    /* ── TABLET ── */
+    @media(max-width:900px){
+      .grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1.2rem;padding:0 1.5rem 3rem}
+      .filters{max-width:100%}
+    }
+    /* ── MOBILE ── */
+    @media(max-width:768px){
+      .nav-hamburger{display:flex}
+      .nav-links{
+        display:none;position:fixed;inset:0;top:64px;background:var(--primary);
+        flex-direction:column;align-items:center;justify-content:center;gap:2rem;z-index:99
+      }
+      .nav-links.open{display:flex}
+      .nav-links a{font-size:1.1rem;color:rgba(255,255,255,.9);padding:.5rem 1rem}
+      .store-hero{padding:2.8rem 1.2rem 2.2rem}
+      .hero-sub{font-size:.9rem}
+      .hero-pills{gap:.4rem}
+      .hero-pill{font-size:.72rem;padding:.22rem .65rem}
+      .model-tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:.8rem 1rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+      .model-tabs::-webkit-scrollbar{display:none}
+      .model-tab{flex-shrink:0;padding:.5rem 1rem;font-size:.82rem;white-space:nowrap}
+      .filters{flex-direction:column;padding:0 1rem .8rem;align-items:stretch}
+      .search-wrap{min-width:0;max-width:none;width:100%}
+      select.filter-select{width:100%;padding:.7rem 1rem;font-size:.9rem}
+      .search-wrap input{padding:.7rem 1rem .7rem 2.4rem;font-size:.9rem}
+      .grid{grid-template-columns:repeat(2,1fr);padding:0 .8rem 3rem;gap:.8rem}
+      .qty-btn{width:36px;height:36px}
+    }
+    /* ── SMALL PHONE ── */
+    @media(max-width:420px){
+      .grid{grid-template-columns:1fr}
+      .hero-logo{font-size:2rem}
+      .card-btn{padding:.6rem;font-size:.82rem}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">UNICUNA®</a>
+  <div class="nav-links" id="navLinks">
+    <a href="/">Inicio</a>
+    <a href="/login.html" id="navAuthLink" class="nav-login">Iniciar sesión</a>
+    <button class="cart-btn" onclick="toggleCart();closeMenu()">
+      🛒 <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" onclick="toggleMenu()" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="store-hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Colección completa</div>
+    <h1 class="hero-logo">UNICUNA<span>®</span></h1>
+    <div class="hero-line"></div>
+    <p class="hero-sub">Colchones premium para bebé · Materiales hipoalergénicos certificados · Fabricados en México</p>
+    <div class="hero-pills">
+      <span class="hero-pill">🌿 Hipoalergénico</span>
+      <span class="hero-pill">🇲🇽 Hecho en México</span>
+      <span class="hero-pill">✅ Certificado</span>
+      <span class="hero-pill">🚚 Envío a todo el país</span>
+    </div>
+  </div>
+</div>
+
+<!-- Model tabs -->
+<div class="model-tabs" id="modelTabs">
+  <button class="model-tab active" data-model="Todos" onclick="setModel('Todos')">Todos</button>
+  <button class="model-tab" data-model="Supreme" onclick="setModel('Supreme')">Supreme</button>
+  <button class="model-tab" data-model="Memory" onclick="setModel('Memory')">Memory</button>
+  <button class="model-tab" data-model="Impermeable" onclick="setModel('Impermeable')">Impermeable</button>
+</div>
+
+<!-- Filters -->
+<div class="filters">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Buscar..." oninput="filterProducts()"/>
+  </div>
+  <select class="filter-select" id="colorFilter" onchange="filterProducts()">
+    <option value="">Todos los colores</option>
+  </select>
+  <select class="filter-select" id="sizeFilter" onchange="filterProducts()">
+    <option value="">Todas las medidas</option>
+  </select>
+</div>
+<div class="results-count" id="resultsCount"></div>
+
+<div class="grid" id="productGrid">
+  <div class="loader"><div class="spinner"></div></div>
+</div>
+
+<!-- Cart Drawer -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>Tu carrito</h3>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cartTotal">$0 MXN</span></div>
+    <a href="/checkout.html" class="btn-checkout">Continuar con el pedido →</a>
+  </div>
+</div>
+
+<script>
+const COLOR_MAP = {
+  'Agua':'#b2d8d8','Rosa':'#f4a7b9','Azul Claro':'#a8c8e8','Amarillo':'#f7e08a',
+  'Verde Claro':'#a8d5a2','Blanco':'#f5f5f5','Rosa Claro':'#ffd6e0','Gris':'#c8c8c8',
+  'Beige':'#f5e6d0','Morado':'#d4a8d8','Naranja':'#f5c27a','Azul Acero':'#7db5d6',
+  'Verde':'#6dbf6d','Rojo':'#e87878','Negro':'#555','Café':'#a0785a','Lila':'#c9a8e8',
+  'Crema':'#f8f0dc','Rosa Palido':'#fce4ec','Coral Claro':'#ffb5a7','Blancoguinda':'#f5d5d5',
+  'Blancovino':'#e8cdd5','Blanco Con Azul':'#d8eaf5','Azul Marino':'#2d4d8a',
+  'Colchon Especial':'#c9a96e','Rosa Claro Unicuna Baby':'#ffc4d0'
+}
+
+// Image lookup: model + color → file
+const IMG_MAP = {
+  'supreme-Agua':       '/assets/colchones/supreme-verde.png',
+  'supreme-Verde':      '/assets/colchones/supreme-verde.png',
+  'supreme-Verde Claro':'/assets/colchones/supreme-verde.png',
+  'supreme-Amarillo':   '/assets/colchones/supreme-amarillo.png',
+  'supreme-Azul Claro': '/assets/colchones/supreme-azul.png',
+  'supreme-Azul Acero': '/assets/colchones/supreme-azul.png',
+  'supreme-Rosa':       '/assets/colchones/supreme-rosa.png',
+  'supreme-Rosa Claro': '/assets/colchones/supreme-rosa.png',
+  'memory-Agua':        '/assets/colchones/memory-agua.png',
+  'memory-Verde':       '/assets/colchones/memory-agua.png',
+  'normal-Agua':        '/assets/colchones/normal-agua.png',
+  'normal-Verde':       '/assets/colchones/normal-agua.png',
+  'normal-Verde Claro': '/assets/colchones/normal-agua.png',
+  'impermeable-Agua':   '/assets/colchones/impermeable-agua.png',
+  'impermeable-Verde':  '/assets/colchones/impermeable-agua.png',
+}
+
+function getProductImage(model, colors) {
+  const m = (model||'Normal').toLowerCase()
+  // Try each color until we find a match
+  for (const c of (colors||[])) {
+    const key = `${m}-${c}`
+    if (IMG_MAP[key]) return IMG_MAP[key]
+  }
+  // Fallback: try model without color
+  return null
+}
+
+// Size normalization (same as server)
+function normalizeSize(s) {
+  if (!s) return null
+  const m = s.match(/^(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)$/i)
+  if (!m) return s
+  let a = parseFloat(m[1]), b = parseFloat(m[2])
+  if (a >= 1 && a < 10) a = Math.round(a * 100)
+  if (b >= 1 && b < 10) b = Math.round(b * 100)
+  return `${Math.min(a,b)}x${Math.max(a,b)}`
+}
+function displaySize(s) {
+  if (!s) return '—'
+  const m = s.match(/^(\d+)x(\d+)$/)
+  return m ? `${m[1]} × ${m[2]} cm` : s
+}
+
+let allProducts = []
+let activeModel = 'Todos'
+
+async function loadProducts() {
+  try {
+    const res = await fetch('/api/products')
+    const data = await res.json()
+    allProducts = data.products || []
+    populateFilters()
+    filterProducts()
+  } catch(e) {
+    document.getElementById('productGrid').innerHTML = '<div class="empty"><span>⚠️</span>Error cargando productos</div>'
+  }
+}
+
+function setModel(model) {
+  activeModel = model
+  document.querySelectorAll('.model-tab').forEach(t => t.classList.toggle('active', t.dataset.model === model))
+  filterProducts()
+}
+
+function populateFilters() {
+  const colors = new Set(), sizes = new Set()
+  allProducts.forEach(p => {
+    p.colors.forEach(c => colors.add(c))
+    p.sizes.forEach(s => { const n = normalizeSize(s); if(n) sizes.add(n) })
+  })
+  const cSel = document.getElementById('colorFilter')
+  const sSel = document.getElementById('sizeFilter')
+  ;[...colors].sort().forEach(c => {
+    if (!COLOR_MAP[c] && !c) return
+    const o = document.createElement('option'); o.value = c; o.textContent = c; cSel.appendChild(o)
+  })
+  ;[...sizes].sort((a,b)=>{
+    const [a1,a2] = a.split('x').map(Number)
+    const [b1,b2] = b.split('x').map(Number)
+    return a1-b1 || a2-b2
+  }).forEach(s => {
+    const o = document.createElement('option'); o.value = s; o.textContent = displaySize(s); sSel.appendChild(o)
+  })
+}
+
+function filterProducts() {
+  const q     = document.getElementById('searchInput').value.toLowerCase()
+  const color = document.getElementById('colorFilter').value
+  const size  = document.getElementById('sizeFilter').value
+
+  const filtered = allProducts.filter(p => {
+    if (activeModel !== 'Todos' && p.model !== activeModel) return false
+    if (q && !p.name.toLowerCase().includes(q)) return false
+    if (color && !p.colors.includes(color)) return false
+    if (size) {
+      const normSizes = p.sizes.map(s => normalizeSize(s))
+      if (!normSizes.includes(size)) return false
+    }
+    return true
+  })
+
+  document.getElementById('resultsCount').textContent =
+    filtered.length === allProducts.length
+      ? `${filtered.length} colchones`
+      : `${filtered.length} de ${allProducts.length} colchones`
+
+  renderProducts(filtered)
+}
+
+function priceRange(p) {
+  if (!p.minPrice && !p.maxPrice) return 'Consultar precio'
+  if (Math.round(p.minPrice) === Math.round(p.maxPrice)) return `$${p.minPrice.toLocaleString('es-MX')} MXN`
+  return `$${p.minPrice.toLocaleString('es-MX')} – $${p.maxPrice.toLocaleString('es-MX')} MXN`
+}
+
+function renderProducts(products) {
+  const grid = document.getElementById('productGrid')
+  if (!products.length) {
+    grid.innerHTML = '<div class="empty"><span>🔍</span>No encontramos colchones con esos filtros</div>'
+    return
+  }
+  grid.innerHTML = products.map(p => {
+    const imgUrl = getProductImage(p.model, p.colors)
+    const imgHtml = imgUrl
+      ? `<img class="card-img" src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'card-img-placeholder\\'>🛏️</div>'">`
+      : `<div class="card-img-placeholder" style="background:${cardGradient(p.model)}">🛏️</div>`
+
+    const dots = p.colors.slice(0,6).map(c =>
+      `<span class="color-dot" style="background:${COLOR_MAP[c]||'#ccc'}" title="${c}"></span>`
+    ).join('')
+
+    // Display unique normalized sizes (deduplicated)
+    const normSizes = [...new Set(p.sizes.map(s => normalizeSize(s)).filter(Boolean))]
+      .sort((a,b) => {
+        const [a1,a2]=a.split('x').map(Number), [b1,b2]=b.split('x').map(Number)
+        return a1-b1||a2-b2
+      })
+    const sizesText = normSizes.slice(0,4).map(displaySize).join(' · ') + (normSizes.length > 4 ? ` +${normSizes.length-4}` : '')
+
+    return `
+      <a class="card" href="/producto.html?h=${encodeURIComponent(p.handle)}">
+        <div class="card-img-wrap">
+          ${imgHtml}
+          <span class="model-badge badge-${p.model}">${p.model}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">${p.name}</div>
+          <div class="card-price">${priceRange(p)}</div>
+          <div class="card-colors">${dots}</div>
+          <div class="card-sizes">${sizesText}</div>
+          <div class="card-btn">Ver colchón →</div>
+        </div>
+      </a>`
+  }).join('')
+}
+
+function cardGradient(model) {
+  return {Supreme:'linear-gradient(135deg,#e8e0f5,#d5cae8)',Memory:'linear-gradient(135deg,#dbeafe,#c3d9f0)',Impermeable:'linear-gradient(135deg,#d1fae5,#a7f3d0)',Normal:'linear-gradient(135deg,#e8eff8,#d0dff0)'}[model]||'linear-gradient(135deg,#e8eff8,#d0dff0)'
+}
+
+// Cart
+function getCart() { return JSON.parse(localStorage.getItem('unicuna_cart')||'[]') }
+function saveCart(c) { localStorage.setItem('unicuna_cart', JSON.stringify(c)) }
+
+function toggleCart() {
+  document.getElementById('cartDrawer').classList.toggle('open')
+  document.getElementById('cartOverlay').classList.toggle('open')
+  renderCart()
+}
+function renderCart() {
+  const cart = getCart()
+  const total = cart.reduce((s,i)=>s+i.price*i.qty,0)
+  document.getElementById('cartCount').textContent = cart.reduce((s,i)=>s+i.qty,0)
+  document.getElementById('cartTotal').textContent = `$${total.toLocaleString('es-MX')} MXN`
+  const el = document.getElementById('cartItems')
+  if (!cart.length) { el.innerHTML = '<div class="cart-empty-msg">Tu carrito está vacío</div>'; return }
+  el.innerHTML = cart.map((item,idx) => `
+    <div class="cart-item">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-meta">${item.color||''} ${item.size?'· '+item.size:''}</div>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+        </div>
+      </div>
+      <div>
+        <div class="cart-item-price">$${(item.price*item.qty).toLocaleString('es-MX')}</div>
+        <button class="cart-item-remove" onclick="removeItem(${idx})">🗑</button>
+      </div>
+    </div>`).join('')
+}
+function changeQty(idx,delta){const c=getCart();c[idx].qty=Math.max(1,c[idx].qty+delta);saveCart(c);renderCart()}
+function removeItem(idx){const c=getCart();c.splice(idx,1);saveCart(c);renderCart()}
+
+async function initAuth() {
+  try {
+    const r = await fetch('/api/auth/me'); const d = await r.json()
+    if (d.user) {
+      const l = document.getElementById('navAuthLink')
+      l.textContent = d.user.name.split(' ')[0]
+      l.href = '/cuenta.html'
+      l.classList.remove('nav-login')
+    }
+  } catch {}
+}
+
+function toggleMenu(){document.getElementById('navLinks').classList.toggle('open')}
+function closeMenu(){document.getElementById('navLinks').classList.remove('open')}
+document.querySelectorAll('#navLinks a').forEach(a=>a.addEventListener('click',closeMenu))
+
+// Init
+document.getElementById('cartCount').textContent = getCart().reduce((s,i)=>s+i.qty,0)
+loadProducts()
+initAuth()
+</script>
+</body>
+</html>

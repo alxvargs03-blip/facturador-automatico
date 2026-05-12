@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Mi cuenta — UNICUNA®</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--primary:#1e2d52;--gold:#c9a96e;--bg:#fdf9f5;--white:#fff;--gray:#6b7280;--border:#e8e0d5}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--primary);min-height:100vh}
+
+    nav{background:var(--primary);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px}
+    .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold);font-weight:600;text-decoration:none}
+    .nav-links{display:flex;gap:1.5rem;align-items:center}
+    .nav-links a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.85rem}
+    .nav-links a:hover{color:var(--gold)}
+    .btn-logout{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.3);padding:.4rem .9rem;border-radius:6px;cursor:pointer;font-size:.82rem}
+    .btn-logout:hover{border-color:var(--gold);color:var(--gold)}
+
+    .page-wrap{max-width:800px;margin:0 auto;padding:2.5rem 2rem 4rem}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;margin-bottom:.3rem}
+    .user-email{color:var(--gray);font-size:.88rem;margin-bottom:2rem}
+
+    .section-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+
+    /* Orders */
+    .order-card{background:var(--white);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:1rem;overflow:hidden}
+    .order-head{padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+    .order-head:hover{background:#fafaf8}
+    .order-id{font-weight:600;font-size:.9rem}
+    .order-meta{font-size:.78rem;color:var(--gray);margin-top:.2rem}
+    .order-status{padding:.25rem .7rem;border-radius:20px;font-size:.75rem;font-weight:600;text-transform:uppercase}
+    .status-nuevo{background:#dbeafe;color:#1d4ed8}
+    .status-procesando{background:#fef3c7;color:#92400e}
+    .status-enviado{background:#dcfce7;color:#15803d}
+    .status-entregado{background:#dcfce7;color:#15803d}
+    .order-total{font-weight:700;color:var(--gold);font-size:.95rem}
+    .order-chevron{color:var(--gray);transition:transform .25s;font-size:.9rem}
+    .order-head.open .order-chevron{transform:rotate(180deg)}
+
+    .order-items{border-top:1px solid var(--border);padding:1rem 1.2rem;display:none}
+    .order-items.open{display:block}
+    .order-item{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border)}
+    .order-item:last-child{border-bottom:none}
+    .order-item-name{font-size:.88rem;font-weight:500}
+    .order-item-meta{font-size:.78rem;color:var(--gray)}
+    .order-item-price{font-size:.88rem;font-weight:600;color:var(--gold)}
+    .order-addr{font-size:.82rem;color:var(--gray);margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--border)}
+
+    .empty-orders{text-align:center;padding:3rem;color:var(--gray)}
+    .empty-orders span{font-size:3rem;display:block;margin-bottom:1rem}
+    .empty-orders a{color:var(--gold);text-decoration:none;font-weight:600}
+
+    .loader{display:flex;justify-content:center;padding:3rem}
+    .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">UNICUNA®</a>
+  <div class="nav-links">
+    <a href="/tienda.html">Tienda</a>
+    <a href="/checkout.html">Carrito</a>
+    <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+  </div>
+</nav>
+
+<div class="page-wrap" id="pageContent">
+  <div class="loader"><div class="spinner"></div></div>
+</div>
+
+<script>
+async function init() {
+  try {
+    const r = await fetch('/api/auth/me')
+    const d = await r.json()
+    if (!d.user) { location.href = '/login.html?redirect=/cuenta.html'; return }
+
+    const or = await fetch('/api/orders')
+    const od = await or.json()
+
+    document.getElementById('pageContent').innerHTML = `
+      <h1 class="page-title">Hola, ${d.user.name.split(' ')[0]}</h1>
+      <p class="user-email">${d.user.email}</p>
+      <div class="section-title">Mis pedidos</div>
+      <div id="ordersList"></div>
+    `
+    renderOrders(od.orders || [])
+  } catch(e) {
+    document.getElementById('pageContent').innerHTML = '<p style="color:#6b7280;text-align:center;padding:3rem">Error cargando tu cuenta</p>'
+  }
+}
+
+function renderOrders(orders) {
+  const el = document.getElementById('ordersList')
+  if (!orders.length) {
+    el.innerHTML = `<div class="empty-orders"><span>📦</span><p>Aún no tienes pedidos.</p><p style="margin-top:.5rem"><a href="/tienda.html">Explorar colchones →</a></p></div>`
+    return
+  }
+  el.innerHTML = orders.map((o, i) => {
+    const date = new Date(o.created_at).toLocaleDateString('es-MX', {day:'numeric',month:'long',year:'numeric'})
+    const statusClass = `status-${o.status}`
+    const itemsHtml = (o.items||[]).map(item => `
+      <div class="order-item">
+        <div>
+          <div class="order-item-name">${item.product_name}</div>
+          <div class="order-item-meta">${item.color||''} ${item.size?'· '+item.size:''} · Cant: ${item.quantity}</div>
+        </div>
+        <div class="order-item-price">$${(item.price*item.quantity).toLocaleString('es-MX')}</div>
+      </div>`).join('')
+
+    return `
+      <div class="order-card">
+        <div class="order-head" onclick="toggleOrder(${i})" id="head${i}">
+          <div>
+            <div class="order-id">Pedido #${o.id.slice(0,8).toUpperCase()}</div>
+            <div class="order-meta">${date} · ${o.payment_method}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem">
+            <span class="order-status ${statusClass}">${o.status}</span>
+            <div class="order-total">$${o.total.toLocaleString('es-MX')} MXN</div>
+            <span class="order-chevron">▼</span>
+          </div>
+        </div>
+        <div class="order-items" id="items${i}">
+          ${itemsHtml}
+          ${o.shipping_address ? `<div class="order-addr">📍 ${o.shipping_address}</div>` : ''}
+        </div>
+      </div>`
+  }).join('')
+}
+
+function toggleOrder(i) {
+  document.getElementById(`head${i}`).classList.toggle('open')
+  document.getElementById(`items${i}`).classList.toggle('open')
+}
+
+async function logout() {
+  await fetch('/api/auth/logout', { method:'POST' })
+  location.href = '/'
+}
+
+init()
+</script>
+</body>
+</html>

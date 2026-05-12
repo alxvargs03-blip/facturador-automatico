@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Admin — UNICUNA®</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --nav:#0f1623;--sidebar:#1a2438;--bg:#f4f6fb;--white:#fff;
+      --primary:#1e2d52;--gold:#c9a96e;--border:#e2e8f0;
+      --gray:#64748b;--text:#1e293b;
+      --green:#16a34a;--yellow:#d97706;--blue:#2563eb;--red:#dc2626;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+    /* ── LOGIN OVERLAY ── */
+    #loginOverlay{position:fixed;inset:0;background:linear-gradient(135deg,#1e2d52,#2a4175);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+    #loginOverlay.hidden{display:none}
+    .login-box{background:#fff;border-radius:16px;padding:2.5rem;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+    .login-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--primary);text-align:center;margin-bottom:.2rem;font-weight:600}
+    .login-logo span{color:var(--gold)}
+    .login-sub{text-align:center;font-size:.8rem;color:var(--gray);margin-bottom:2rem}
+    .lfield{margin-bottom:1rem}
+    .lfield label{display:block;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem;color:var(--primary)}
+    .lfield input{width:100%;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+    .lfield input:focus{border-color:var(--gold)}
+    .lbtn{width:100%;padding:.85rem;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:.3rem;font-family:'Inter',sans-serif;transition:background .2s}
+    .lbtn:hover{background:#2a4175}
+    .lbtn:disabled{opacity:.6;cursor:not-allowed}
+    .lerr{background:#fef2f2;border:1.5px solid #fecaca;color:#b91c1c;padding:.6rem .9rem;border-radius:8px;font-size:.83rem;margin-bottom:.8rem;display:none}
+    .lerr.show{display:block}
+
+    /* ── MAIN LAYOUT ── */
+    #app{display:flex;min-height:100vh}
+    #app.hidden{display:none}
+
+    /* Sidebar */
+    .sidebar{width:220px;background:var(--sidebar);flex-shrink:0;display:flex;flex-direction:column;min-height:100vh}
+    .s-logo{padding:1.4rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.08)}
+    .s-logo-text{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--gold);font-weight:600}
+    .s-logo-sub{font-size:.68rem;color:rgba(255,255,255,.35);margin-top:.1rem}
+    .s-nav{flex:1;padding:.8rem 0}
+    .s-item{display:flex;align-items:center;gap:.7rem;padding:.7rem 1.2rem;color:rgba(255,255,255,.6);cursor:pointer;font-size:.84rem;font-weight:500;transition:all .2s;border-left:3px solid transparent}
+    .s-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.9)}
+    .s-item.active{background:rgba(201,169,110,.12);color:var(--gold);border-left-color:var(--gold)}
+    .s-ico{font-size:1rem;width:20px;text-align:center}
+    .s-footer{padding:.8rem 1.2rem;border-top:1px solid rgba(255,255,255,.08)}
+    .s-logout{display:flex;align-items:center;gap:.6rem;color:rgba(255,255,255,.4);font-size:.8rem;cursor:pointer;transition:color .2s;background:none;border:none;width:100%;text-align:left;padding:.4rem 0}
+    .s-logout:hover{color:#f87171}
+
+    /* Main content */
+    .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+    .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+    .topbar-title{font-size:1rem;font-weight:600;color:var(--text)}
+    .topbar-date{font-size:.78rem;color:var(--gray)}
+    .content{padding:1.5rem;flex:1;overflow-y:auto}
+
+    /* ── TABS ── */
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* ── STAT CARDS ── */
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1rem;margin-bottom:1.5rem}
+    .stat-card{background:var(--white);border-radius:12px;padding:1.2rem;box-shadow:0 1px 4px rgba(0,0,0,.06);border-left:4px solid transparent}
+    .sc-blue{border-left-color:#3b82f6}
+    .sc-gold{border-left-color:var(--gold)}
+    .sc-green{border-left-color:#22c55e}
+    .sc-purple{border-left-color:#a855f7}
+    .sc-orange{border-left-color:#f97316}
+    .stat-label{font-size:.72rem;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+    .stat-val{font-size:1.6rem;font-weight:700;color:var(--text);line-height:1}
+    .stat-sub{font-size:.72rem;color:var(--gray);margin-top:.3rem}
+
+    /* ── SECTION HEADER ── */
+    .sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+    .sec-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600}
+    .sec-count{font-size:.78rem;color:var(--gray);background:var(--bg);padding:.2rem .6rem;border-radius:20px}
+
+    /* ── SEARCH ── */
+    .search-bar{position:relative;margin-bottom:1rem}
+    .search-bar input{width:100%;padding:.55rem 1rem .55rem 2.2rem;border:1.5px solid var(--border);border-radius:8px;font-size:.84rem;font-family:'Inter',sans-serif;outline:none;background:var(--white)}
+    .search-bar input:focus{border-color:var(--gold)}
+    .search-bar .ico{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:var(--gray);font-size:.85rem}
+
+    /* ── TABLE ── */
+    .tbl-wrap{background:var(--white);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;margin-bottom:1.5rem}
+    table{width:100%;border-collapse:collapse;font-size:.82rem}
+    thead tr{background:#f8fafc;border-bottom:2px solid var(--border)}
+    th{padding:.7rem 1rem;text-align:left;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);white-space:nowrap}
+    td{padding:.75rem 1rem;border-bottom:1px solid var(--border);vertical-align:top}
+    tr:last-child td{border-bottom:none}
+    tr.detail-row td{background:#fafbff;padding:0}
+    .detail-box{padding:1rem 1.2rem;display:none}
+    .detail-box.open{display:block}
+
+    /* ── BADGES ── */
+    .badge{display:inline-block;padding:.18rem .55rem;border-radius:20px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+    .b-nuevo{background:#dbeafe;color:#1d4ed8}
+    .b-procesando{background:#fef3c7;color:#92400e}
+    .b-enviado{background:#d1fae5;color:#065f46}
+    .b-entregado{background:#dcfce7;color:#15803d}
+    .b-cancelado{background:#fee2e2;color:#991b1b}
+    .b-pendiente{background:#f3f4f6;color:#374151}
+
+    /* ── STATUS SELECT ── */
+    .status-sel{padding:.3rem .6rem;border:1.5px solid var(--border);border-radius:6px;font-size:.78rem;font-family:'Inter',sans-serif;outline:none;cursor:pointer;background:#fff}
+    .status-sel:focus{border-color:var(--gold)}
+
+    /* ── DETAIL ITEMS ── */
+    .d-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem 1.5rem;font-size:.82rem}
+    .d-label{color:var(--gray);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.1rem}
+    .d-val{color:var(--text);font-weight:500}
+    .d-products{margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--border)}
+    .d-prod-item{display:flex;justify-content:space-between;align-items:center;padding:.35rem 0;border-bottom:1px dashed var(--border)}
+    .d-prod-item:last-child{border-bottom:none}
+
+    /* ── VISIT BARS ── */
+    .visit-section{background:var(--white);border-radius:12px;padding:1.2rem;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:1rem}
+    .v-row{display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem;font-size:.82rem}
+    .v-label{width:120px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
+    .v-bar-wrap{flex:1;background:#f1f5f9;border-radius:4px;height:18px;overflow:hidden}
+    .v-bar{height:100%;background:linear-gradient(90deg,var(--gold),#e8c37e);border-radius:4px;transition:width .4s ease;min-width:2px}
+    .v-num{width:50px;text-align:right;color:var(--gray);font-size:.78rem}
+
+    .empty-state{text-align:center;padding:3rem;color:var(--gray)}
+    .empty-state .ico{font-size:2.5rem;display:block;margin-bottom:.8rem;opacity:.4}
+
+    .btn-sm{padding:.3rem .7rem;border-radius:6px;font-size:.75rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+    .btn-expand{background:var(--bg);color:var(--gray)}
+    .btn-expand:hover{background:var(--border)}
+
+    @media(max-width:768px){
+      .sidebar{width:60px}
+      .s-logo-text,.s-logo-sub,.s-item span,.s-logout span{display:none}
+      .s-item{padding:.7rem;justify-content:center}
+      .s-footer{padding:.5rem;text-align:center}
+      .stat-grid{grid-template-columns:1fr 1fr}
+      .d-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:480px){
+      .sidebar{width:50px}
+      .stat-grid{grid-template-columns:1fr}
+      .content{padding:1rem}
+      .page-title{font-size:1.1rem}
+      .stat-card{padding:1rem}
+      th,td{font-size:.76rem;padding:.5rem .6rem}
+      .search-bar input{font-size:.82rem;padding:.5rem .8rem}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN OVERLAY ── -->
+<div id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">UNICUNA<span>®</span></div>
+    <div class="login-sub">Panel de Administración</div>
+    <div class="lerr" id="loginErr"></div>
+    <div class="lfield"><label>Usuario</label><input type="text" id="lUser" placeholder="Usuario" autocomplete="username"/></div>
+    <div class="lfield"><label>Contraseña</label><input type="password" id="lPass" placeholder="••••••••" autocomplete="current-password"/></div>
+    <button class="lbtn" id="lBtn" onclick="adminLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app" class="hidden">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="s-logo">
+      <div class="s-logo-text">UNICUNA®</div>
+      <div class="s-logo-sub">Admin Panel</div>
+    </div>
+    <nav class="s-nav">
+      <div class="s-item active" onclick="showTab('dashboard')"><span class="s-ico">📊</span><span>Dashboard</span></div>
+      <div class="s-item" onclick="showTab('pedidos')"><span class="s-ico">📦</span><span>Pedidos</span></div>
+      <div class="s-item" onclick="showTab('clientes')"><span class="s-ico">👥</span><span>Clientes</span></div>
+      <div class="s-item" onclick="showTab('visitas')"><span class="s-ico">📈</span><span>Visitas</span></div>
+    </nav>
+    <div class="s-footer">
+      <button class="s-logout" onclick="adminLogout()"><span>🚪</span><span>Cerrar sesión</span></button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-date" id="topbarDate"></div>
+    </div>
+    <div class="content">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="tab-panel active" id="tab-dashboard">
+        <div class="stat-grid" id="statGrid">
+          <div class="stat-card sc-blue"><div class="stat-label">Pedidos totales</div><div class="stat-val" id="s-orders">—</div><div class="stat-sub" id="s-orders-today">Hoy: —</div></div>
+          <div class="stat-card sc-gold"><div class="stat-label">Ingresos totales</div><div class="stat-val" id="s-revenue">—</div><div class="stat-sub" id="s-rev-today">Hoy: —</div></div>
+          <div class="stat-card sc-green"><div class="stat-label">Clientes registrados</div><div class="stat-val" id="s-users">—</div></div>
+          <div class="stat-card sc-purple"><div class="stat-label">Visitas totales</div><div class="stat-val" id="s-visits">—</div><div class="stat-sub" id="s-visits-today">Hoy: —</div></div>
+          <div class="stat-card sc-orange"><div class="stat-label">Pedidos nuevos</div><div class="stat-val" id="s-new">—</div><div class="stat-sub">Sin procesar</div></div>
+        </div>
+
+        <div class="sec-header"><div class="sec-title">Últimos pedidos</div></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>#Pedido</th><th>Fecha</th><th>Cliente</th><th>Total</th><th>Estado</th></tr></thead>
+          <tbody id="recentOrders"></tbody>
+        </table></div>
+      </div>
+
+      <!-- ── PEDIDOS ── -->
+      <div class="tab-panel" id="tab-pedidos">
+        <div class="search-bar"><span class="ico">🔍</span><input type="text" id="orderSearch" placeholder="Buscar por cliente, correo o #pedido..." oninput="renderOrders()"/></div>
+        <div class="sec-header">
+          <div class="sec-title">Todos los pedidos</div>
+          <span class="sec-count" id="orderCount">0</span>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>#Pedido</th><th>Fecha</th><th>Cliente</th><th>Teléfono</th><th>Total</th><th>Estatus</th><th>Acciones</th></tr></thead>
+          <tbody id="ordersBody"></tbody>
+        </table></div>
+      </div>
+
+      <!-- ── CLIENTES ── -->
+      <div class="tab-panel" id="tab-clientes">
+        <div class="search-bar"><span class="ico">🔍</span><input type="text" id="clientSearch" placeholder="Buscar cliente..." oninput="renderClients()"/></div>
+        <div class="sec-header">
+          <div class="sec-title">Clientes registrados</div>
+          <span class="sec-count" id="clientCount">0</span>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>#</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Registro</th><th>Dirección guardada</th></tr></thead>
+          <tbody id="clientsBody"></tbody>
+        </table></div>
+      </div>
+
+      <!-- ── VISITAS ── -->
+      <div class="tab-panel" id="tab-visitas">
+        <div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="stat-card sc-purple"><div class="stat-label">Visitas totales</div><div class="stat-val" id="vTotal">—</div></div>
+          <div class="stat-card sc-blue"><div class="stat-label">Visitas hoy</div><div class="stat-val" id="vToday">—</div></div>
+          <div class="stat-card sc-green"><div class="stat-label">Páginas distintas</div><div class="stat-val" id="vPages">—</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="visit-section">
+            <div class="sec-title" style="margin-bottom:1rem">Últimos 14 días</div>
+            <div id="visitsByDay"></div>
+          </div>
+          <div class="visit-section">
+            <div class="sec-title" style="margin-bottom:1rem">Por página</div>
+            <div id="visitsByPage"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+let allOrders = []
+let allClients = []
+let statsData = {}
+
+/* ── AUTH ── */
+async function adminLogin() {
+  const user = document.getElementById('lUser').value.trim()
+  const pass = document.getElementById('lPass').value
+  const err  = document.getElementById('loginErr')
+  const btn  = document.getElementById('lBtn')
+  err.classList.remove('show')
+  if (!user || !pass) { err.textContent = 'Ingresa usuario y contraseña'; err.classList.add('show'); return }
+  btn.disabled = true; btn.textContent = 'Verificando...'
+  try {
+    const r = await fetch('/api/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username: user, password: pass }) })
+    const d = await r.json()
+    if (!d.ok) { err.textContent = d.error; err.classList.add('show'); return }
+    document.getElementById('loginOverlay').classList.add('hidden')
+    document.getElementById('app').classList.remove('hidden')
+    loadAll()
+  } catch { err.textContent = 'Error de conexión'; err.classList.add('show') }
+  finally { btn.disabled = false; btn.textContent = 'Entrar' }
+}
+
+async function adminLogout() {
+  await fetch('/api/admin/logout', { method:'POST' }).catch(()=>{})
+  document.getElementById('app').classList.add('hidden')
+  document.getElementById('loginOverlay').classList.remove('hidden')
+  document.getElementById('lPass').value = ''
+}
+
+/* ── NAVIGATION ── */
+const TAB_NAMES = { dashboard:'Dashboard', pedidos:'Pedidos', clientes:'Clientes', visitas:'Visitas' }
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
+  document.querySelectorAll('.s-item').forEach(i => i.classList.remove('active'))
+  document.getElementById('tab-'+id).classList.add('active')
+  document.querySelectorAll('.s-item')[['dashboard','pedidos','clientes','visitas'].indexOf(id)].classList.add('active')
+  document.getElementById('topbarTitle').textContent = TAB_NAMES[id]
+}
+
+/* ── LOAD ALL ── */
+async function loadAll() {
+  document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'})
+  await Promise.all([loadStats(), loadOrders(), loadClients()])
+}
+
+async function loadStats() {
+  const r = await fetch('/api/admin/stats'); const d = await r.json()
+  if (!d.ok) return
+  const s = d.stats; statsData = s
+  document.getElementById('s-orders').textContent     = s.totalOrders
+  document.getElementById('s-orders-today').textContent = `Hoy: ${s.todayOrders}`
+  document.getElementById('s-revenue').textContent    = `$${(s.totalRevenue||0).toLocaleString('es-MX')}`
+  document.getElementById('s-rev-today').textContent  = `Hoy: $${(s.todayRevenue||0).toLocaleString('es-MX')}`
+  document.getElementById('s-users').textContent      = s.totalUsers
+  document.getElementById('s-visits').textContent     = s.totalVisits
+  document.getElementById('s-visits-today').textContent = `Hoy: ${s.todayVisits}`
+  document.getElementById('s-new').textContent        = s.byStatus?.nuevo || 0
+  renderVisits(s.visits)
+}
+
+async function loadOrders() {
+  const r = await fetch('/api/admin/orders'); const d = await r.json()
+  if (!d.ok) return
+  allOrders = d.orders
+  renderOrders()
+  renderRecentOrders()
+}
+
+async function loadClients() {
+  const r = await fetch('/api/admin/users'); const d = await r.json()
+  if (!d.ok) return
+  allClients = d.users
+  renderClients()
+}
+
+/* ── ORDERS ── */
+const STATUS_OPTS = ['nuevo','procesando','enviado','entregado','cancelado']
+const STATUS_LABELS = { nuevo:'Nuevo', procesando:'Procesando', enviado:'Enviado', entregado:'Entregado', cancelado:'Cancelado', pendiente:'Pendiente' }
+
+function badgeHtml(status) {
+  return `<span class="badge b-${status||'pendiente'}">${STATUS_LABELS[status]||status||'—'}</span>`
+}
+
+function renderRecentOrders() {
+  const rows = allOrders.slice(0,5).map(o => `
+    <tr>
+      <td style="font-family:monospace;font-weight:600">#${o.id.slice(0,8).toUpperCase()}</td>
+      <td>${fmtDate(o.created_at)}</td>
+      <td>${o.customer_name}</td>
+      <td style="color:var(--gold);font-weight:600">$${(o.total||0).toLocaleString('es-MX')}</td>
+      <td>${badgeHtml(o.status)}</td>
+    </tr>`).join('')
+  document.getElementById('recentOrders').innerHTML = rows || '<tr><td colspan="5" style="text-align:center;padding:1.5rem;color:var(--gray)">Sin pedidos aún</td></tr>'
+}
+
+function renderOrders() {
+  const q = (document.getElementById('orderSearch')?.value||'').toLowerCase()
+  const filtered = allOrders.filter(o =>
+    !q || o.customer_name?.toLowerCase().includes(q) ||
+    o.customer_email?.toLowerCase().includes(q) ||
+    o.id?.slice(0,8).toLowerCase().includes(q)
+  )
+  document.getElementById('orderCount').textContent = `${filtered.length} pedidos`
+
+  const rows = filtered.map((o,i) => {
+    const shortId = o.id.slice(0,8).toUpperCase()
+    const items = (o.items||[]).map(it =>
+      `<div class="d-prod-item">
+        <div><div style="font-weight:500">${it.product_name}</div><div style="font-size:.75rem;color:var(--gray)">${it.color||''} ${it.size?'· '+it.size:''}</div></div>
+        <div style="white-space:nowrap">$${(it.price||0).toLocaleString('es-MX')} × ${it.quantity}</div>
+      </div>`
+    ).join('')
+    const addr = o.shipping_address || '—'
+    return `
+      <tr>
+        <td><span style="font-family:monospace;font-weight:700;font-size:.8rem">#${shortId}</span></td>
+        <td style="white-space:nowrap">${fmtDate(o.created_at)}</td>
+        <td>
+          <div style="font-weight:500">${o.customer_name}</div>
+          <div style="font-size:.74rem;color:var(--gray)">${o.customer_email}</div>
+        </td>
+        <td style="white-space:nowrap">${o.customer_phone||'—'}</td>
+        <td style="font-weight:700;color:var(--gold);white-space:nowrap">$${(o.total||0).toLocaleString('es-MX')}</td>
+        <td>
+          <select class="status-sel" onchange="changeStatus('${o.id}',this.value)">
+            ${STATUS_OPTS.map(s=>`<option value="${s}"${o.status===s?' selected':''}>${STATUS_LABELS[s]}</option>`).join('')}
+          </select>
+        </td>
+        <td><button class="btn-sm btn-expand" onclick="toggleDetail('d-${shortId}',this)">Ver detalles ▸</button></td>
+      </tr>
+      <tr class="detail-row" id="d-${shortId}">
+        <td colspan="7">
+          <div class="detail-box" id="box-${shortId}">
+            <div class="d-grid">
+              <div><div class="d-label">Dirección de envío</div><div class="d-val">${addr}</div></div>
+              <div><div class="d-label">Notas</div><div class="d-val">${o.notes||'—'}</div></div>
+              <div><div class="d-label">Método de pago</div><div class="d-val">${o.payment_method||'—'}</div></div>
+              <div><div class="d-label">Estado de pago</div><div class="d-val">${badgeHtml(o.payment_status)}</div></div>
+            </div>
+            <div class="d-products">
+              <div class="d-label" style="margin-bottom:.5rem">Productos (${(o.items||[]).length})</div>
+              ${items||'<div style="color:var(--gray)">Sin items</div>'}
+              <div style="text-align:right;font-weight:700;margin-top:.5rem;color:var(--primary)">Total: $${(o.total||0).toLocaleString('es-MX')} MXN</div>
+            </div>
+          </div>
+        </td>
+      </tr>`
+  }).join('')
+
+  document.getElementById('ordersBody').innerHTML = rows || `<tr><td colspan="7"><div class="empty-state"><span class="ico">📦</span>Sin pedidos</div></td></tr>`
+}
+
+function toggleDetail(rowId, btn) {
+  const boxId = 'box-' + rowId.replace('d-','')
+  const box = document.getElementById(boxId)
+  if (!box) return
+  const open = box.classList.toggle('open')
+  btn.textContent = open ? 'Ocultar ▾' : 'Ver detalles ▸'
+}
+
+async function changeStatus(orderId, status) {
+  try {
+    await fetch(`/api/admin/orders/${orderId}/status`, {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ status })
+    })
+    const o = allOrders.find(x => x.id === orderId)
+    if (o) { o.status = status; renderRecentOrders() }
+    // Flash feedback
+    document.querySelectorAll('.status-sel').forEach(el => {
+      if (el.closest('tr')?.querySelector('td')?.textContent.includes(orderId.slice(0,8).toUpperCase())) {
+        el.style.borderColor = '#22c55e'
+        setTimeout(() => el.style.borderColor = '', 1200)
+      }
+    })
+  } catch(e) { alert('Error actualizando estatus') }
+}
+
+/* ── CLIENTS ── */
+function renderClients() {
+  const q = (document.getElementById('clientSearch')?.value||'').toLowerCase()
+  const filtered = allClients.filter(c =>
+    !q || c.name?.toLowerCase().includes(q) || c.email?.toLowerCase().includes(q)
+  )
+  document.getElementById('clientCount').textContent = `${filtered.length} clientes`
+
+  const rows = filtered.map((c,i) => {
+    const addr = c.calle ? `${c.calle} ${c.numExt||''}, ${c.colonia||''}, ${c.ciudad||''}` : '—'
+    return `<tr>
+      <td style="color:var(--gray)">${i+1}</td>
+      <td style="font-weight:500">${c.name}</td>
+      <td style="color:var(--gray)">${c.email}</td>
+      <td>${c.phone||'—'}</td>
+      <td style="white-space:nowrap">${fmtDate(c.created_at)}</td>
+      <td style="font-size:.78rem;color:var(--gray)">${addr}</td>
+    </tr>`
+  }).join('')
+
+  document.getElementById('clientsBody').innerHTML = rows || `<tr><td colspan="6"><div class="empty-state"><span class="ico">👥</span>Sin clientes registrados</div></td></tr>`
+}
+
+/* ── VISITS ── */
+function renderVisits(v) {
+  if (!v) return
+  document.getElementById('vTotal').textContent  = v.total || 0
+  const today = new Date().toISOString().slice(0,10)
+  document.getElementById('vToday').textContent  = v.byDay?.[today] || 0
+  document.getElementById('vPages').textContent  = Object.keys(v.byPage||{}).length
+
+  // By day — last 14
+  const days = Object.entries(v.byDay||{}).sort((a,b)=>a[0].localeCompare(b[0])).slice(-14)
+  const maxDay = Math.max(...days.map(d=>d[1]), 1)
+  document.getElementById('visitsByDay').innerHTML = days.length
+    ? days.map(([d,n])=>`<div class="v-row">
+        <div class="v-label">${fmtDateShort(d)}</div>
+        <div class="v-bar-wrap"><div class="v-bar" style="width:${Math.round(n/maxDay*100)}%"></div></div>
+        <div class="v-num">${n}</div>
+      </div>`).join('')
+    : '<div style="color:var(--gray);font-size:.84rem;padding:.5rem">Sin datos aún</div>'
+
+  // By page
+  const pages = Object.entries(v.byPage||{}).sort((a,b)=>b[1]-a[1]).slice(0,10)
+  const maxPage = Math.max(...pages.map(p=>p[1]), 1)
+  document.getElementById('visitsByPage').innerHTML = pages.length
+    ? pages.map(([p,n])=>`<div class="v-row">
+        <div class="v-label">${p}</div>
+        <div class="v-bar-wrap"><div class="v-bar" style="width:${Math.round(n/maxPage*100)}%"></div></div>
+        <div class="v-num">${n}</div>
+      </div>`).join('')
+    : '<div style="color:var(--gray);font-size:.84rem;padding:.5rem">Sin datos aún</div>'
+}
+
+/* ── UTILS ── */
+function fmtDate(iso) {
+  if (!iso) return '—'
+  return new Date(iso).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
+}
+function fmtDateShort(iso) {
+  if (!iso) return '—'
+  return new Date(iso+'T00:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short'})
+}
+
+/* ── ENTER KEY ── */
+document.getElementById('lPass').addEventListener('keydown', e => { if(e.key==='Enter') adminLogin() })
+document.getElementById('lUser').addEventListener('keydown', e => { if(e.key==='Enter') adminLogin() })
+
+/* ── INIT ── */
+;(async () => {
+  try {
+    const r = await fetch('/api/admin/me'); const d = await r.json()
+    if (d.isAdmin) {
+      document.getElementById('loginOverlay').classList.add('hidden')
+      document.getElementById('app').classList.remove('hidden')
+      loadAll()
+    }
+  } catch {}
+})()
+</script>
+</body>
+</html>
