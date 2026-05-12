@@ -94,8 +94,14 @@
     .summary-qty{font-size:.74rem;color:var(--gray);display:block}
     .summary-item-price{font-size:.88rem;font-weight:600;color:var(--gold);white-space:nowrap}
     .summary-divider{border:none;border-top:2px solid var(--border);margin:.8rem 0}
+    .summary-subtotal{display:flex;justify-content:space-between;font-size:.88rem;color:var(--gray);margin-bottom:.4rem}
+    .summary-shipping{display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:.4rem}
+    .summary-shipping .ship-label{color:var(--gray)}
+    .summary-shipping .ship-val{font-weight:600}
     .summary-total{display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700}
     .summary-total span:last-child{color:var(--gold)}
+    .intl-error{background:#fef2f2;border:1px solid #fecaca;color:var(--error);padding:.8rem 1rem;border-radius:8px;font-size:.83rem;margin-top:.8rem;display:none}
+    .intl-error a{color:var(--error);font-weight:700}
     .empty-cart{text-align:center;padding:2rem;color:var(--gray)}
     .empty-cart a{color:var(--gold);text-decoration:none}
 
@@ -257,7 +263,7 @@
           </div>
           <div class="field">
             <label for="addrEstado">Estado *</label>
-            <input type="text" id="addrEstado" placeholder="CDMX" autocomplete="address-level1"/>
+            <input type="text" id="addrEstado" placeholder="CDMX" autocomplete="address-level1" oninput="onEstadoChange()"/>
           </div>
           <div class="field">
             <label for="addrCP">Código Postal *</label>
@@ -267,6 +273,13 @@
         <div class="field">
           <label for="addrRef">Referencias <span class="opt-label">(opcional)</span></label>
           <input type="text" id="addrRef" placeholder="Entre calles, color de fachada, etc."/>
+        </div>
+        <div id="shippingInfo" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.7rem 1rem;font-size:.84rem;margin-top:.4rem;display:none">
+          🚚 <span id="shippingMsg"></span>
+        </div>
+        <div class="intl-error" id="intlError">
+          ⚠️ Solo realizamos envíos nacionales dentro de México. Para envíos internacionales cotiza con nosotros por
+          <a id="intlWaLink" href="#" target="_blank">WhatsApp →</a>
         </div>
       </div>
 
@@ -327,6 +340,13 @@
       <div id="summaryItems">
         <div class="empty-cart"><p>Tu carrito está vacío</p><a href="/tienda.html">Ir a la tienda →</a></div>
       </div>
+      <div id="summaryTotals" style="display:none">
+        <hr class="summary-divider"/>
+        <div class="summary-subtotal"><span>Subtotal</span><span id="summarySubtotal"></span></div>
+        <div class="summary-shipping"><span class="ship-label">Envío</span><span class="ship-val" id="summaryShipping">—</span></div>
+        <hr class="summary-divider"/>
+        <div class="summary-total"><span>Total</span><span id="summaryTotal"></span></div>
+      </div>
     </div>
   </div>
 
@@ -337,11 +357,52 @@
 function getCart() { return JSON.parse(localStorage.getItem('unicuna_cart') || '[]') }
 function saveCart(c) { localStorage.setItem('unicuna_cart', JSON.stringify(c)) }
 
+/* ─── Shipping ──────────────────────────────────────────────── */
+const CDMX_KEYS = ['cdmx','ciudad de mexico','ciudad de méxico','df','d.f.','distrito federal']
+const ESTADOS_MX = ['aguascalientes','baja california','baja california sur','campeche','chiapas','chihuahua','coahuila','colima','durango','guanajuato','guerrero','hidalgo','jalisco','mexico','michoacan','michoacán','morelos','nayarit','nuevo leon','nuevo león','oaxaca','puebla','queretaro','querétaro','quintana roo','san luis potosi','san luis potosí','sinaloa','sonora','tabasco','tamaulipas','tlaxcala','veracruz','yucatan','yucatán','zacatecas','edomex','estado de mexico','estado de méxico']
+
+function getShipping(estado) {
+  if (!estado) return null
+  const e = estado.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+  if (CDMX_KEYS.some(k => e.includes(k.normalize('NFD').replace(/[̀-ͯ]/g,'')))) return { cost:120, label:'CDMX' }
+  const allMx = [...CDMX_KEYS, ...ESTADOS_MX].map(k=>k.normalize('NFD').replace(/[̀-ͯ]/g,''))
+  if (allMx.some(k => e.includes(k) || k.includes(e))) return { cost:380, label:'Foráneo' }
+  return null // international / unrecognized
+}
+
+let currentShipping = null
+
+function onEstadoChange() {
+  const estado = document.getElementById('addrEstado').value.trim()
+  const shipping = getShipping(estado)
+  const info = document.getElementById('shippingInfo')
+  const intlErr = document.getElementById('intlError')
+  currentShipping = null
+
+  if (!estado) { info.style.display='none'; intlErr.style.display='none'; updateSummaryTotals(); return }
+
+  if (shipping) {
+    currentShipping = shipping.cost
+    info.style.display = 'block'
+    const emoji = shipping.label==='CDMX' ? '🏙️' : '📦'
+    document.getElementById('shippingMsg').textContent = `${emoji} Tarifa de envío ${shipping.label}: $${shipping.cost} MXN`
+    intlErr.style.display = 'none'
+  } else {
+    info.style.display = 'none'
+    intlErr.style.display = 'block'
+    // Build WhatsApp link with cart items
+    const cart = getCart()
+    const items = cart.map(i=>`• ${i.name} — ${i.color||''} ${i.size||''}`).join('%0A')
+    const msg = encodeURIComponent(`Hola UNICUNA® 👋, quisiera cotizar envío internacional a: ${estado}\n\nProductos:\n${cart.map(i=>`• ${i.name} — ${i.color||''} ${i.size||''}`).join('\n')}`)
+    document.getElementById('intlWaLink').href = `https://wa.me/525637725305?text=${msg}`
+  }
+  updateSummaryTotals()
+}
+
 function renderSummary() {
   const cart = getCart()
   const el = document.getElementById('summaryItems')
   if (!cart.length) return
-  const total = cart.reduce((s,i) => s + i.price * i.qty, 0)
   el.innerHTML = cart.map(item => `
     <div class="summary-item">
       <div class="summary-item-info">
@@ -350,9 +411,19 @@ function renderSummary() {
         <span class="summary-qty">Cant: ${item.qty}</span>
       </div>
       <div class="summary-item-price">$${(item.price*item.qty).toLocaleString('es-MX')}</div>
-    </div>`).join('') +
-    `<hr class="summary-divider"/>
-     <div class="summary-total"><span>Total</span><span>$${total.toLocaleString('es-MX')} MXN</span></div>`
+    </div>`).join('')
+  document.getElementById('summaryTotals').style.display = 'block'
+  updateSummaryTotals()
+}
+
+function updateSummaryTotals() {
+  const cart = getCart()
+  const subtotal = cart.reduce((s,i) => s + i.price * i.qty, 0)
+  document.getElementById('summarySubtotal').textContent = `$${subtotal.toLocaleString('es-MX')} MXN`
+  const ship = currentShipping
+  document.getElementById('summaryShipping').textContent = ship != null ? `$${ship.toLocaleString('es-MX')} MXN` : 'Ingresa tu estado'
+  const total = subtotal + (ship || 0)
+  document.getElementById('summaryTotal').textContent = `$${total.toLocaleString('es-MX')} MXN`
 }
 
 /* ─── Auth tabs ─────────────────────────────────────────────── */
@@ -517,6 +588,15 @@ async function submitOrder() {
   }
   if (!cart.length) return showFormError('Tu carrito está vacío')
 
+  // Validate shipping
+  const estadoVal = document.getElementById('addrEstado').value.trim()
+  const shippingResult = getShipping(estadoVal)
+  if (!shippingResult) {
+    const cart2 = getCart()
+    const msg = encodeURIComponent(`Hola UNICUNA® 👋, quisiera cotizar envío internacional a: ${estadoVal}\n\nProductos:\n${cart2.map(i=>`• ${i.name} — ${i.color||''} ${i.size||''}`).join('\n')}`)
+    return showFormError(`Solo enviamos dentro de México. Para envíos internacionales escríbenos por WhatsApp: https://wa.me/525637725305?text=${encodeURIComponent('Hola, quiero cotizar envío a ' + estadoVal)}`)
+  }
+
   // Validate card fields
   const cardName   = document.getElementById('cardName').value.trim()
   const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g,'')
@@ -569,10 +649,12 @@ async function submitOrder() {
 
     // MercadoPago not configured — show success + WhatsApp
     saveCart([])
-    const total = cart.reduce((s,i) => s+i.price*i.qty, 0)
+    const subtotal = cart.reduce((s,i) => s+i.price*i.qty, 0)
+    const total = subtotal + (shippingResult?.cost || 0)
     document.getElementById('checkoutWrap').style.display = 'none'
     document.getElementById('successMsg').innerHTML =
       `Tu pedido <strong>#${data.orderId.slice(0,8).toUpperCase()}</strong> fue registrado.<br>` +
+      `Subtotal: $${subtotal.toLocaleString('es-MX')} · Envío: $${(shippingResult?.cost||0).toLocaleString('es-MX')}<br>` +
       `Total: <strong>$${total.toLocaleString('es-MX')} MXN</strong><br><br>` +
       `<strong>Revisa tu correo</strong> — te enviamos la confirmación a <em>${email}</em>.<br>` +
       `También puedes escribirnos por ` +

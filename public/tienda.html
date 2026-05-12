@@ -47,6 +47,8 @@
     .model-tab[data-model="Memory"].active{background:#0369a1;border-color:#0369a1}
     .model-tab[data-model="Impermeable"].active{background:#047857;border-color:#047857}
     .model-tab[data-model="Cuña"].active{background:#b45309;border-color:#b45309}
+    .model-tab[data-model="Unimedic"].active{background:#0891b2;border-color:#0891b2}
+    .badge-Unimedic{background:#0891b2;color:#fff}
 
     /* FILTERS */
     .filters{padding:0 2rem 1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;max-width:900px;margin:0 auto}
@@ -190,6 +192,7 @@
   <button class="model-tab" data-model="Memory" onclick="setModel('Memory')">Memory</button>
   <button class="model-tab" data-model="Impermeable" onclick="setModel('Impermeable')">Impermeable</button>
   <button class="model-tab" data-model="Cuña" onclick="setModel('Cuña')">Cuñas</button>
+  <button class="model-tab" data-model="Unimedic" onclick="setModel('Unimedic')">Unimedic</button>
 </div>
 
 <!-- Filters -->
@@ -200,6 +203,11 @@
   </div>
   <select class="filter-select" id="colorFilter" onchange="filterProducts()">
     <option value="">Todos los colores</option>
+    <option value="Rosa">🌸 Rosa</option>
+    <option value="Azul">💙 Azul</option>
+    <option value="Amarillo">🌟 Amarillo / Blanco / Beige</option>
+    <option value="Verde Agua">🌿 Verde / Agua</option>
+    <option value="Vino">🍷 Vino / Guinda</option>
   </select>
   <select class="filter-select" id="sizeFilter" onchange="filterProducts()">
     <option value="">Todas las medidas</option>
@@ -326,6 +334,35 @@ function displaySize(s) {
 const DESCUENTO = 0.13
 function disc(price) { return Math.round(price * (1 - DESCUENTO)) }
 
+// ── Color groups ──────────────────────────────────────────────
+const COLOR_GROUPS = {
+  'Rosa':       ['Rosa','Rosa Claro','Rosa Palido','Coral Claro','Lila','Morado','Rosa Claro Unicuna Baby'],
+  'Azul':       ['Azul Claro','Azul Acero','Azul Marino','Blanco Con Azul','Gris','Negro'],
+  'Amarillo':   ['Amarillo','Crema','Blanco','Beige','Naranja','Colchon Especial','Café'],
+  'Verde Agua': ['Verde','Verde Claro','Agua'],
+  'Vino':       ['Blancoguinda','Blancovino','Rojo'],
+}
+
+// ── Fuzzy search ──────────────────────────────────────────────
+function normalize(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9\s]/g,'')
+}
+function levenshtein(a, b) {
+  if (Math.abs(a.length - b.length) > 4) return 99
+  const m = a.length, n = b.length
+  const dp = Array.from({length:m+1},(_,i)=>Array.from({length:n+1},(_,j)=>i===0?j:j===0?i:0))
+  for (let i=1;i<=m;i++) for (let j=1;j<=n;j++)
+    dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1])
+  return dp[m][n]
+}
+function fuzzyMatch(query, text) {
+  if (!query) return true
+  const nq = normalize(query), nt = normalize(text)
+  if (nt.includes(nq)) return true
+  const words = nq.split(/\s+/).filter(w=>w.length>1)
+  return words.some(w => nt.includes(w) || nt.split(/\s+/).some(tw=>tw.length>2&&levenshtein(w,tw)<=Math.max(1,Math.floor(w.length/4))))
+}
+
 function priceRange(p) {
   if (!p.minPrice && !p.maxPrice) return '<span class="price-new">Consultar precio</span>'
   const dMin = disc(p.minPrice), dMax = disc(p.maxPrice)
@@ -359,17 +396,9 @@ function setModel(model) {
 }
 
 function populateFilters() {
-  const colors = new Set(), sizes = new Set()
-  allProducts.forEach(p => {
-    p.colors.forEach(c => colors.add(c))
-    p.sizes.forEach(s => { const n = normalizeSize(s); if(n) sizes.add(n) })
-  })
-  const cSel = document.getElementById('colorFilter')
+  const sizes = new Set()
+  allProducts.forEach(p => p.sizes.forEach(s => { const n = normalizeSize(s); if(n) sizes.add(n) }))
   const sSel = document.getElementById('sizeFilter')
-  ;[...colors].sort().forEach(c => {
-    if (!COLOR_MAP[c] && !c) return
-    const o = document.createElement('option'); o.value = c; o.textContent = c; cSel.appendChild(o)
-  })
   ;[...sizes].sort((a,b)=>{
     const [a1,a2] = a.split('x').map(Number)
     const [b1,b2] = b.split('x').map(Number)
@@ -380,14 +409,15 @@ function populateFilters() {
 }
 
 function filterProducts() {
-  const q     = document.getElementById('searchInput').value.toLowerCase()
-  const color = document.getElementById('colorFilter').value
-  const size  = document.getElementById('sizeFilter').value
+  const q          = document.getElementById('searchInput').value.trim()
+  const colorGroup = document.getElementById('colorFilter').value
+  const size       = document.getElementById('sizeFilter').value
+  const allowedColors = colorGroup ? (COLOR_GROUPS[colorGroup] || []) : null
 
-  const filtered = allProducts.filter(p => {
+  let filtered = allProducts.filter(p => {
     if (activeModel !== 'Todos' && p.model !== activeModel) return false
-    if (q && !p.name.toLowerCase().includes(q)) return false
-    if (color && !p.colors.includes(color)) return false
+    if (q && !fuzzyMatch(q, p.name)) return false
+    if (allowedColors && !p.colors.some(c => allowedColors.includes(c))) return false
     if (size) {
       const normSizes = p.sizes.map(s => normalizeSize(s))
       if (!normSizes.includes(size)) return false
@@ -395,10 +425,29 @@ function filterProducts() {
     return true
   })
 
-  document.getElementById('resultsCount').textContent =
-    filtered.length === allProducts.length
+  // If no results and there's a query, show closest suggestions
+  let isSuggestion = false
+  if (!filtered.length && q) {
+    isSuggestion = true
+    // Score all products by similarity to query
+    const nq = normalize(q)
+    filtered = [...allProducts]
+      .map(p => {
+        const nt = normalize(p.name)
+        const score = levenshtein(nq.slice(0,10), nt.slice(0,10))
+        return { p, score }
+      })
+      .sort((a,b) => a.score - b.score)
+      .slice(0, 4)
+      .map(x => x.p)
+  }
+
+  const total = allProducts.length
+  document.getElementById('resultsCount').textContent = isSuggestion
+    ? `No encontramos "${q}" exactamente — te mostramos los más parecidos:`
+    : filtered.length === total
       ? `${filtered.length} colchones`
-      : `${filtered.length} de ${allProducts.length} colchones`
+      : `${filtered.length} de ${total} colchones`
 
   renderProducts(filtered)
 }
