@@ -1,7 +1,8 @@
 {
   "functions": {
     "api/index.js": {
-      "includeFiles": "data/**,assets/**,public/**,web-unicuna.html,portales/**,db.js"
+      "includeFiles": "data/**,assets/**,public/**,web-unicuna.html,portales/**,db.js",
+      "maxDuration": 30
     }
   },
   "rewrites": [{ "source": "/(.*)", "destination": "/api/index.js" }]

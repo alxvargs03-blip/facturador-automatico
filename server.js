@@ -12,7 +12,6 @@ import { v4 as uuidv4 } from 'uuid'
 import { fileURLToPath } from 'url'
 import path from 'path'
 import Anthropic from '@anthropic-ai/sdk'
-import { procesarFactura } from './portales/index.js'
 import {
   getAllProductsGrouped, getProductByHandle,
   getUserByEmail, getUserById, createUser, updateUserProfile,
@@ -515,6 +514,7 @@ app.post('/api/facturar', async (req, res) => {
   res.flushHeaders()
   const enviar = (data) => res.write(`data: ${JSON.stringify(data)}\n\n`)
   try {
+    const { procesarFactura } = await import('./portales/index.js')
     const resultado = await procesarFactura(datosRecibo, datosFiscales, (paso) => enviar({ tipo: 'paso', texto: paso }))
     enviar({ tipo: 'fin', resultado })
   } catch (err) {
