@@ -54,8 +54,8 @@ app.use((req, res, next) => {
 
 // Serve UNICUNA landing page at root (before static to override public/index.html)
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'web-unicuna.html')))
-app.use(express.static('public', { index: false }))
-app.use('/assets', express.static('assets'))
+app.use(express.static(path.join(__dirname, 'public'), { index: false }))
+app.use('/assets', express.static(path.join(__dirname, 'assets')))
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

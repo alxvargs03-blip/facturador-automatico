@@ -46,6 +46,7 @@
     .model-tab[data-model="Supreme"].active{background:#7c3aed;border-color:#7c3aed}
     .model-tab[data-model="Memory"].active{background:#0369a1;border-color:#0369a1}
     .model-tab[data-model="Impermeable"].active{background:#047857;border-color:#047857}
+    .model-tab[data-model="Cuña"].active{background:#b45309;border-color:#b45309}
 
     /* FILTERS */
     .filters{padding:0 2rem 1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;max-width:900px;margin:0 auto}
@@ -70,6 +71,7 @@
     .badge-Memory{background:#0369a1;color:#fff}
     .badge-Impermeable{background:#047857;color:#fff}
     .badge-Normal{background:#7c3aed;color:#fff}
+    .badge-Cuña{background:#b45309;color:#fff}
     .card-img-wrap{position:relative}
     .card-body{padding:.9rem 1rem 1.1rem;flex:1;display:flex;flex-direction:column}
     .card-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;margin-bottom:.35rem;line-height:1.3;flex:1}
@@ -184,6 +186,7 @@
   <button class="model-tab" data-model="Supreme" onclick="setModel('Supreme')">Supreme</button>
   <button class="model-tab" data-model="Memory" onclick="setModel('Memory')">Memory</button>
   <button class="model-tab" data-model="Impermeable" onclick="setModel('Impermeable')">Impermeable</button>
+  <button class="model-tab" data-model="Cuña" onclick="setModel('Cuña')">Cuñas</button>
 </div>
 
 <!-- Filters -->
@@ -290,6 +293,7 @@ const MODEL_DEFAULT_IMG = {
   memory:      '/assets/colchones/memory-agua.png',
   normal:      '/assets/colchones/normal-agua.png',
   impermeable: '/assets/colchones/impermeable-agua.png',
+  'cuña':      '/assets/colchones/supreme-rosa.png',
 }
 function getProductImage(model, colors) {
   const m = (model||'Supreme').toLowerCase()

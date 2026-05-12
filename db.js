@@ -33,6 +33,7 @@ export function displaySize(normalized) {
 export function detectModel(name) {
   if (!name) return 'Supreme'
   const n = name.toLowerCase()
+  if (n.startsWith('cojin') || n.startsWith('almohada')) return 'Cuña'
   if (n.includes('memory'))   return 'Memory'
   if (n.includes('imper') || n.includes('viajera')) return 'Impermeable'
   if (n.includes('supreme'))  return 'Supreme'
