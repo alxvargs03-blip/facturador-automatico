@@ -1,0 +1,9 @@
+portales/
+data/*.json
+.env
+.claude/
+INSTRUCCIONES.md
+spartan-cam.html
+web-tucontador.html
+index.html
+email-template.html

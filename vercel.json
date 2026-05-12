@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/index.js": {
-      "includeFiles": "data/**,assets/**,public/**,web-unicuna.html,portales/**,db.js",
+      "includeFiles": "data/**,assets/**,public/**,web-unicuna.html,db.js",
       "maxDuration": 30
     }
   },

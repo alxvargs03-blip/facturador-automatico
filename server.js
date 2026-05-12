@@ -236,6 +236,21 @@ function buildWhatsAppMessage(order) {
   )
 }
 
+// ─── Health check ─────────────────────────────────────────────────────────────
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    ok: true,
+    env: {
+      mongodb: !!process.env.MONGODB_URI,
+      session: !!process.env.SESSION_SECRET,
+      vercel: !!process.env.VERCEL
+    },
+    dirname: __dirname,
+    cwd: process.cwd()
+  })
+})
+
 // ─── Products API ─────────────────────────────────────────────────────────────
 
 app.get('/api/products', (req, res) => {
