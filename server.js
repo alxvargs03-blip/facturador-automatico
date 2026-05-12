@@ -32,8 +32,18 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 app.set('trust proxy', 1)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+let sessionStore
+try {
+  if (process.env.MONGODB_URI) {
+    sessionStore = MongoStore.create({ mongoUrl: process.env.MONGODB_URI, dbName: 'unicuna' })
+  }
+} catch (e) {
+  console.error('[session] MongoStore init failed:', e.message)
+}
+
 app.use(session({
-  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI, dbName: 'unicuna' }),
+  store: sessionStore,
   secret: process.env.SESSION_SECRET || 'unicuna-dev-secret-2024',
   resave: false,
   saveUninitialized: false,

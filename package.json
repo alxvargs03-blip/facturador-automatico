@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.40.0",
-    "@sparticuz/chromium": "^133.0.0",
     "bcryptjs": "^2.4.3",
     "connect-mongo": "^6.0.0",
     "dotenv": "^16.4.5",
@@ -23,7 +22,10 @@
     "mongodb": "^7.2.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.13",
-    "puppeteer-core": "^22.0.0",
     "uuid": "^9.0.1"
+  },
+  "optionalDependencies": {
+    "@sparticuz/chromium": "^133.0.0",
+    "puppeteer-core": "^22.0.0"
   }
 }
