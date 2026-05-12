@@ -143,6 +143,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overf
 .pcard:hover{transform:translateY(-7px);box-shadow:0 20px 60px rgba(30,45,82,.12)}
 .ptag{position:absolute;top:.9rem;left:.9rem;z-index:1;background:var(--primary);color:#fff;padding:.25rem .7rem;border-radius:100px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
 .ptag.g{background:var(--gold)}
+.ptag-off{position:absolute;top:.9rem;right:.9rem;z-index:1;background:#dc2626;color:#fff;padding:.25rem .65rem;border-radius:100px;font-size:.7rem;font-weight:800;letter-spacing:.03em;box-shadow:0 2px 8px rgba(220,38,38,.35)}
 .pimg{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:3.8rem;position:relative;overflow:hidden}
 .pimg::after{content:'Foto de producto';position:absolute;bottom:7px;left:50%;transform:translateX(-50%);font-size:.63rem;color:rgba(0,0,0,.22);font-style:italic;font-family:'Inter',sans-serif}
 .pi1{background:linear-gradient(135deg,#f5e0e8,#eee0f5)}
@@ -155,9 +156,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overf
 .pfeats{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.1rem}
 .pfeat{background:var(--blush);color:var(--primary);padding:.18rem .55rem;border-radius:100px;font-size:.7rem;font-weight:500}
 .pfoot{display:flex;align-items:center;justify-content:space-between;padding-top:.9rem;border-top:1px solid #f0ece8}
-.pprice{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;color:var(--primary)}
+.pprice{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;color:var(--primary);line-height:1.2}
 .pprice .cur{font-size:.95rem;font-family:'Inter',sans-serif}
 .pprice .phold{font-size:1rem;color:var(--muted);font-family:'Inter',sans-serif;font-style:italic}
+.pprice-old{font-size:.8rem;font-family:'Inter',sans-serif;font-weight:400;color:#9ca3af;text-decoration:line-through;display:block;margin-bottom:.1rem}
 .btnadd{background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;padding:.65rem 1.1rem;font-size:.82rem;font-weight:600;transition:var(--ease)}
 .btnadd:hover{background:var(--gold)}.btnadd.ok{background:#22c55e;pointer-events:none}
 
@@ -366,11 +368,11 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
         <a href="#nosotros-wrap" class="btn-ghost">Conocer más</a>
       </div>
       <div class="hpills">
+        <span class="hpill" style="background:rgba(220,38,38,.28);border-color:rgba(220,38,38,.55);color:#fca5a5;font-weight:700;letter-spacing:.04em">🏷️ 13% de descuento</span>
         <span class="hpill">🌿 Hipoalergénico</span>
         <span class="hpill">🇲🇽 Hecho en México</span>
         <span class="hpill">✅ Certificado</span>
         <span class="hpill">🚚 Envío a todo el país</span>
-        <span class="hpill">🛡️ Garantía 365 días</span>
       </div>
     </div>
   </div>
@@ -753,21 +755,27 @@ renderCart();
     const grid = document.getElementById('pgrid')
     if (!products.length) { grid.innerHTML=''; return }
 
+    const DISC = 0.13
+    const disc = price => Math.round(price * (1 - DISC))
+
     grid.innerHTML = products.map(p => {
       const imgKey = `${(p.model||'Normal').toLowerCase()}-${p.colors[0]||''}`
       const imgUrl = IMG_MAP[imgKey]
       const imgHtml = imgUrl ? `<img src="${imgUrl}" alt="${p.name}" style="width:100%;aspect-ratio:4/3;object-fit:cover">` : `<div class="pimg" style="font-size:2.5rem">🛏️</div>`
-      const priceHtml = p.minPrice ? `<span class="cur">$</span>${p.minPrice.toLocaleString('es-MX')} <small>MXN</small>` : '<span class="phold">Consultar precio</span>'
+      const priceHtml = p.minPrice
+        ? `<span class="pprice-old">$${p.minPrice.toLocaleString('es-MX')} MXN</span><span class="cur">$</span>${disc(p.minPrice).toLocaleString('es-MX')} <small>MXN</small>`
+        : '<span class="phold">Consultar precio</span>'
       const dots = (p.colors||[]).slice(0,5).map(c=>`<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${COLOR_MAP[c]||'#ccc'};border:1px solid rgba(0,0,0,.15);margin-right:3px"></span>`).join('')
       const mbg = MODEL_COLORS[p.model]||'#1e2d52'
       return `<div class="pcard">
         <span class="ptag" style="background:${mbg}">${p.model||'Normal'}</span>
+        <span class="ptag-off">−13%</span>
         <a href="/producto.html?h=${encodeURIComponent(p.handle)}" style="display:block;text-decoration:none;color:inherit">
           ${imgHtml}
           <div class="pbody">
             <div class="pname">${p.name}</div>
             <div style="margin:.3rem 0 .6rem">${dots}</div>
-            <div class="pfoot">
+            <div class="pfoot" style="align-items:flex-end">
               <div class="pprice">${priceHtml}</div>
               <button class="btnadd" onclick="event.preventDefault();window.location='/producto.html?h=${encodeURIComponent(p.handle)}'">Ver →</button>
             </div>
