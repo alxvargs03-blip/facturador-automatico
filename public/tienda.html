@@ -232,32 +232,72 @@ const COLOR_MAP = {
 
 // Image lookup: model + color → file
 const IMG_MAP = {
-  'supreme-Agua':       '/assets/colchones/supreme-verde.png',
-  'supreme-Verde':      '/assets/colchones/supreme-verde.png',
-  'supreme-Verde Claro':'/assets/colchones/supreme-verde.png',
-  'supreme-Amarillo':   '/assets/colchones/supreme-amarillo.png',
-  'supreme-Azul Claro': '/assets/colchones/supreme-azul.png',
-  'supreme-Azul Acero': '/assets/colchones/supreme-azul.png',
-  'supreme-Rosa':       '/assets/colchones/supreme-rosa.png',
-  'supreme-Rosa Claro': '/assets/colchones/supreme-rosa.png',
-  'memory-Agua':        '/assets/colchones/memory-agua.png',
-  'memory-Verde':       '/assets/colchones/memory-agua.png',
-  'normal-Agua':        '/assets/colchones/normal-agua.png',
-  'normal-Verde':       '/assets/colchones/normal-agua.png',
-  'normal-Verde Claro': '/assets/colchones/normal-agua.png',
-  'impermeable-Agua':   '/assets/colchones/impermeable-agua.png',
-  'impermeable-Verde':  '/assets/colchones/impermeable-agua.png',
+  // Supreme — verdes
+  'supreme-Agua':                    '/assets/colchones/supreme-verde.png',
+  'supreme-Verde':                   '/assets/colchones/supreme-verde.png',
+  'supreme-Verde Claro':             '/assets/colchones/supreme-verde.png',
+  // Supreme — amarillos y neutros
+  'supreme-Amarillo':                '/assets/colchones/supreme-amarillo.png',
+  'supreme-Beige':                   '/assets/colchones/supreme-amarillo.png',
+  'supreme-Crema':                   '/assets/colchones/supreme-amarillo.png',
+  'supreme-Blanco':                  '/assets/colchones/supreme-amarillo.png',
+  'supreme-Naranja':                 '/assets/colchones/supreme-amarillo.png',
+  'supreme-Café':                    '/assets/colchones/supreme-amarillo.png',
+  'supreme-Colchon Especial':        '/assets/colchones/supreme-amarillo.png',
+  // Supreme — azules y grises
+  'supreme-Azul Claro':              '/assets/colchones/supreme-azul.png',
+  'supreme-Azul Acero':              '/assets/colchones/supreme-azul.png',
+  'supreme-Azul Marino':             '/assets/colchones/supreme-azul.png',
+  'supreme-Blanco Con Azul':         '/assets/colchones/supreme-azul.png',
+  'supreme-Gris':                    '/assets/colchones/supreme-azul.png',
+  'supreme-Negro':                   '/assets/colchones/supreme-azul.png',
+  // Supreme — rosas y morados
+  'supreme-Rosa':                    '/assets/colchones/supreme-rosa.png',
+  'supreme-Rosa Claro':              '/assets/colchones/supreme-rosa.png',
+  'supreme-Rosa Palido':             '/assets/colchones/supreme-rosa.png',
+  'supreme-Coral Claro':             '/assets/colchones/supreme-rosa.png',
+  'supreme-Lila':                    '/assets/colchones/supreme-rosa.png',
+  'supreme-Morado':                  '/assets/colchones/supreme-rosa.png',
+  'supreme-Rojo':                    '/assets/colchones/supreme-rosa.png',
+  'supreme-Blancoguinda':            '/assets/colchones/supreme-rosa.png',
+  'supreme-Blancovino':              '/assets/colchones/supreme-rosa.png',
+  'supreme-Rosa Claro Unicuna Baby': '/assets/colchones/supreme-rosa.png',
+  // Memory
+  'memory-Agua':                     '/assets/colchones/memory-agua.png',
+  'memory-Verde':                    '/assets/colchones/memory-agua.png',
+  'memory-Verde Claro':              '/assets/colchones/memory-agua.png',
+  'memory-Azul Claro':               '/assets/colchones/memory-agua.png',
+  'memory-Rosa':                     '/assets/colchones/memory-agua.png',
+  'memory-Rosa Claro':               '/assets/colchones/memory-agua.png',
+  'memory-Blanco':                   '/assets/colchones/memory-agua.png',
+  'memory-Amarillo':                 '/assets/colchones/memory-agua.png',
+  // Normal (legacy)
+  'normal-Agua':                     '/assets/colchones/normal-agua.png',
+  'normal-Verde':                    '/assets/colchones/normal-agua.png',
+  'normal-Verde Claro':              '/assets/colchones/normal-agua.png',
+  // Impermeable
+  'impermeable-Agua':                '/assets/colchones/impermeable-agua.png',
+  'impermeable-Verde':               '/assets/colchones/impermeable-agua.png',
+  'impermeable-Verde Claro':         '/assets/colchones/impermeable-agua.png',
+  'impermeable-Azul Claro':          '/assets/colchones/impermeable-agua.png',
+  'impermeable-Rosa':                '/assets/colchones/impermeable-agua.png',
+  'impermeable-Rosa Claro':          '/assets/colchones/impermeable-agua.png',
+  'impermeable-Blanco':              '/assets/colchones/impermeable-agua.png',
 }
 
+const MODEL_DEFAULT_IMG = {
+  supreme:     '/assets/colchones/supreme-verde.png',
+  memory:      '/assets/colchones/memory-agua.png',
+  normal:      '/assets/colchones/normal-agua.png',
+  impermeable: '/assets/colchones/impermeable-agua.png',
+}
 function getProductImage(model, colors) {
-  const m = (model||'Normal').toLowerCase()
-  // Try each color until we find a match
+  const m = (model||'Supreme').toLowerCase()
   for (const c of (colors||[])) {
     const key = `${m}-${c}`
     if (IMG_MAP[key]) return IMG_MAP[key]
   }
-  // Fallback: try model without color
-  return null
+  return MODEL_DEFAULT_IMG[m] || '/assets/colchones/supreme-verde.png'
 }
 
 // Size normalization (same as server)
