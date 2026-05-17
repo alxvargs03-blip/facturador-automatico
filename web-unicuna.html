@@ -244,7 +244,9 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
 #zoom-reveal{height:400vh;position:relative}
 .zoom-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:#0c1220}
 #fabric-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;will-change:opacity}
-#zoom-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(3.2);transform-origin:center center;max-width:85%;max-height:88vh;object-fit:contain;z-index:2;opacity:0;will-change:transform,opacity}
+.fabric-shimmer{position:absolute;inset:0;background:linear-gradient(108deg,transparent 30%,rgba(240,200,110,.07) 50%,transparent 70%);animation:fabshim 5s ease-in-out infinite;z-index:2;pointer-events:none;will-change:transform}
+@keyframes fabshim{0%{transform:translateX(-130%) skewX(-8deg)}100%{transform:translateX(230%) skewX(-8deg)}}
+#zoom-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(3.2);transform-origin:center center;max-width:85%;max-height:88vh;object-fit:contain;z-index:3;opacity:0;filter:blur(0px);will-change:transform,opacity,filter}
 .zoom-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 28%,rgba(12,18,32,.6) 100%);z-index:4;pointer-events:none}
 /* scroll hint */
 .zoom-hint{position:absolute;bottom:2.4rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.45rem;transition:opacity .35s;pointer-events:none;z-index:5}
@@ -419,6 +421,7 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
 <section id="zoom-reveal">
   <div class="zoom-sticky">
     <canvas id="fabric-canvas"></canvas>
+    <div class="fabric-shimmer"></div>
     <img src="assets/unicuna nuevo/header.png" id="zoom-img" alt="Colchón UNICUNA® Memory">
     <div class="zoom-vignette"></div>
 
@@ -904,75 +907,97 @@ window.addEventListener('scroll', () => {
   const l3      = document.getElementById('zlabel3');
   if (!section || !canvas || !img) return;
 
-  // ── Draw woven fabric on canvas (always crisp, no pixelation) ──
+  // ── Draw professional woven fabric (cylindrical threads, deep shadows) ──
   function drawFabric() {
     const dpr = window.devicePixelRatio || 1;
-    const W = window.innerWidth, H = window.innerHeight;
-    canvas.width  = W * dpr; canvas.height = H * dpr;
-    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    const W   = window.innerWidth, H = window.innerHeight;
+    canvas.width  = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
 
-    const T = 11; // thread thickness in CSS px
+    const T = 24; // thread diameter — visible, dramatic
+    const SH = T * 0.38; // shadow spread
 
-    // dark base so gaps look like depth
-    ctx.fillStyle = '#1a100a';
+    // Near-black warm base
+    ctx.fillStyle = '#050403';
     ctx.fillRect(0, 0, W, H);
 
-    const rows = Math.ceil(H / T) + 2;
     const cols = Math.ceil(W / T) + 2;
+    const rows = Math.ceil(H / T) + 2;
 
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
+    // Pass 1 — all weft threads (horizontal, full width)
+    for (let r = 0; r <= rows; r++) {
+      const y = r * T;
+      const g = ctx.createLinearGradient(0, y, 0, y + T);
+      g.addColorStop(0,    '#2c1b04');
+      g.addColorStop(0.10, '#6e4514');
+      g.addColorStop(0.35, '#b8842e');
+      g.addColorStop(0.50, '#d4a040'); // gold peak
+      g.addColorStop(0.65, '#b8842e');
+      g.addColorStop(0.90, '#6e4514');
+      g.addColorStop(1,    '#1e1002');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, y, W, T);
+    }
+
+    // Pass 2 — warp threads (vertical) over/under
+    for (let c = 0; c <= cols; c++) {
+      for (let r = 0; r <= rows; r++) {
         const x = c * T, y = r * T;
-        const warpTop = (r + c) % 2 === 0;
+        const warpOnTop = (r + c) % 2 === 0;
 
-        // bottom thread (flattened, darker)
-        const bot = ctx.createLinearGradient(
-          warpTop ? x : x,  warpTop ? y : y,
-          warpTop ? x : x,  warpTop ? y+T : y+T
-        );
-        if (warpTop) {
-          // weft on bottom: horizontal ribbon, darker
-          const g = ctx.createLinearGradient(x, y, x, y+T);
-          g.addColorStop(0, '#9a8060'); g.addColorStop(.5, '#c8a878'); g.addColorStop(1, '#9a8060');
-          ctx.fillStyle = g; ctx.fillRect(x, y, T, T);
+        if (warpOnTop) {
+          // Warp thread crossing OVER weft — draw it brighter
+          const g = ctx.createLinearGradient(x, 0, x + T, 0);
+          g.addColorStop(0,    '#1c1002');
+          g.addColorStop(0.08, '#5c3810');
+          g.addColorStop(0.30, '#c09030');
+          g.addColorStop(0.50, '#ecc050'); // bright Unicuna gold
+          g.addColorStop(0.70, '#c09030');
+          g.addColorStop(0.92, '#5c3810');
+          g.addColorStop(1,    '#140c01');
+          ctx.fillStyle = g;
+          ctx.fillRect(x, y, T, T);
+
+          // Shadow cast left of warp (on weft beneath)
+          const sl = ctx.createLinearGradient(x - SH, 0, x, 0);
+          sl.addColorStop(0, 'rgba(0,0,0,0)');
+          sl.addColorStop(1, 'rgba(0,0,0,0.62)');
+          ctx.fillStyle = sl;
+          ctx.fillRect(x - SH, y, SH, T);
+
+          // Shadow cast right of warp
+          const sr = ctx.createLinearGradient(x + T, 0, x + T + SH, 0);
+          sr.addColorStop(0, 'rgba(0,0,0,0.62)');
+          sr.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = sr;
+          ctx.fillRect(x + T, y, SH, T);
         } else {
-          // warp on bottom: vertical ribbon, darker
-          const g = ctx.createLinearGradient(x, y, x+T, y);
-          g.addColorStop(0, '#8a7050'); g.addColorStop(.5, '#b89868'); g.addColorStop(1, '#8a7050');
-          ctx.fillStyle = g; ctx.fillRect(x, y, T, T);
-        }
+          // Warp goes UNDER — shadow from weft above on warp edges
+          const st = ctx.createLinearGradient(0, y - SH, 0, y);
+          st.addColorStop(0, 'rgba(0,0,0,0)');
+          st.addColorStop(1, 'rgba(0,0,0,0.55)');
+          ctx.fillStyle = st;
+          ctx.fillRect(x, y - SH, T, SH);
 
-        // top thread (brighter, cream/beige highlight)
-        if (warpTop) {
-          // warp on top: vertical ribbon with highlight
-          const g = ctx.createLinearGradient(x, y, x+T, y);
-          g.addColorStop(0,   '#c0a880');
-          g.addColorStop(.18, '#e8d4b0');
-          g.addColorStop(.42, '#f8eedc'); // peak highlight
-          g.addColorStop(.58, '#f8eedc');
-          g.addColorStop(.82, '#e8d4b0');
-          g.addColorStop(1,   '#c0a880');
-          ctx.fillStyle = g; ctx.fillRect(x, y, T, T);
-        } else {
-          // weft on top: horizontal ribbon with highlight
-          const g = ctx.createLinearGradient(x, y, x, y+T);
-          g.addColorStop(0,   '#b09870');
-          g.addColorStop(.18, '#d8c098');
-          g.addColorStop(.42, '#f0e2c8'); // peak highlight
-          g.addColorStop(.58, '#f0e2c8');
-          g.addColorStop(.82, '#d8c098');
-          g.addColorStop(1,   '#b09870');
-          ctx.fillStyle = g; ctx.fillRect(x, y, T, T);
+          const sb = ctx.createLinearGradient(0, y + T, 0, y + T + SH);
+          sb.addColorStop(0, 'rgba(0,0,0,0.55)');
+          sb.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = sb;
+          ctx.fillRect(x, y + T, T, SH);
         }
-
-        // micro shadow at crossing edge
-        ctx.fillStyle = 'rgba(20,10,0,0.22)';
-        ctx.fillRect(x + T*0.78, y, T*0.22, T);
-        ctx.fillRect(x, y + T*0.78, T, T*0.22);
       }
     }
+
+    // Vignette — dark edges for cinematic feel
+    const vg = ctx.createRadialGradient(W/2, H/2, Math.min(W,H)*0.18, W/2, H/2, Math.max(W,H)*0.78);
+    vg.addColorStop(0, 'rgba(0,0,0,0)');
+    vg.addColorStop(1, 'rgba(0,0,0,0.75)');
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
   }
 
   drawFabric();
@@ -988,23 +1013,28 @@ window.addEventListener('scroll', () => {
     const scrollable = section.offsetHeight - window.innerHeight;
     const p = clamp01(-top / scrollable);
 
-    // Canvas: visible 0→0.28, fade out 0.28→0.46
-    canvas.style.opacity = p < .28 ? 1 : Math.max(0, 1 - remap(p, .28, .46) );
+    // Canvas + shimmer: fade out 0.26→0.44
+    const canvasOp = p < .26 ? 1 : Math.max(0, 1 - remap(p, .26, .44));
+    canvas.style.opacity = canvasOp;
+    const shimmer = canvas.nextElementSibling;
+    if (shimmer) shimmer.style.opacity = canvasOp;
 
-    // Image: fade in 0.36→0.52, then zoom out 3.2x→1x from 0.36→0.93
-    const imgFade  = remap(p, .36, .52);
-    const imgZoomP = ease(remap(p, .36, .93));
+    // Image: fade in 0.34→0.50, zoom 3.2→1 with easing, blur 18px→0 (hides pixelation)
+    const imgFade  = remap(p, .34, .50);
+    const imgZoomP = ease(remap(p, .34, .92));
     const imgScale = 3.2 - 2.2 * imgZoomP;
+    const blurPx   = Math.max(0, 18 * (1 - remap(p, .34, .80)));
     img.style.opacity   = imgFade;
-    img.style.transform = `translate(-50%,-50%) scale(${imgScale})`;
+    img.style.transform = `translate(-50%,-50%) scale(${imgScale.toFixed(3)})`;
+    img.style.filter    = `blur(${blurPx.toFixed(1)}px)`;
 
     // Hint
     if (hint) hint.style.opacity = p < .04 ? 1 : Math.max(0, 1 - p * 18);
 
     // Labels
-    if (l1) l1.classList.toggle('on', p > .06 && p < .28);
-    if (l2) l2.classList.toggle('on', p > .42 && p < .63);
-    if (l3) l3.classList.toggle('on', p > .68 && p < .88);
+    if (l1) l1.classList.toggle('on', p > .06 && p < .26);
+    if (l2) l2.classList.toggle('on', p > .40 && p < .62);
+    if (l3) l3.classList.toggle('on', p > .67 && p < .87);
 
     // Final CTA
     if (final) final.classList.toggle('on', p > .93);
