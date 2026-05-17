@@ -240,30 +240,27 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
 .socials a{width:34px;height:34px;border-radius:7px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;font-size:.85rem;transition:var(--ease)}
 .socials a:hover{background:var(--gold)}
 
-/* ZOOM REVEAL */
-#zoom-reveal{height:400vh;position:relative}
-.zoom-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:#0c1220}
-#fabric-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;will-change:opacity}
-.fabric-shimmer{position:absolute;inset:0;background:linear-gradient(108deg,transparent 30%,rgba(240,200,110,.07) 50%,transparent 70%);animation:fabshim 5s ease-in-out infinite;z-index:2;pointer-events:none;will-change:transform}
-@keyframes fabshim{0%{transform:translateX(-130%) skewX(-8deg)}100%{transform:translateX(230%) skewX(-8deg)}}
-#zoom-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(3.2);transform-origin:center center;max-width:85%;max-height:88vh;object-fit:contain;z-index:3;opacity:0;filter:blur(0px);will-change:transform,opacity,filter}
-.zoom-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 28%,rgba(12,18,32,.6) 100%);z-index:4;pointer-events:none}
-/* scroll hint */
-.zoom-hint{position:absolute;bottom:2.4rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.45rem;transition:opacity .35s;pointer-events:none;z-index:5}
-.zoom-hint span{color:rgba(255,255,255,.45);font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase}
-.zoom-arrow-line{width:1px;height:38px;background:linear-gradient(to bottom,var(--gold),transparent);animation:zbob 1.6s ease-in-out infinite}
+/* THREAD REVEAL */
+#thread-reveal{height:300vh;position:relative}
+.thread-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:#07060a}
+#thread-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.thread-hint{position:absolute;bottom:2.4rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.45rem;transition:opacity .35s;pointer-events:none;z-index:5}
+.thread-hint span{color:rgba(255,255,255,.45);font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase}
+.thread-arrow-line{width:1px;height:38px;background:linear-gradient(to bottom,var(--gold),transparent);animation:zbob 1.6s ease-in-out infinite}
 @keyframes zbob{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.3;transform:scaleY(.6)}}
-/* feature labels */
-.zoom-label{position:absolute;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:opacity .5s ease;pointer-events:none;z-index:5;width:88%;max-width:560px}
-.zoom-label.top{top:10%}.zoom-label.bottom{bottom:10%}
-.zoom-label .zlbig{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:600;color:#fff;line-height:1.1;margin-bottom:.45rem}
-.zoom-label .zlsub{color:rgba(255,255,255,.5);font-size:.88rem;font-weight:400;line-height:1.7}
-.zoom-label .zlnum{display:inline-block;background:var(--gold);color:var(--primary);font-size:.65rem;font-weight:800;padding:.2rem .65rem;border-radius:100px;letter-spacing:.1em;margin-bottom:.75rem;text-transform:uppercase}
-.zoom-label.on{opacity:1}
-/* final cta */
-.zoom-final{position:absolute;bottom:11%;left:50%;transform:translateX(-50%) translateY(16px);text-align:center;opacity:0;transition:opacity .5s,transform .5s;pointer-events:none;z-index:5;white-space:nowrap}
-.zoom-final.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all}
-.zoom-final p{color:rgba(255,255,255,.55);font-size:.88rem;margin-bottom:1rem;font-style:italic}
+.thread-label{position:absolute;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:opacity .5s ease;pointer-events:none;z-index:5;width:88%;max-width:560px}
+.thread-label.top{top:10%}.thread-label.bottom{bottom:10%}
+.thread-label .tlbig{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:600;color:#fff;line-height:1.1;margin-bottom:.45rem}
+.thread-label .tlsub{color:rgba(255,255,255,.5);font-size:.88rem;font-weight:400;line-height:1.7}
+.thread-label .tlnum{display:inline-block;background:var(--gold);color:var(--primary);font-size:.65rem;font-weight:800;padding:.2rem .65rem;border-radius:100px;letter-spacing:.1em;margin-bottom:.75rem;text-transform:uppercase}
+.thread-label.on{opacity:1}
+/* product reveal */
+#product-reveal{background:#07060a;padding:8rem 2rem 10rem;text-align:center}
+.pr-eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem}
+.pr-img{max-width:600px;width:90%;display:block;margin:0 auto;border-radius:18px;box-shadow:0 40px 120px rgba(0,0,0,.6)}
+.pr-caption{margin-top:2.5rem;font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.8rem);color:#fff;font-weight:600}
+.pr-sub{margin-top:.75rem;color:rgba(255,255,255,.5);font-size:.92rem;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.7}
+.pr-cta{margin-top:2.5rem;display:inline-flex;gap:1rem;flex-wrap:wrap;justify-content:center}
 
 /* CAROUSEL */
 .car-wrap{position:relative}
@@ -417,41 +414,45 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
   </div>
 </div>
 
-<!-- ZOOM REVEAL -->
-<section id="zoom-reveal">
-  <div class="zoom-sticky">
-    <canvas id="fabric-canvas"></canvas>
-    <div class="fabric-shimmer"></div>
-    <img src="assets/unicuna nuevo/header.png" id="zoom-img" alt="Colchón UNICUNA® Memory">
-    <div class="zoom-vignette"></div>
+<!-- THREAD REVEAL -->
+<section id="thread-reveal">
+  <div class="thread-sticky">
+    <canvas id="thread-canvas"></canvas>
 
-    <div class="zoom-label top" id="zlabel1">
-      <div class="zlnum">01 — Material</div>
-      <div class="zlbig">Tejido hipoalergénico</div>
-      <div class="zlsub">Fibras certificadas libres de alérgenos y toxinas.<br>Suave al tacto, seguro desde el primer día.</div>
+    <div class="thread-label top" id="tlabel1">
+      <div class="tlnum">01 — Material</div>
+      <div class="tlbig">Tejido hipoalergénico</div>
+      <div class="tlsub">Fibras certificadas libres de alérgenos y toxinas.<br>Suave al tacto, seguro desde el primer día.</div>
     </div>
 
-    <div class="zoom-label bottom" id="zlabel2">
-      <div class="zlnum">02 — Tecnología</div>
-      <div class="zlbig">Transpirable 360°</div>
-      <div class="zlsub">Ventilación natural que regula la temperatura<br>y previene el sobrecalentamiento.</div>
+    <div class="thread-label bottom" id="tlabel2">
+      <div class="tlnum">02 — Tecnología</div>
+      <div class="tlbig">Transpirable 360°</div>
+      <div class="tlsub">Ventilación natural que regula la temperatura<br>y previene el sobrecalentamiento.</div>
     </div>
 
-    <div class="zoom-label top" id="zlabel3">
-      <div class="zlnum">03 — Estructura</div>
-      <div class="zlbig">Soporte ortopédico</div>
-      <div class="zlsub">Firmeza calibrada para el desarrollo sano<br>de la columna vertebral de tu bebé.</div>
+    <div class="thread-label top" id="tlabel3">
+      <div class="tlnum">03 — Estructura</div>
+      <div class="tlbig">Soporte ortopédico</div>
+      <div class="tlsub">Firmeza calibrada para el desarrollo sano<br>de la columna vertebral de tu bebé.</div>
     </div>
 
-    <div class="zoom-hint" id="zoom-hint">
+    <div class="thread-hint" id="thread-hint">
       <span>Desliza</span>
-      <div class="zoom-arrow-line"></div>
+      <div class="thread-arrow-line"></div>
     </div>
+  </div>
+</section>
 
-    <div class="zoom-final" id="zoom-final">
-      <p>El colchón premium para tu bebé</p>
-      <a href="#inicio" class="btn-gold">Descubrirlo →</a>
-    </div>
+<!-- PRODUCT REVEAL -->
+<section id="product-reveal">
+  <div class="pr-eyebrow">El colchón UNICUNA® Memory</div>
+  <img src="assets/unicuna nuevo/header.png" class="pr-img" alt="Colchón UNICUNA® Memory">
+  <div class="pr-caption">Hecho para proteger lo más valioso</div>
+  <div class="pr-sub">Materiales certificados, soporte ortopédico y ventilación 360° para el descanso seguro de tu bebé.</div>
+  <div class="pr-cta">
+    <a href="/tienda.html" class="btn-gold">Ver colchones</a>
+    <a href="#nosotros-wrap" class="btn-ghost" style="border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7)">Conocer más</a>
   </div>
 </section>
 
@@ -895,149 +896,115 @@ window.addEventListener('scroll', () => {
   });
 }, { passive: true });
 
-// ZOOM REVEAL — canvas fabric + crossfade to product image
+// THREAD REVEAL — animated spinning golden helix + scroll labels
 ;(function(){
-  const section = document.getElementById('zoom-reveal');
-  const canvas  = document.getElementById('fabric-canvas');
-  const img     = document.getElementById('zoom-img');
-  const hint    = document.getElementById('zoom-hint');
-  const final   = document.getElementById('zoom-final');
-  const l1      = document.getElementById('zlabel1');
-  const l2      = document.getElementById('zlabel2');
-  const l3      = document.getElementById('zlabel3');
-  if (!section || !canvas || !img) return;
+  const section = document.getElementById('thread-reveal');
+  const canvas  = document.getElementById('thread-canvas');
+  const hint    = document.getElementById('thread-hint');
+  const l1      = document.getElementById('tlabel1');
+  const l2      = document.getElementById('tlabel2');
+  const l3      = document.getElementById('tlabel3');
+  if (!section || !canvas) return;
 
-  // ── Draw professional woven fabric (cylindrical threads, deep shadows) ──
-  function drawFabric() {
-    const dpr = window.devicePixelRatio || 1;
-    const W   = window.innerWidth, H = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    W = window.innerWidth; H = window.innerHeight;
     canvas.width  = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     canvas.style.width  = W + 'px';
     canvas.style.height = H + 'px';
-    const ctx = canvas.getContext('2d');
-    ctx.scale(dpr, dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
 
-    const T = 24; // thread diameter — visible, dramatic
-    const SH = T * 0.38; // shadow spread
+  let t = 0;
+  let scrollP = 0;
 
-    // Near-black warm base
-    ctx.fillStyle = '#050403';
+  function helixPoint(strandPhase, frac) {
+    const angle  = frac * Math.PI * 2 * 7 + t + strandPhase;
+    const helixH = Math.min(H * 0.72, 440);
+    const ampX   = Math.min(W * 0.13, 100);
+    const cx = W / 2, cy = H / 2;
+    return {
+      x:     cx + Math.cos(angle) * ampX,
+      y:     cy - helixH / 2 + frac * helixH,
+      depth: Math.sin(angle)
+    };
+  }
+
+  function drawFrame() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#07060a';
     ctx.fillRect(0, 0, W, H);
 
-    const cols = Math.ceil(W / T) + 2;
-    const rows = Math.ceil(H / T) + 2;
+    const STEPS = 300;
+    const segments = [];
 
-    // Pass 1 — all weft threads (horizontal, full width)
-    for (let r = 0; r <= rows; r++) {
-      const y = r * T;
-      const g = ctx.createLinearGradient(0, y, 0, y + T);
-      g.addColorStop(0,    '#2c1b04');
-      g.addColorStop(0.10, '#6e4514');
-      g.addColorStop(0.35, '#b8842e');
-      g.addColorStop(0.50, '#d4a040'); // gold peak
-      g.addColorStop(0.65, '#b8842e');
-      g.addColorStop(0.90, '#6e4514');
-      g.addColorStop(1,    '#1e1002');
-      ctx.fillStyle = g;
-      ctx.fillRect(0, y, W, T);
+    for (let strand = 0; strand < 2; strand++) {
+      const phase = strand * Math.PI;
+      for (let i = 0; i < STEPS; i++) {
+        const a = helixPoint(phase, i / STEPS);
+        const b = helixPoint(phase, (i + 1) / STEPS);
+        segments.push({ a, b, depth: (a.depth + b.depth) / 2 });
+      }
     }
+    segments.sort((a, b) => a.depth - b.depth);
 
-    // Pass 2 — warp threads (vertical) over/under
-    for (let c = 0; c <= cols; c++) {
-      for (let r = 0; r <= rows; r++) {
-        const x = c * T, y = r * T;
-        const warpOnTop = (r + c) % 2 === 0;
+    for (const seg of segments) {
+      const { a, b, depth } = seg;
+      const v  = (depth + 1) / 2;
+      const r  = Math.round(60  + 195 * v);
+      const g  = Math.round(35  + 125 * v);
+      const bl = Math.round(0   + 8   * v);
+      const lw = (v * 0.55 + 0.45) * 13;
 
-        if (warpOnTop) {
-          // Warp thread crossing OVER weft — draw it brighter
-          const g = ctx.createLinearGradient(x, 0, x + T, 0);
-          g.addColorStop(0,    '#1c1002');
-          g.addColorStop(0.08, '#5c3810');
-          g.addColorStop(0.30, '#c09030');
-          g.addColorStop(0.50, '#ecc050'); // bright Unicuna gold
-          g.addColorStop(0.70, '#c09030');
-          g.addColorStop(0.92, '#5c3810');
-          g.addColorStop(1,    '#140c01');
-          ctx.fillStyle = g;
-          ctx.fillRect(x, y, T, T);
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = `rgb(${r},${g},${bl})`;
+      ctx.lineWidth   = lw;
+      ctx.lineCap     = 'round';
+      ctx.stroke();
 
-          // Shadow cast left of warp (on weft beneath)
-          const sl = ctx.createLinearGradient(x - SH, 0, x, 0);
-          sl.addColorStop(0, 'rgba(0,0,0,0)');
-          sl.addColorStop(1, 'rgba(0,0,0,0.62)');
-          ctx.fillStyle = sl;
-          ctx.fillRect(x - SH, y, SH, T);
-
-          // Shadow cast right of warp
-          const sr = ctx.createLinearGradient(x + T, 0, x + T + SH, 0);
-          sr.addColorStop(0, 'rgba(0,0,0,0.62)');
-          sr.addColorStop(1, 'rgba(0,0,0,0)');
-          ctx.fillStyle = sr;
-          ctx.fillRect(x + T, y, SH, T);
-        } else {
-          // Warp goes UNDER — shadow from weft above on warp edges
-          const st = ctx.createLinearGradient(0, y - SH, 0, y);
-          st.addColorStop(0, 'rgba(0,0,0,0)');
-          st.addColorStop(1, 'rgba(0,0,0,0.55)');
-          ctx.fillStyle = st;
-          ctx.fillRect(x, y - SH, T, SH);
-
-          const sb = ctx.createLinearGradient(0, y + T, 0, y + T + SH);
-          sb.addColorStop(0, 'rgba(0,0,0,0.55)');
-          sb.addColorStop(1, 'rgba(0,0,0,0)');
-          ctx.fillStyle = sb;
-          ctx.fillRect(x, y + T, T, SH);
-        }
+      if (depth > 0.25) {
+        const alpha = ((depth - 0.25) / 0.75) * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(a.x - 1.5, a.y);
+        ctx.lineTo(b.x - 1.5, b.y);
+        ctx.strokeStyle = `rgba(255,218,100,${alpha.toFixed(2)})`;
+        ctx.lineWidth   = lw * 0.4;
+        ctx.stroke();
       }
     }
 
-    // Vignette — dark edges for cinematic feel
-    const vg = ctx.createRadialGradient(W/2, H/2, Math.min(W,H)*0.18, W/2, H/2, Math.max(W,H)*0.78);
+    // Vignette
+    const cx = W / 2, cy = H / 2;
+    const vg = ctx.createRadialGradient(cx, cy, Math.min(W,H)*0.18, cx, cy, Math.max(W,H)*0.75);
     vg.addColorStop(0, 'rgba(0,0,0,0)');
-    vg.addColorStop(1, 'rgba(0,0,0,0.75)');
+    vg.addColorStop(1, 'rgba(0,0,0,0.85)');
     ctx.fillStyle = vg;
     ctx.fillRect(0, 0, W, H);
+
+    t += 0.016 + scrollP * 0.028;
+    requestAnimationFrame(drawFrame);
   }
+  requestAnimationFrame(drawFrame);
 
-  drawFabric();
-  window.addEventListener('resize', drawFabric);
-
-  // ── Scroll handler ──
-  function ease(t){ return t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; }
   function clamp01(v){ return Math.max(0, Math.min(1, v)); }
-  function remap(v, a, b){ return clamp01((v-a)/(b-a)); }
 
   function update() {
     const top = section.getBoundingClientRect().top;
     const scrollable = section.offsetHeight - window.innerHeight;
     const p = clamp01(-top / scrollable);
-
-    // Canvas + shimmer: fade out 0.26→0.44
-    const canvasOp = p < .26 ? 1 : Math.max(0, 1 - remap(p, .26, .44));
-    canvas.style.opacity = canvasOp;
-    const shimmer = canvas.nextElementSibling;
-    if (shimmer) shimmer.style.opacity = canvasOp;
-
-    // Image: fade in 0.34→0.50, zoom 3.2→1 with easing, blur 18px→0 (hides pixelation)
-    const imgFade  = remap(p, .34, .50);
-    const imgZoomP = ease(remap(p, .34, .92));
-    const imgScale = 3.2 - 2.2 * imgZoomP;
-    const blurPx   = Math.max(0, 18 * (1 - remap(p, .34, .80)));
-    img.style.opacity   = imgFade;
-    img.style.transform = `translate(-50%,-50%) scale(${imgScale.toFixed(3)})`;
-    img.style.filter    = `blur(${blurPx.toFixed(1)}px)`;
-
-    // Hint
-    if (hint) hint.style.opacity = p < .04 ? 1 : Math.max(0, 1 - p * 18);
-
-    // Labels
-    if (l1) l1.classList.toggle('on', p > .06 && p < .26);
-    if (l2) l2.classList.toggle('on', p > .40 && p < .62);
-    if (l3) l3.classList.toggle('on', p > .67 && p < .87);
-
-    // Final CTA
-    if (final) final.classList.toggle('on', p > .93);
+    scrollP = p;
+    if (hint) hint.style.opacity = p < .04 ? 1 : Math.max(0, 1 - p * 20);
+    if (l1) l1.classList.toggle('on', p > .06 && p < .30);
+    if (l2) l2.classList.toggle('on', p > .38 && p < .64);
+    if (l3) l3.classList.toggle('on', p > .72 && p < .94);
   }
 
   window.addEventListener('scroll', update, { passive: true });
