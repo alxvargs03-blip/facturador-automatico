@@ -28,44 +28,50 @@
 
     .product-layout{display:grid;grid-template-columns:1fr 1fr;gap:3rem;max-width:1000px;margin:0 auto;padding:1.5rem 2rem 4rem}
 
-    .product-image{background:linear-gradient(135deg,#e8eff8,#d0dff0);border-radius:16px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:6rem}
+    .product-image{background:linear-gradient(135deg,#e8eff8,#d0dff0);border-radius:20px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:6rem;overflow:hidden;box-shadow:0 8px 40px rgba(30,45,82,.12);transition:box-shadow .3s}
+    .product-image img{border-radius:20px;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+    .product-image:hover img{transform:scale(1.04)}
 
     .product-info{}
-    .product-name{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;line-height:1.2;margin-bottom:.5rem}
-    .product-sku{font-size:.78rem;color:var(--gray);margin-bottom:1.2rem}
-    .product-price{margin-bottom:1.5rem}
-    .price-consult{font-size:1.1rem;color:var(--gray);font-style:italic}
-    .price-off-pill{display:inline-flex;align-items:center;gap:.3rem;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;font-size:.78rem;font-weight:700;padding:.25rem .65rem;border-radius:100px;margin-bottom:.5rem}
-    .price-row{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;margin-bottom:.25rem}
-    .price-old{color:var(--gray);font-size:1.1rem;text-decoration:line-through;font-weight:400}
-    .price-new{font-size:1.8rem;font-weight:700;color:var(--gold)}
-    .price-savings{font-size:.82rem;color:#16a34a;font-weight:600}
+    .product-name{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;line-height:1.15;margin-bottom:.4rem;letter-spacing:.01em}
+    .product-sku{font-size:.75rem;color:var(--gray);margin-bottom:1.2rem;letter-spacing:.06em;text-transform:uppercase}
+    .product-price{margin-bottom:1.5rem;padding:1.1rem 1.3rem;background:linear-gradient(135deg,#fdf9f5,#faf4ec);border-radius:12px;border:1px solid var(--border)}
+    .price-consult{font-size:1rem;color:var(--gray);font-style:italic}
+    .price-off-pill{display:inline-flex;align-items:center;gap:.3rem;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;font-size:.76rem;font-weight:700;padding:.22rem .65rem;border-radius:100px;margin-bottom:.6rem;letter-spacing:.03em}
+    .price-row{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;margin-bottom:.3rem}
+    .price-old{color:var(--gray);font-size:1.05rem;text-decoration:line-through;font-weight:400}
+    .price-new{font-size:2rem;font-weight:700;color:var(--gold);line-height:1}
+    .price-savings{font-size:.82rem;color:#16a34a;font-weight:600;display:flex;align-items:center;gap:.3rem}
 
-    .selector-label{font-size:.82rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.6rem;color:var(--primary)}
-    .options{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.4rem}
+    .selector-label{font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.65rem;color:var(--primary);display:flex;align-items:center;gap:.4rem}
+    .options{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:1.4rem}
 
-    .option-btn{padding:.45rem .9rem;border:2px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;font-size:.85rem;font-family:'Inter',sans-serif;transition:all .2s;color:var(--primary)}
-    .option-btn:hover{border-color:var(--gold)}
-    .option-btn.selected{border-color:var(--primary);background:var(--primary);color:var(--white)}
-    .option-btn.unavailable{opacity:.35;cursor:not-allowed}
+    .option-btn{padding:.45rem .95rem;border:1.5px solid var(--border);border-radius:100px;background:var(--white);cursor:pointer;font-size:.84rem;font-family:'Inter',sans-serif;transition:all .22s cubic-bezier(.16,1,.3,1);color:var(--primary)}
+    .option-btn:hover{border-color:var(--gold);transform:translateY(-1px)}
+    .option-btn.selected{border-color:var(--primary);background:var(--primary);color:var(--white);box-shadow:0 4px 12px rgba(30,45,82,.2)}
+    .option-btn.unavailable{opacity:.3;cursor:not-allowed}
 
-    .color-option{display:flex;align-items:center;gap:.5rem;padding:.45rem .9rem}
-    .color-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(0,0,0,.15)}
+    .color-option{display:flex;align-items:center;gap:.5rem;padding:.4rem .9rem}
+    .color-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(0,0,0,.12);transition:transform .2s}
+    .color-option.selected .color-dot{transform:scale(1.2);box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--primary)}
 
     .qty-row{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
-    .qty-label{font-size:.82rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-    .qty-control{display:flex;align-items:center;gap:.5rem}
-    .qty-btn{width:44px;height:44px;border:1.5px solid var(--border);border-radius:6px;background:var(--white);cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center}
-    .qty-val{font-size:1rem;font-weight:600;min-width:28px;text-align:center}
+    .qty-label{font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+    .qty-control{display:flex;align-items:center;gap:.5rem;background:var(--bg);border-radius:100px;padding:.2rem .4rem}
+    .qty-btn{width:36px;height:36px;border:none;border-radius:50%;background:var(--white);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:all .2s}
+    .qty-btn:hover{background:var(--primary);color:#fff}
+    .qty-val{font-size:1rem;font-weight:700;min-width:28px;text-align:center}
 
-    .btn-add{width:100%;padding:1rem;background:var(--primary);color:var(--white);border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:background .2s;margin-bottom:.7rem}
-    .btn-add:hover{background:var(--gold);color:var(--primary)}
-    .btn-add:disabled{opacity:.5;cursor:not-allowed}
-    .btn-cart{width:100%;padding:.8rem;background:transparent;color:var(--primary);border:2px solid var(--primary);border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+    .btn-add{width:100%;padding:1.05rem;background:linear-gradient(135deg,var(--primary),#2a4175);color:var(--white);border:none;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .25s cubic-bezier(.16,1,.3,1);margin-bottom:.7rem;letter-spacing:.03em;box-shadow:0 4px 16px rgba(30,45,82,.2)}
+    .btn-add:hover{background:linear-gradient(135deg,var(--gold),#e8c47a);color:var(--primary);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,169,110,.35)}
+    .btn-add:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+    .btn-cart{width:100%;padding:.85rem;background:transparent;color:var(--primary);border:2px solid var(--primary);border-radius:12px;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .25s}
     .btn-cart:hover{background:var(--primary);color:var(--white)}
-
+    /* Trust badges */
+    .trust-badges{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.2rem}
+    .trust-badge{display:flex;align-items:center;gap:.35rem;background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:.3rem .75rem;font-size:.74rem;color:var(--gray);font-weight:500}
     .notice{font-size:.82rem;color:var(--gray);margin-top:.5rem;text-align:center}
-    .added-msg{background:#dcfce7;color:#166534;padding:.6rem 1rem;border-radius:8px;text-align:center;font-size:.88rem;margin-top:.7rem;display:none}
+    .added-msg{background:linear-gradient(135deg,#dcfce7,#bbf7d0);color:#166534;padding:.7rem 1rem;border-radius:10px;text-align:center;font-size:.88rem;margin-top:.7rem;display:none;font-weight:500}
 
     .loader{display:flex;justify-content:center;align-items:center;min-height:60vh}
     .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
@@ -350,11 +356,16 @@ function renderProduct() {
         </div>
 
         <button class="btn-add" id="btnAdd" onclick="addToCart()" disabled>
-          Agregar al carrito
+          🛒 Agregar al carrito
         </button>
         <a href="/checkout.html" class="btn-cart">Ir al carrito →</a>
-        <div class="added-msg" id="addedMsg">✅ Agregado al carrito</div>
-        <p class="notice">Envíos a toda la República · Pago con tarjeta</p>
+        <div class="added-msg" id="addedMsg">✅ ¡Agregado al carrito!</div>
+        <div class="trust-badges">
+          <span class="trust-badge">🚚 Envío a todo México</span>
+          <span class="trust-badge">🛡️ Garantía 365 días</span>
+          <span class="trust-badge">🌿 Hipoalergénico</span>
+          <span class="trust-badge">🔒 Pago seguro</span>
+        </div>
       </div>
     </div>`
 
