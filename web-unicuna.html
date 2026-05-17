@@ -240,6 +240,55 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
 .socials a{width:34px;height:34px;border-radius:7px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;font-size:.85rem;transition:var(--ease)}
 .socials a:hover{background:var(--gold)}
 
+/* ── CULT UI ENHANCEMENTS ───────────────────────────────── */
+
+/* Hero canvas — Fractal Dot Grid */
+#hero-dots{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+
+/* Stripe-style column guides */
+.col-guides{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;display:grid;grid-template-columns:repeat(5,1fr);padding:0 3rem}
+.cg-line{position:relative;height:100%;border-left:1px dashed rgba(255,255,255,.05)}
+.cg-line:last-child{border-right:1px dashed rgba(255,255,255,.05)}
+.cg-glow{position:absolute;left:-1px;width:1px;height:20vh;background:linear-gradient(to bottom,transparent,rgba(201,169,110,.45),transparent);top:-25%;animation:cg-run 10s ease-in-out infinite;opacity:.85}
+.cg-line:nth-child(1) .cg-glow{animation-delay:0s;animation-duration:11s}
+.cg-line:nth-child(2) .cg-glow{animation-delay:2.2s;animation-duration:9.5s}
+.cg-line:nth-child(3) .cg-glow{animation-delay:4.4s;animation-duration:13s}
+.cg-line:nth-child(4) .cg-glow{animation-delay:1.1s;animation-duration:10s}
+.cg-line:nth-child(5) .cg-glow{animation-delay:3.3s;animation-duration:8.5s}
+@keyframes cg-run{0%{top:-25%;opacity:0}15%{opacity:.85}85%{opacity:.85}100%{top:110%;opacity:0}}
+
+/* Noise grain texture overlay */
+.noise{position:absolute;inset:0;pointer-events:none;opacity:.038;mix-blend-mode:overlay;z-index:2;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px}
+
+/* MinimalCard — 5-layer shadow system (Cult UI) */
+.pcard{border-radius:18px!important;border:1px solid rgba(255,255,255,.72)!important;background:#fff!important;box-shadow:0 0 0 1px rgba(17,24,28,.05),0 1px 3px rgba(17,24,28,.05),0 6px 16px rgba(30,45,82,.07),0 20px 40px rgba(30,45,82,.06),inset 0 1px 0 rgba(255,255,255,.75)!important;transition:transform .42s cubic-bezier(.16,1,.3,1),box-shadow .42s cubic-bezier(.16,1,.3,1)!important}
+.pcard:hover{transform:translateY(-9px)!important;box-shadow:0 0 0 1px rgba(30,45,82,.08),0 4px 8px rgba(30,45,82,.08),0 16px 40px rgba(30,45,82,.13),0 40px 80px rgba(30,45,82,.07),inset 0 1px 0 rgba(255,255,255,.75)!important}
+
+/* TextureCard dark glass — feature cards (Cult UI) */
+.fcard{background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.07)!important;border-radius:18px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 0 1px rgba(0,0,0,.18),0 2px 4px rgba(0,0,0,.18),0 8px 20px rgba(0,0,0,.12);transition:var(--ease)}
+.fcard:hover{background:rgba(255,255,255,.07)!important;border-color:rgba(201,169,110,.28)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 0 1px rgba(201,169,110,.22),0 4px 12px rgba(0,0,0,.22),0 16px 40px rgba(0,0,0,.14);transform:translateY(-5px)}
+
+/* GradientHeading — section titles (Cult UI) */
+.shead .stitle{background:linear-gradient(165deg,var(--primary) 0%,#3a5c9e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#caract .stitle{-webkit-text-fill-color:unset!important;background:none!important;color:#fff!important}
+#nosotros-wrap .stitle{-webkit-text-fill-color:unset!important;background:none!important}
+
+/* NeumorphButton — stat cards (Cult UI) */
+.scard{background:#fff;border-radius:16px!important;border:1px solid rgba(255,255,255,.88)!important;padding:1.6rem!important;box-shadow:5px 5px 12px rgba(30,45,82,.06),-3px -3px 9px rgba(255,255,255,.9),inset 0 1px 0 rgba(255,255,255,.85)!important;transition:var(--ease)}
+.scard:hover{transform:translateY(-2px);box-shadow:8px 8px 18px rgba(30,45,82,.09),-4px -4px 12px rgba(255,255,255,.95),inset 0 1px 0 rgba(255,255,255,.9)!important}
+
+/* GlowButton — mouse-tracking light spot (Cult UI) */
+.btn-gold{position:relative;overflow:hidden;isolation:isolate}
+.btn-glow-spot{position:absolute;width:150px;height:150px;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.3) 0%,rgba(255,218,100,.35) 35%,transparent 70%);opacity:0;transition:opacity .18s;z-index:0}
+.btn-gold:hover .btn-glow-spot,.btn-gold:focus .btn-glow-spot{opacity:1}
+
+/* Hero card — pulsing glow shadow */
+@keyframes hero-glow{0%{box-shadow:0 30px 70px rgba(0,0,0,.25),0 0 30px rgba(201,169,110,.06)}100%{box-shadow:0 30px 70px rgba(0,0,0,.28),0 0 70px rgba(201,169,110,.2),0 0 0 1px rgba(201,169,110,.18)}}
+.hero-card{animation:fl 6s ease-in-out infinite,hero-glow 3.5s ease-in-out infinite alternate!important}
+
+/* Gradient separator */
+.grad-sep{height:1px;background:linear-gradient(90deg,transparent,rgba(201,169,110,.55),transparent);opacity:.7}
+
 /* THREAD REVEAL */
 #thread-reveal{height:300vh;position:relative}
 .thread-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:#07060a}
@@ -458,9 +507,15 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
 
 <!-- HERO -->
 <section id="inicio">
-  <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
-    <div class="hc"></div><div class="hc"></div><div class="hc"></div><div class="hc"></div>
+  <canvas id="hero-dots" aria-hidden="true"></canvas>
+  <div class="col-guides" aria-hidden="true">
+    <div class="cg-line"><div class="cg-glow"></div></div>
+    <div class="cg-line"><div class="cg-glow"></div></div>
+    <div class="cg-line"><div class="cg-glow"></div></div>
+    <div class="cg-line"><div class="cg-glow"></div></div>
+    <div class="cg-line"><div class="cg-glow"></div></div>
   </div>
+  <div class="noise" aria-hidden="true"></div>
   <div class="hwrap">
     <div class="htxt">
       <span class="hbadge">✦ Fabricados en México · Desde 2015</span>
@@ -545,6 +600,8 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
     </div>
   </div>
 </div>
+
+<div class="grad-sep"></div>
 
 <!-- NOSOTROS -->
 <section>
@@ -1063,6 +1120,85 @@ renderCart();
     }
   } catch {}
 })()
+
+// ── CULT UI: Canvas Fractal Dot Grid — hero background ──────────
+;(function(){
+  const canvas = document.getElementById('hero-dots');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  const mouse = { x: -9999, y: -9999 };
+  const DOT  = 3.2, SPC = 22, OP = 0.26, WAVE_R = 200, WAVE_I = 24;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const sec = document.getElementById('inicio');
+  window.addEventListener('mousemove', e => {
+    if (!sec) return;
+    const r = sec.getBoundingClientRect();
+    if (e.clientY < r.top || e.clientY > r.bottom) return;
+    mouse.x = (e.clientX - r.left) / r.width * W;
+    mouse.y = (e.clientY - r.top)  / r.height * H;
+  });
+
+  function draw(time) {
+    ctx.clearRect(0, 0, W, H);
+    const cols = Math.ceil(W / SPC), rows = Math.ceil(H / SPC);
+    for (let i = 0; i <= cols; i += 2) {
+      for (let j = 0; j <= rows; j += 2) {
+        const x = i * SPC, y = j * SPC;
+        const dx = x - mouse.x, dy = y - mouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        let px = x, py = y;
+
+        if (dist < WAVE_R) {
+          const str  = Math.pow(1 - dist / WAVE_R, 2);
+          const ang  = Math.atan2(dy, dx);
+          const off  = Math.sin(dist * 0.05 - time * 0.003) * WAVE_I * str;
+          px += Math.cos(ang) * off;
+          py += Math.sin(ang) * off;
+          const gr = ctx.createRadialGradient(px, py, 0, px, py, DOT * (1 + str));
+          gr.addColorStop(0, `rgba(201,169,110,${OP * (1 + str * 0.9)})`);
+          gr.addColorStop(1, 'rgba(201,169,110,0)');
+          ctx.fillStyle = gr;
+        } else {
+          ctx.fillStyle = `rgba(201,169,110,${OP})`;
+        }
+        ctx.beginPath();
+        ctx.arc(px, py, DOT / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+// ── CULT UI: GlowButton — mouse-tracking light spot ──────────
+;(function(){
+  function initGlow(btn) {
+    if (btn.dataset.glowInit) return;
+    btn.dataset.glowInit = '1';
+    const spot = document.createElement('span');
+    spot.className = 'btn-glow-spot';
+    btn.appendChild(spot);
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      spot.style.left = (e.clientX - r.left) + 'px';
+      spot.style.top  = (e.clientY - r.top)  + 'px';
+    });
+  }
+  document.querySelectorAll('.btn-gold').forEach(initGlow);
+  // Also init on dynamically created buttons
+  new MutationObserver(() => {
+    document.querySelectorAll('.btn-gold').forEach(initGlow);
+  }).observe(document.body, { childList: true, subtree: true });
+})();
 
 // Load real products from API into landing page grid
 ;(async () => {
