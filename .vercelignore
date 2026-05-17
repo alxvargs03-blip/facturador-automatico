@@ -1,9 +1,22 @@
-portales/
-data/*.json
-.env
-.claude/
-INSTRUCCIONES.md
-spartan-cam.html
-web-tucontador.html
-index.html
+node_modules
+.claude
 email-template.html
+spartan-cam.html
+citas.html
+web-tucontador.html
+web-vfriends-veterinaria.html
+web-antava-elastics.html
+web-callimontessori.html
+web-etiquetas-antava.html
+web-glowandgo.html
+web-grupogemi.html
+web-vfriends-veterinaria.html
+INSTRUCCIONES.md
+deploy-callimontessori/
+deploy-grupogemi/
+assets/callimontessori/
+assets/glow & go/
+assets/grupo gemi/
+assets/logo-gemi.png.png
+index.html
+cotizacion-vfriends.html
