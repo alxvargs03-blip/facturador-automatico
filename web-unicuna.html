@@ -99,8 +99,32 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overf
 @keyframes spin{to{transform:rotate(360deg)}}
 /* gold line separator */
 .hline{width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 1.8rem}
-.hwrap{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:8rem 2rem 5rem;text-align:center;width:100%}
+.hwrap{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:8rem 3rem 5rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;width:100%}
+.hwrap .htxt{text-align:left}
 .htxt{color:#fff}
+/* hero visual card */
+.hero-vis{position:relative;display:flex;align-items:center;justify-content:center}
+.hero-card{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:24px;padding:1.8rem;backdrop-filter:blur(16px);animation:fl 6s ease-in-out infinite;width:100%;max-width:340px;box-shadow:0 30px 70px rgba(0,0,0,.25)}
+.hc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
+.hc-badge{background:var(--gold);color:var(--primary);padding:.28rem .75rem;border-radius:6px;font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.hc-stars{color:var(--gold-light);font-size:.82rem;font-weight:600}
+.hc-img{width:100%;aspect-ratio:1/1;border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,.13),rgba(201,169,110,.1));display:flex;align-items:center;justify-content:center;font-size:4.5rem;margin-bottom:1.1rem;border:1px solid rgba(255,255,255,.1)}
+.hc-name{color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;margin-bottom:.15rem}
+.hc-sub{color:rgba(255,255,255,.5);font-size:.75rem;margin-bottom:.85rem}
+.hc-feats{display:flex;flex-direction:column;gap:.42rem;margin-bottom:1rem}
+.hc-feat{color:rgba(255,255,255,.8);font-size:.76rem;display:flex;align-items:center;gap:.5rem}
+.hc-feat::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+.hc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:.85rem;border-top:1px solid rgba(255,255,255,.12)}
+.hc-price-lbl{color:rgba(255,255,255,.4);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.1rem}
+.hc-price{color:var(--gold-light);font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;line-height:1}
+.hc-btn{background:var(--gold);color:var(--primary);border:none;padding:.48rem 1rem;border-radius:7px;font-size:.76rem;font-weight:800;cursor:pointer;transition:var(--ease)}
+.hc-btn:hover{background:#fff}
+.orb{position:absolute;border-radius:50%;pointer-events:none}
+.orb1{width:100px;height:100px;background:rgba(201,169,110,.3);top:-25px;right:-25px;filter:blur(25px)}
+.orb2{width:150px;height:150px;background:rgba(245,232,224,.1);bottom:-35px;left:-35px;filter:blur(35px)}
+/* word cycle */
+.wc{display:inline-block;color:var(--gold-light);font-style:italic;transition:opacity .22s cubic-bezier(.16,1,.3,1),transform .22s cubic-bezier(.16,1,.3,1)}
+.wc.out{opacity:0;transform:translateY(-8px) scale(.96)}
 .hbadge{display:inline-block;background:rgba(201,169,110,.18);border:1px solid rgba(201,169,110,.35);color:var(--gold-light);padding:.35rem 1rem;border-radius:100px;font-size:.73rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.6rem}
 .htitle{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:600;line-height:1.08;margin-bottom:1.2rem}
 .htitle em{font-style:italic;color:var(--gold-light)}
@@ -114,10 +138,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overf
 .hpills{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap}
 .hpill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.82);padding:.32rem .85rem;border-radius:100px;font-size:.77rem;font-weight:500;backdrop-filter:blur(6px)}
 
-/* TRUST BAR */
-.trust{background:var(--primary);padding:1.1rem 2rem;display:flex;align-items:center;justify-content:center;gap:3rem;flex-wrap:wrap}
-.ti{display:flex;align-items:center;gap:.6rem;color:rgba(255,255,255,.8);font-size:.82rem;font-weight:500}
-.ti-ico{font-size:1.1rem}
+/* TRUST BAR — marquee */
+.trust{background:var(--primary);padding:.85rem 0;overflow:hidden}
+.trust-inner{display:flex;width:max-content;animation:mq 28s linear infinite}
+.trust-inner:hover{animation-play-state:paused}
+.trust-group{display:flex;gap:2.5rem;padding:0 2.5rem;align-items:center;flex-shrink:0}
+@keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ti{display:flex;align-items:center;gap:.55rem;color:rgba(255,255,255,.82);font-size:.82rem;font-weight:500;white-space:nowrap}
+.ti-sep{color:rgba(255,255,255,.18);font-size:1.4rem;line-height:1}
+.ti-ico{font-size:1rem}
 
 /* NOSOTROS */
 #nosotros-wrap{padding:7rem 2rem;max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
@@ -211,6 +240,28 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
 .socials a{width:34px;height:34px;border-radius:7px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;font-size:.85rem;transition:var(--ease)}
 .socials a:hover{background:var(--gold)}
 
+/* ZOOM REVEAL */
+#zoom-reveal{height:280vh;position:relative}
+.zoom-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+#zoom-img{width:88%;max-width:700px;object-fit:contain;transform:scale(7);transform-origin:47% 32%;will-change:transform;display:block}
+.zoom-hint{position:absolute;bottom:2.8rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;transition:opacity .4s;pointer-events:none}
+.zoom-hint span{color:var(--muted);font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.zoom-arrow-line{width:1.5px;height:44px;background:linear-gradient(to bottom,var(--gold),transparent);animation:zbob 1.6s ease-in-out infinite}
+@keyframes zbob{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.4;transform:scaleY(.7)}}
+.zoom-final{position:absolute;bottom:14%;left:50%;transform:translateX(-50%) translateY(18px);text-align:center;opacity:0;transition:opacity .55s ease,transform .55s ease;pointer-events:none;white-space:nowrap}
+.zoom-final.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all}
+.zoom-final p{color:var(--muted);font-size:.9rem;margin-bottom:1rem;font-style:italic}
+
+/* CAROUSEL */
+.car-wrap{position:relative}
+.car-track{display:flex;gap:1.5rem;overflow-x:auto;scroll-snap-type:x mandatory;-ms-overflow-style:none;scrollbar-width:none;cursor:grab;padding:1rem .5rem 1.8rem;-webkit-overflow-scrolling:touch}
+.car-track:active{cursor:grabbing}
+.car-track::-webkit-scrollbar{display:none}
+.car-track .pcard{min-width:272px;flex-shrink:0;scroll-snap-align:start}
+.car-arrows{display:flex;gap:.7rem;justify-content:center;margin-top:.3rem}
+.car-arr{width:46px;height:46px;border-radius:50%;border:1.5px solid #e0d9d0;background:#fff;cursor:pointer;font-size:1.15rem;display:flex;align-items:center;justify-content:center;transition:var(--ease);box-shadow:0 2px 12px rgba(30,45,82,.06)}
+.car-arr:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+
 /* SCROLL ANIM */
 .rv{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
 .rvl{opacity:0;transform:translateX(-35px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
@@ -233,10 +284,11 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
 
 /* RESPONSIVE */
 @media(max-width:1024px){
-  .hwrap{grid-template-columns:1fr}.hcard{display:none}
+  .hwrap{grid-template-columns:1fr;text-align:center}.hwrap .htxt{text-align:center}.hero-vis{display:none}
   #nosotros-wrap{grid-template-columns:1fr}.nvis{display:none}
   #contacto-wrap{grid-template-columns:1fr}
   .ftop{grid-template-columns:1fr 1fr}
+  .hact{justify-content:center}.hpills{justify-content:center}
 }
 @media(max-width:768px){
   .nav-links{display:none;position:fixed;inset:0;top:65px;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;gap:1.8rem;z-index:99}
@@ -352,6 +404,21 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
   </div>
 </div>
 
+<!-- ZOOM REVEAL -->
+<section id="zoom-reveal">
+  <div class="zoom-sticky">
+    <img src="assets/unicuna nuevo/header.png" id="zoom-img" alt="Colchón UNICUNA® Memory">
+    <div class="zoom-hint" id="zoom-hint">
+      <span>Desliza</span>
+      <div class="zoom-arrow-line"></div>
+    </div>
+    <div class="zoom-final" id="zoom-final">
+      <p>El colchón premium para tu bebé</p>
+      <a href="#inicio" class="btn-gold">Descubrirlo →</a>
+    </div>
+  </div>
+</section>
+
 <!-- HERO -->
 <section id="inicio">
   <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
@@ -360,8 +427,8 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
   <div class="hwrap">
     <div class="htxt">
       <span class="hbadge">✦ Fabricados en México · Desde 2015</span>
-      <h1 class="htitle">UNICUNA<em>®</em></h1>
-      <div class="hline"></div>
+      <h1 class="htitle">El colchón que<br>tu bebé <span class="wc" id="wc">merece</span></h1>
+      <div class="hline" style="margin:0 0 1.8rem"></div>
       <p class="hsub">Colchones premium para bebé con materiales hipoalergénicos certificados. Diseñados para proteger a tu pequeño durante sus primeros años de vida.</p>
       <div class="hact">
         <a href="/tienda.html" class="btn-gold">Ver colchones</a>
@@ -375,15 +442,71 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
         <span class="hpill">🚚 Envío a todo el país</span>
       </div>
     </div>
+    <div class="hero-vis">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="hero-card">
+        <div class="hc-top">
+          <span class="hc-badge">⭐ Más vendido</span>
+          <span class="hc-stars">★★★★★ 4.9</span>
+        </div>
+        <div class="hc-img">🛏️</div>
+        <div class="hc-name">Colchón Supreme</div>
+        <div class="hc-sub">Memoria viscoelástica + capa hipoalergénica</div>
+        <div class="hc-feats">
+          <div class="hc-feat">Materiales hipoalergénicos certificados</div>
+          <div class="hc-feat">Tecnología transpirable de alta densidad</div>
+          <div class="hc-feat">Soporte ortopédico para bebés</div>
+          <div class="hc-feat">365 días de garantía incluida</div>
+        </div>
+        <div class="hc-footer">
+          <div>
+            <div class="hc-price-lbl">Desde</div>
+            <div class="hc-price">$1,450 MXN</div>
+          </div>
+          <button class="hc-btn" onclick="window.location='/tienda.html'">Ver →</button>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- TRUST BAR -->
-<div class="trust">
-  <div class="ti"><span class="ti-ico">🌿</span>Materiales hipoalergénicos</div>
-  <div class="ti"><span class="ti-ico">🇲🇽</span>Fabricados en México</div>
-  <div class="ti"><span class="ti-ico">🌬️</span>Tecnología transpirable</div>
-  <div class="ti"><span class="ti-ico">📦</span>Envío a todo el país</div>
+<!-- TRUST BAR — marquee -->
+<div class="trust" aria-hidden="true">
+  <div class="trust-inner">
+    <div class="trust-group">
+      <div class="ti"><span class="ti-ico">🌿</span>Materiales hipoalergénicos</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">🇲🇽</span>Fabricados en México</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">🌬️</span>Tecnología transpirable</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">📦</span>Envío a todo el país</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">⭐</span>+10 años de experiencia</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">🛡️</span>365 días de garantía</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">✅</span>Certificado libre de tóxicos</div>
+      <span class="ti-sep">·</span>
+    </div>
+    <div class="trust-group" aria-hidden="true">
+      <div class="ti"><span class="ti-ico">🌿</span>Materiales hipoalergénicos</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">🇲🇽</span>Fabricados en México</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">🌬️</span>Tecnología transpirable</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">📦</span>Envío a todo el país</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">⭐</span>+10 años de experiencia</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">🛡️</span>365 días de garantía</div>
+      <span class="ti-sep">·</span>
+      <div class="ti"><span class="ti-ico">✅</span>Certificado libre de tóxicos</div>
+      <span class="ti-sep">·</span>
+    </div>
+  </div>
 </div>
 
 <!-- NOSOTROS -->
@@ -427,8 +550,14 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
       <h2 class="stitle">Colchones Premium para Bebé</h2>
       <p>Cada colchón acompaña el desarrollo de tu bebé desde los primeros días hasta los años de crecimiento.</p>
     </div>
-    <div class="pgrid stg" id="pgrid">
-      <div style="grid-column:1/-1;display:flex;justify-content:center;padding:2rem 0"><div style="width:32px;height:32px;border:3px solid #e8e0d5;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite" id="landingSpinner"></div></div>
+    <div class="car-wrap">
+      <div class="car-track stg" id="pgrid">
+        <div style="padding:2rem;display:flex;align-items:center"><div style="width:32px;height:32px;border:3px solid #e8e0d5;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite" id="landingSpinner"></div></div>
+      </div>
+      <div class="car-arrows">
+        <button class="car-arr" onclick="carScroll(-1)" title="Anterior">←</button>
+        <button class="car-arr" onclick="carScroll(1)" title="Siguiente">→</button>
+      </div>
     </div>
     <p style="text-align:center;margin-top:2rem">
       <a href="/tienda.html" class="btn-gold" style="display:inline-block">Ver todos los colchones →</a>
@@ -729,6 +858,75 @@ window.addEventListener('scroll', () => {
     c.style.transform = `translateY(${window.scrollY * (.08 + i * .04)}px)`;
   });
 }, { passive: true });
+
+// ZOOM REVEAL SCROLL
+;(function(){
+  const section = document.getElementById('zoom-reveal');
+  const img = document.getElementById('zoom-img');
+  const hint = document.getElementById('zoom-hint');
+  const final = document.getElementById('zoom-final');
+  if (!section || !img) return;
+
+  function update() {
+    const top = section.getBoundingClientRect().top;
+    const scrollable = section.offsetHeight - window.innerHeight;
+    const p = Math.max(0, Math.min(1, -top / scrollable));
+
+    // escala 7 → 1 conforme avanza el scroll
+    const scale = 7 - 6 * p;
+    img.style.transform = `scale(${scale})`;
+    img.style.transformOrigin = '47% 32%';
+
+    // hint desaparece al empezar
+    if (hint) hint.style.opacity = p < 0.06 ? 1 : Math.max(0, 1 - p * 8);
+
+    // CTA aparece al final
+    if (final) final.classList.toggle('on', p > 0.9);
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+// WORD CYCLING
+;(function(){
+  const el = document.getElementById('wc');
+  if (!el) return;
+  const words = ['merece','necesita','cuida','protege','ama'];
+  let i = 0;
+  setInterval(() => {
+    el.classList.add('out');
+    setTimeout(() => {
+      i = (i + 1) % words.length;
+      el.textContent = words[i];
+      el.classList.remove('out');
+    }, 220);
+  }, 2400);
+})();
+
+// CAROUSEL DRAG
+;(function(){
+  const track = document.getElementById('pgrid');
+  if (!track) return;
+  let down = false, startX, scrollL;
+  track.addEventListener('mousedown', e => {
+    down = true; startX = e.pageX - track.offsetLeft; scrollL = track.scrollLeft;
+    track.style.userSelect = 'none';
+  });
+  ['mouseleave','mouseup'].forEach(ev => track.addEventListener(ev, () => {
+    down = false; track.style.userSelect = '';
+  }));
+  track.addEventListener('mousemove', e => {
+    if (!down) return;
+    e.preventDefault();
+    track.scrollLeft = scrollL - (e.pageX - track.offsetLeft - startX) * 1.6;
+  });
+})();
+
+function carScroll(dir) {
+  const t = document.getElementById('pgrid');
+  if (t) t.scrollBy({ left: dir * 295, behavior: 'smooth' });
+}
 
 // INIT
 renderCart();
