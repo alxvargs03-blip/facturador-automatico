@@ -241,16 +241,27 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
 .socials a:hover{background:var(--gold)}
 
 /* ZOOM REVEAL */
-#zoom-reveal{height:280vh;position:relative}
-.zoom-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--bg)}
-#zoom-img{width:88%;max-width:700px;object-fit:contain;transform:scale(7);transform-origin:47% 32%;will-change:transform;display:block}
-.zoom-hint{position:absolute;bottom:2.8rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;transition:opacity .4s;pointer-events:none}
-.zoom-hint span{color:var(--muted);font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
-.zoom-arrow-line{width:1.5px;height:44px;background:linear-gradient(to bottom,var(--gold),transparent);animation:zbob 1.6s ease-in-out infinite}
-@keyframes zbob{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.4;transform:scaleY(.7)}}
-.zoom-final{position:absolute;bottom:14%;left:50%;transform:translateX(-50%) translateY(18px);text-align:center;opacity:0;transition:opacity .55s ease,transform .55s ease;pointer-events:none;white-space:nowrap}
+#zoom-reveal{height:400vh;position:relative}
+.zoom-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:#0c1220}
+#fabric-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;will-change:opacity}
+#zoom-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(3.2);transform-origin:center center;max-width:85%;max-height:88vh;object-fit:contain;z-index:2;opacity:0;will-change:transform,opacity}
+.zoom-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 28%,rgba(12,18,32,.6) 100%);z-index:4;pointer-events:none}
+/* scroll hint */
+.zoom-hint{position:absolute;bottom:2.4rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.45rem;transition:opacity .35s;pointer-events:none;z-index:5}
+.zoom-hint span{color:rgba(255,255,255,.45);font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase}
+.zoom-arrow-line{width:1px;height:38px;background:linear-gradient(to bottom,var(--gold),transparent);animation:zbob 1.6s ease-in-out infinite}
+@keyframes zbob{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.3;transform:scaleY(.6)}}
+/* feature labels */
+.zoom-label{position:absolute;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:opacity .5s ease;pointer-events:none;z-index:5;width:88%;max-width:560px}
+.zoom-label.top{top:10%}.zoom-label.bottom{bottom:10%}
+.zoom-label .zlbig{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:600;color:#fff;line-height:1.1;margin-bottom:.45rem}
+.zoom-label .zlsub{color:rgba(255,255,255,.5);font-size:.88rem;font-weight:400;line-height:1.7}
+.zoom-label .zlnum{display:inline-block;background:var(--gold);color:var(--primary);font-size:.65rem;font-weight:800;padding:.2rem .65rem;border-radius:100px;letter-spacing:.1em;margin-bottom:.75rem;text-transform:uppercase}
+.zoom-label.on{opacity:1}
+/* final cta */
+.zoom-final{position:absolute;bottom:11%;left:50%;transform:translateX(-50%) translateY(16px);text-align:center;opacity:0;transition:opacity .5s,transform .5s;pointer-events:none;z-index:5;white-space:nowrap}
 .zoom-final.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all}
-.zoom-final p{color:var(--muted);font-size:.9rem;margin-bottom:1rem;font-style:italic}
+.zoom-final p{color:rgba(255,255,255,.55);font-size:.88rem;margin-bottom:1rem;font-style:italic}
 
 /* CAROUSEL */
 .car-wrap{position:relative}
@@ -407,11 +418,33 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
 <!-- ZOOM REVEAL -->
 <section id="zoom-reveal">
   <div class="zoom-sticky">
+    <canvas id="fabric-canvas"></canvas>
     <img src="assets/unicuna nuevo/header.png" id="zoom-img" alt="Colchón UNICUNA® Memory">
+    <div class="zoom-vignette"></div>
+
+    <div class="zoom-label top" id="zlabel1">
+      <div class="zlnum">01 — Material</div>
+      <div class="zlbig">Tejido hipoalergénico</div>
+      <div class="zlsub">Fibras certificadas libres de alérgenos y toxinas.<br>Suave al tacto, seguro desde el primer día.</div>
+    </div>
+
+    <div class="zoom-label bottom" id="zlabel2">
+      <div class="zlnum">02 — Tecnología</div>
+      <div class="zlbig">Transpirable 360°</div>
+      <div class="zlsub">Ventilación natural que regula la temperatura<br>y previene el sobrecalentamiento.</div>
+    </div>
+
+    <div class="zoom-label top" id="zlabel3">
+      <div class="zlnum">03 — Estructura</div>
+      <div class="zlbig">Soporte ortopédico</div>
+      <div class="zlsub">Firmeza calibrada para el desarrollo sano<br>de la columna vertebral de tu bebé.</div>
+    </div>
+
     <div class="zoom-hint" id="zoom-hint">
       <span>Desliza</span>
       <div class="zoom-arrow-line"></div>
     </div>
+
     <div class="zoom-final" id="zoom-final">
       <p>El colchón premium para tu bebé</p>
       <a href="#inicio" class="btn-gold">Descubrirlo →</a>
@@ -859,29 +892,122 @@ window.addEventListener('scroll', () => {
   });
 }, { passive: true });
 
-// ZOOM REVEAL SCROLL
+// ZOOM REVEAL — canvas fabric + crossfade to product image
 ;(function(){
   const section = document.getElementById('zoom-reveal');
-  const img = document.getElementById('zoom-img');
-  const hint = document.getElementById('zoom-hint');
-  const final = document.getElementById('zoom-final');
-  if (!section || !img) return;
+  const canvas  = document.getElementById('fabric-canvas');
+  const img     = document.getElementById('zoom-img');
+  const hint    = document.getElementById('zoom-hint');
+  const final   = document.getElementById('zoom-final');
+  const l1      = document.getElementById('zlabel1');
+  const l2      = document.getElementById('zlabel2');
+  const l3      = document.getElementById('zlabel3');
+  if (!section || !canvas || !img) return;
+
+  // ── Draw woven fabric on canvas (always crisp, no pixelation) ──
+  function drawFabric() {
+    const dpr = window.devicePixelRatio || 1;
+    const W = window.innerWidth, H = window.innerHeight;
+    canvas.width  = W * dpr; canvas.height = H * dpr;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    const T = 11; // thread thickness in CSS px
+
+    // dark base so gaps look like depth
+    ctx.fillStyle = '#1a100a';
+    ctx.fillRect(0, 0, W, H);
+
+    const rows = Math.ceil(H / T) + 2;
+    const cols = Math.ceil(W / T) + 2;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const x = c * T, y = r * T;
+        const warpTop = (r + c) % 2 === 0;
+
+        // bottom thread (flattened, darker)
+        const bot = ctx.createLinearGradient(
+          warpTop ? x : x,  warpTop ? y : y,
+          warpTop ? x : x,  warpTop ? y+T : y+T
+        );
+        if (warpTop) {
+          // weft on bottom: horizontal ribbon, darker
+          const g = ctx.createLinearGradient(x, y, x, y+T);
+          g.addColorStop(0, '#9a8060'); g.addColorStop(.5, '#c8a878'); g.addColorStop(1, '#9a8060');
+          ctx.fillStyle = g; ctx.fillRect(x, y, T, T);
+        } else {
+          // warp on bottom: vertical ribbon, darker
+          const g = ctx.createLinearGradient(x, y, x+T, y);
+          g.addColorStop(0, '#8a7050'); g.addColorStop(.5, '#b89868'); g.addColorStop(1, '#8a7050');
+          ctx.fillStyle = g; ctx.fillRect(x, y, T, T);
+        }
+
+        // top thread (brighter, cream/beige highlight)
+        if (warpTop) {
+          // warp on top: vertical ribbon with highlight
+          const g = ctx.createLinearGradient(x, y, x+T, y);
+          g.addColorStop(0,   '#c0a880');
+          g.addColorStop(.18, '#e8d4b0');
+          g.addColorStop(.42, '#f8eedc'); // peak highlight
+          g.addColorStop(.58, '#f8eedc');
+          g.addColorStop(.82, '#e8d4b0');
+          g.addColorStop(1,   '#c0a880');
+          ctx.fillStyle = g; ctx.fillRect(x, y, T, T);
+        } else {
+          // weft on top: horizontal ribbon with highlight
+          const g = ctx.createLinearGradient(x, y, x, y+T);
+          g.addColorStop(0,   '#b09870');
+          g.addColorStop(.18, '#d8c098');
+          g.addColorStop(.42, '#f0e2c8'); // peak highlight
+          g.addColorStop(.58, '#f0e2c8');
+          g.addColorStop(.82, '#d8c098');
+          g.addColorStop(1,   '#b09870');
+          ctx.fillStyle = g; ctx.fillRect(x, y, T, T);
+        }
+
+        // micro shadow at crossing edge
+        ctx.fillStyle = 'rgba(20,10,0,0.22)';
+        ctx.fillRect(x + T*0.78, y, T*0.22, T);
+        ctx.fillRect(x, y + T*0.78, T, T*0.22);
+      }
+    }
+  }
+
+  drawFabric();
+  window.addEventListener('resize', drawFabric);
+
+  // ── Scroll handler ──
+  function ease(t){ return t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; }
+  function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+  function remap(v, a, b){ return clamp01((v-a)/(b-a)); }
 
   function update() {
     const top = section.getBoundingClientRect().top;
     const scrollable = section.offsetHeight - window.innerHeight;
-    const p = Math.max(0, Math.min(1, -top / scrollable));
+    const p = clamp01(-top / scrollable);
 
-    // escala 7 → 1 conforme avanza el scroll
-    const scale = 7 - 6 * p;
-    img.style.transform = `scale(${scale})`;
-    img.style.transformOrigin = '47% 32%';
+    // Canvas: visible 0→0.28, fade out 0.28→0.46
+    canvas.style.opacity = p < .28 ? 1 : Math.max(0, 1 - remap(p, .28, .46) );
 
-    // hint desaparece al empezar
-    if (hint) hint.style.opacity = p < 0.06 ? 1 : Math.max(0, 1 - p * 8);
+    // Image: fade in 0.36→0.52, then zoom out 3.2x→1x from 0.36→0.93
+    const imgFade  = remap(p, .36, .52);
+    const imgZoomP = ease(remap(p, .36, .93));
+    const imgScale = 3.2 - 2.2 * imgZoomP;
+    img.style.opacity   = imgFade;
+    img.style.transform = `translate(-50%,-50%) scale(${imgScale})`;
 
-    // CTA aparece al final
-    if (final) final.classList.toggle('on', p > 0.9);
+    // Hint
+    if (hint) hint.style.opacity = p < .04 ? 1 : Math.max(0, 1 - p * 18);
+
+    // Labels
+    if (l1) l1.classList.toggle('on', p > .06 && p < .28);
+    if (l2) l2.classList.toggle('on', p > .42 && p < .63);
+    if (l3) l3.classList.toggle('on', p > .68 && p < .88);
+
+    // Final CTA
+    if (final) final.classList.toggle('on', p > .93);
   }
 
   window.addEventListener('scroll', update, { passive: true });
