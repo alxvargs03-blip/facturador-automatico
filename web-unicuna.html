@@ -301,7 +301,7 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
 
 /* THREAD REVEAL */
 #thread-reveal{height:300vh;position:relative}
-.thread-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:#07060a}
+.thread-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:#0c1628}
 #thread-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 .thread-hint{position:absolute;bottom:2.4rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.45rem;transition:opacity .35s;pointer-events:none;z-index:5}
 .thread-hint span{color:rgba(255,255,255,.45);font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase}
@@ -314,7 +314,7 @@ footer{background:#0f1623;color:rgba(255,255,255,.65);padding:4rem 2rem 2rem}
 .thread-label .tlnum{display:inline-block;background:var(--gold);color:var(--primary);font-size:.65rem;font-weight:800;padding:.2rem .65rem;border-radius:100px;letter-spacing:.1em;margin-bottom:.75rem;text-transform:uppercase}
 .thread-label.on{opacity:1}
 /* product reveal */
-#product-reveal{background:#07060a;padding:8rem 2rem 10rem;text-align:center}
+#product-reveal{background:#0c1628;padding:8rem 2rem 10rem;text-align:center}
 .pr-eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem}
 .pr-img{max-width:600px;width:90%;display:block;margin:0 auto;border-radius:18px;box-shadow:0 40px 120px rgba(0,0,0,.6)}
 .pr-caption{margin-top:2.5rem;font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.8rem);color:#fff;font-weight:600}
@@ -963,14 +963,14 @@ window.addEventListener('scroll', () => {
   });
 }, { passive: true });
 
-// THREAD REVEAL — animated spinning golden helix + scroll labels
+// FABRIC REVEAL — woven textile threads scroll animation
 ;(function(){
   const section = document.getElementById('thread-reveal');
   const canvas  = document.getElementById('thread-canvas');
   const hint    = document.getElementById('thread-hint');
-  const l1      = document.getElementById('tlabel1');
-  const l2      = document.getElementById('tlabel2');
-  const l3      = document.getElementById('tlabel3');
+  const l1 = document.getElementById('tlabel1');
+  const l2 = document.getElementById('tlabel2');
+  const l3 = document.getElementById('tlabel3');
   if (!section || !canvas) return;
 
   const ctx = canvas.getContext('2d');
@@ -988,80 +988,120 @@ window.addEventListener('scroll', () => {
   resize();
   window.addEventListener('resize', resize);
 
-  let t = 0;
-  let scrollP = 0;
+  let t = 0, scrollP = 0;
 
-  function helixPoint(strandPhase, frac) {
-    const angle  = frac * Math.PI * 2 * 7 + t + strandPhase;
-    const helixH = Math.min(H * 0.72, 440);
-    const ampX   = Math.min(W * 0.13, 100);
-    const cx = W / 2, cy = H / 2;
-    return {
-      x:     cx + Math.cos(angle) * ampX,
-      y:     cy - helixH / 2 + frac * helixH,
-      depth: Math.sin(angle)
-    };
-  }
+  // Warm fabric palette — cream, ivory, linen, with gold accents
+  const CREAM = [[240,235,224],[232,227,212],[237,231,218],[245,240,232],[220,213,198],[200,192,178]];
+  const GOLD_RGB = [201,169,110];
+
+  function rgba(rgb, a) { return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a.toFixed(2)})`; }
 
   function drawFrame() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#07060a';
+
+    // Deep navy background — UNICUNA brand color
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#0e1e3a');
+    bg.addColorStop(1, '#08111f');
+    ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
-    const STEPS = 300;
-    const segments = [];
+    const N = 80; // number of horizontal threads
+    const baseSpacing = H / N;
 
-    for (let strand = 0; strand < 2; strand++) {
-      const phase = strand * Math.PI;
-      for (let i = 0; i < STEPS; i++) {
-        const a = helixPoint(phase, i / STEPS);
-        const b = helixPoint(phase, (i + 1) / STEPS);
-        segments.push({ a, b, depth: (a.depth + b.depth) / 2 });
-      }
-    }
-    segments.sort((a, b) => a.depth - b.depth);
+    for (let i = 0; i < N; i++) {
+      // Base Y: threads spread across full height
+      const baseY = (i + 0.5) * baseSpacing;
 
-    for (const seg of segments) {
-      const { a, b, depth } = seg;
-      const v  = (depth + 1) / 2;
-      const r  = Math.round(60  + 195 * v);
-      const g  = Math.round(35  + 125 * v);
-      const bl = Math.round(0   + 8   * v);
-      const lw = (v * 0.55 + 0.45) * 13;
+      // As scroll increases threads gently converge toward center (fabric tightening)
+      const pull = Math.pow(scrollP, 0.6) * 0.22;
+      const y = baseY + (H / 2 - baseY) * pull;
 
+      // Wave amplitude: high at start, flattens as fabric forms
+      const maxAmp = baseSpacing * 1.4;
+      const amp = maxAmp * Math.max(0.05, 1 - scrollP * 0.88);
+
+      // Each thread has unique frequency and phase — organic feel
+      const freq = 2.2 + (i % 5) * 0.4;
+      const phaseDir = (i % 2 === 0) ? 1 : -0.85; // alternating wave direction
+      const phase = i * 0.52 + t * phaseDir;
+
+      // Weave depth: odd threads go "above", even go "below"
+      const isAbove = (i % 2 === 0);
+
+      // Gold accent every 9th thread
+      const isGold = (i % 9 === 0);
+      const rgb = isGold ? GOLD_RGB : CREAM[i % CREAM.length];
+
+      // Brightness: above threads are brighter with shimmer
+      const shimmer = isAbove
+        ? 0.72 + 0.28 * Math.sin(t * 1.8 + i * 0.9)
+        : 0.25 + 0.12 * Math.sin(t * 1.1 + i * 0.6);
+
+      // Line width: above threads slightly thicker for 3D weave illusion
+      const lw = isAbove
+        ? 0.9 + scrollP * 0.55 + (isGold ? 0.4 : 0)
+        : 0.45 + scrollP * 0.2;
+
+      // Draw thread as smooth sine wave across full width
       ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
-      ctx.strokeStyle = `rgb(${r},${g},${bl})`;
-      ctx.lineWidth   = lw;
-      ctx.lineCap     = 'round';
-      ctx.stroke();
-
-      if (depth > 0.25) {
-        const alpha = ((depth - 0.25) / 0.75) * 0.5;
-        ctx.beginPath();
-        ctx.moveTo(a.x - 1.5, a.y);
-        ctx.lineTo(b.x - 1.5, b.y);
-        ctx.strokeStyle = `rgba(255,218,100,${alpha.toFixed(2)})`;
-        ctx.lineWidth   = lw * 0.4;
-        ctx.stroke();
+      const step = Math.max(2, Math.floor(W / 320));
+      ctx.moveTo(0, y + Math.sin(phase) * amp);
+      for (let x = step; x <= W; x += step) {
+        const wave = Math.sin(x * freq * Math.PI / W * 2 + phase) * amp;
+        ctx.lineTo(x, y + wave);
       }
+
+      ctx.strokeStyle = rgba(rgb, shimmer);
+      ctx.lineWidth = lw;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // Subtle glow on gold threads and above-layer threads
+      if (isGold || (isAbove && scrollP > 0.15)) {
+        ctx.shadowColor = isGold ? 'rgba(201,169,110,0.35)' : 'rgba(240,235,224,0.18)';
+        ctx.shadowBlur = isGold ? 5 : 2;
+      } else {
+        ctx.shadowBlur = 0;
+      }
+      ctx.stroke();
+    }
+    ctx.shadowBlur = 0;
+
+    // Soft vignette edges — darkens sides for focus
+    const vgL = ctx.createLinearGradient(0, 0, W * 0.18, 0);
+    vgL.addColorStop(0, 'rgba(8,17,31,0.92)');
+    vgL.addColorStop(1, 'rgba(8,17,31,0)');
+    ctx.fillStyle = vgL; ctx.fillRect(0, 0, W, H);
+
+    const vgR = ctx.createLinearGradient(W, 0, W * 0.82, 0);
+    vgR.addColorStop(0, 'rgba(8,17,31,0.92)');
+    vgR.addColorStop(1, 'rgba(8,17,31,0)');
+    ctx.fillStyle = vgR; ctx.fillRect(0, 0, W, H);
+
+    // Top & bottom vignette
+    const vgT = ctx.createLinearGradient(0, 0, 0, H * 0.14);
+    vgT.addColorStop(0, 'rgba(8,17,31,0.88)'); vgT.addColorStop(1, 'rgba(8,17,31,0)');
+    ctx.fillStyle = vgT; ctx.fillRect(0, 0, W, H);
+    const vgB = ctx.createLinearGradient(0, H, 0, H * 0.86);
+    vgB.addColorStop(0, 'rgba(8,17,31,0.88)'); vgB.addColorStop(1, 'rgba(8,17,31,0)');
+    ctx.fillStyle = vgB; ctx.fillRect(0, 0, W, H);
+
+    // Thread density label — at high scroll show "fabric formed" glow
+    if (scrollP > 0.85) {
+      const glow = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.min(W,H)*0.38);
+      glow.addColorStop(0, `rgba(201,169,110,${((scrollP-0.85)/0.15*0.12).toFixed(2)})`);
+      glow.addColorStop(1, 'rgba(201,169,110,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, W, H);
     }
 
-    // Vignette
-    const cx = W / 2, cy = H / 2;
-    const vg = ctx.createRadialGradient(cx, cy, Math.min(W,H)*0.18, cx, cy, Math.max(W,H)*0.75);
-    vg.addColorStop(0, 'rgba(0,0,0,0)');
-    vg.addColorStop(1, 'rgba(0,0,0,0.85)');
-    ctx.fillStyle = vg;
-    ctx.fillRect(0, 0, W, H);
-
-    t += 0.016 + scrollP * 0.028;
+    t += 0.007 + scrollP * 0.014;
     requestAnimationFrame(drawFrame);
   }
   requestAnimationFrame(drawFrame);
 
-  function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+  function clamp01(v) { return Math.max(0, Math.min(1, v)); }
 
   function update() {
     const top = section.getBoundingClientRect().top;
