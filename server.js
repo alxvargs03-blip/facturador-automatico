@@ -520,6 +520,8 @@ app.post('/api/payments/process', async (req, res) => {
       external_reference: orderId,
       payer: {
         email: formData.payer?.email || custEmail || 'test@testuser.com',
+        first_name: formData.payer?.first_name || custName.split(' ')[0] || 'Cliente',
+        last_name: formData.payer?.last_name || custName.split(' ').slice(1).join(' ') || 'Unicuna',
       },
     }
 
