@@ -511,44 +511,23 @@ app.post('/api/payments/process', async (req, res) => {
 
     const orderId = 'UC-' + Date.now().toString(36).toUpperCase()
 
+    console.log('[payments/process] formData keys:', Object.keys(formData), 'pm_id:', formData.payment_method_id, 'hasToken:', !!formData.token, 'amount:', totalAmount)
+
     const body = {
       transaction_amount: totalAmount,
       description: `UNICUNA® — ${items.map(i => i.product_name || i.name).join(', ').slice(0, 100)}`,
       payment_method_id: formData.payment_method_id,
       external_reference: orderId,
       payer: {
-        email: formData.payer?.email || custEmail || 'cliente@unicuna.mx',
-        first_name: custName.split(' ')[0] || 'Cliente',
-        last_name: custName.split(' ').slice(1).join(' ') || 'UNICUNA',
-        ...(formData.payer?.identification?.number
-          ? { identification: formData.payer.identification } : {}),
+        email: formData.payer?.email || custEmail || 'test@testuser.com',
       },
-      additional_info: {
-        items: items.map(i => ({
-          id: String(i.sku || i.product_name || i.name),
-          title: i.product_name || i.name,
-          quantity: Number(i.quantity || i.qty || 1),
-          unit_price: Number(i.price),
-          category_id: 'home'
-        })),
-        payer: { phone: { number: custPhone } },
-        shipments: {
-          receiver_address: {
-            zip_code:      addrFields.cp      || '',
-            state_name:    addrFields.estado  || '',
-            city_name:     addrFields.ciudad  || '',
-            street_name:   addrFields.calle   || '',
-            street_number: addrFields.numExt  || ''
-          }
-        }
-      }
     }
 
     // Card-specific fields
     if (formData.token) {
       body.token = formData.token
       body.installments = Number(formData.installments) || 1
-      body.issuer_id = formData.issuer_id
+      if (formData.issuer_id) body.issuer_id = String(formData.issuer_id)
     }
 
     let result
