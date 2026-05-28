@@ -490,9 +490,20 @@ app.post('/api/payments/process', async (req, res) => {
   }
   try {
     const { formData, orderData } = req.body
-    if (!formData || !orderData?.total) {
+    if (!formData || !orderData) {
       return res.status(400).json({ ok: false, error: 'Datos de pago incompletos' })
     }
+
+    // Normalize field names (frontend uses snake_case)
+    const custName    = orderData.customer_name    || ''
+    const custEmail   = orderData.customer_email   || ''
+    const custPhone   = orderData.customer_phone   || ''
+    const shipAddr    = orderData.shipping_address || ''
+    const addrFields  = orderData.address_fields   || {}
+    const shipCost    = Number(orderData.shipping_cost) || 0
+    const items       = orderData.items            || []
+    const totalAmount = Number(orderData.total)    ||
+      items.reduce((s, i) => s + Number(i.price) * Number(i.quantity || i.qty || 1), 0) + shipCost
 
     const { Payment } = await import('mercadopago')
     const client = await getMPClient()
@@ -501,40 +512,40 @@ app.post('/api/payments/process', async (req, res) => {
     const orderId = 'UC-' + Date.now().toString(36).toUpperCase()
 
     const body = {
-      transaction_amount: Number(orderData.total),
-      description: `UNICUNA® — ${(orderData.items || []).map(i => i.name).join(', ').slice(0, 100)}`,
+      transaction_amount: totalAmount,
+      description: `UNICUNA® — ${items.map(i => i.product_name || i.name).join(', ').slice(0, 100)}`,
       payment_method_id: formData.payment_method_id,
       external_reference: orderId,
       payer: {
-        email: formData.payer?.email || orderData.email || 'cliente@unicuna.mx',
-        first_name: (orderData.name || '').split(' ')[0],
-        last_name: (orderData.name || '').split(' ').slice(1).join(' ') || '',
+        email: formData.payer?.email || custEmail || 'cliente@unicuna.mx',
+        first_name: custName.split(' ')[0],
+        last_name: custName.split(' ').slice(1).join(' ') || '',
         identification: formData.payer?.identification,
         address: {
-          zip_code: orderData.addressFields?.cp || '',
-          street_name: orderData.addressFields?.calle || '',
-          street_number: orderData.addressFields?.numExt || '',
-          city: orderData.addressFields?.ciudad || '',
-          federal_unit: orderData.addressFields?.estado || '',
-          neighborhood: orderData.addressFields?.colonia || ''
+          zip_code:      addrFields.cp      || '',
+          street_name:   addrFields.calle   || '',
+          street_number: addrFields.numExt  || '',
+          city:          addrFields.ciudad  || '',
+          federal_unit:  addrFields.estado  || '',
+          neighborhood:  addrFields.colonia || ''
         }
       },
       additional_info: {
-        items: (orderData.items || []).map(i => ({
-          id: String(i.sku || i.name),
-          title: i.name,
-          quantity: Number(i.qty),
+        items: items.map(i => ({
+          id: String(i.sku || i.product_name || i.name),
+          title: i.product_name || i.name,
+          quantity: Number(i.quantity || i.qty || 1),
           unit_price: Number(i.price),
           category_id: 'home'
         })),
-        payer: { phone: { number: orderData.phone || '' } },
+        payer: { phone: { number: custPhone } },
         shipments: {
           receiver_address: {
-            zip_code:    orderData.addressFields?.cp      || '',
-            state_name:  orderData.addressFields?.estado  || '',
-            city_name:   orderData.addressFields?.ciudad  || '',
-            street_name: orderData.addressFields?.calle   || '',
-            street_number: orderData.addressFields?.numExt || ''
+            zip_code:      addrFields.cp      || '',
+            state_name:    addrFields.estado  || '',
+            city_name:     addrFields.ciudad  || '',
+            street_name:   addrFields.calle   || '',
+            street_number: addrFields.numExt  || ''
           }
         }
       }
@@ -551,14 +562,14 @@ app.post('/api/payments/process', async (req, res) => {
 
     if (result.status === 'rejected') {
       const msgs = {
-        cc_rejected_bad_filled_card_number: 'Número de tarjeta incorrecto',
-        cc_rejected_bad_filled_date:        'Fecha de vencimiento incorrecta',
-        cc_rejected_bad_filled_security_code: 'CVV incorrecto',
-        cc_rejected_bad_filled_other:       'Datos de tarjeta incorrectos',
-        cc_rejected_insufficient_amount:    'Fondos insuficientes',
-        cc_rejected_card_disabled:          'Tarjeta inactiva — actívala con tu banco',
-        cc_rejected_call_for_authorize:     'Tu banco necesita autorizar este pago',
-        cc_rejected_max_attempts:           'Demasiados intentos — espera o usa otra tarjeta',
+        cc_rejected_bad_filled_card_number:    'Número de tarjeta incorrecto',
+        cc_rejected_bad_filled_date:           'Fecha de vencimiento incorrecta',
+        cc_rejected_bad_filled_security_code:  'CVV incorrecto',
+        cc_rejected_bad_filled_other:          'Datos de tarjeta incorrectos',
+        cc_rejected_insufficient_amount:       'Fondos insuficientes',
+        cc_rejected_card_disabled:             'Tarjeta inactiva — actívala con tu banco',
+        cc_rejected_call_for_authorize:        'Tu banco necesita autorizar este pago',
+        cc_rejected_max_attempts:              'Demasiados intentos — espera o usa otra tarjeta',
       }
       return res.status(400).json({
         ok: false,
@@ -570,34 +581,34 @@ app.post('/api/payments/process', async (req, res) => {
     await createOrder({
       id: orderId,
       user_id: req.session?.userId || null,
-      name: orderData.name, phone: orderData.phone, email: orderData.email,
-      shipping_address: orderData.address,
-      address_fields: orderData.addressFields,
+      name: custName, phone: custPhone, email: custEmail,
+      shipping_address: shipAddr,
+      address_fields: addrFields,
       payment_method: formData.payment_method_id,
       payment_status: result.status,
       mp_payment_id: String(result.id),
-      shipping_cost: Number(orderData.shippingCost) || 0,
-      total: Number(orderData.total),
+      shipping_cost: shipCost,
+      total: totalAmount,
       notes: orderData.notes || '',
       status: result.status === 'approved' ? 'confirmada' : 'pendiente'
-    }, (orderData.items || []).map(i => ({
-      sku: i.sku, product_name: i.name,
+    }, items.map(i => ({
+      sku: i.sku, product_name: i.product_name || i.name,
       color: i.color, size: i.size,
-      price: Number(i.price), quantity: Number(i.qty)
+      price: Number(i.price), quantity: Number(i.quantity || i.qty || 1)
     })))
 
     // Build WhatsApp notification URL for Monserrat
-    const itemsText = (orderData.items || [])
-      .map(i => `• ${i.name} x${i.qty} — $${(i.price * i.qty).toLocaleString('es-MX')} MXN`).join('\n')
+    const itemsText = items
+      .map(i => `• ${i.product_name || i.name} x${i.quantity || i.qty} — $${(Number(i.price) * Number(i.quantity || i.qty || 1)).toLocaleString('es-MX')} MXN`).join('\n')
     const statusEmoji = result.status === 'approved' ? '✅' : '⏳'
     const waMsg = encodeURIComponent(
       `${statusEmoji} *PAGO ${result.status === 'approved' ? 'APROBADO' : 'PENDIENTE'} — UNICUNA®*\n\n` +
       `📦 Pedido: #${orderId}\n` +
-      `👤 Cliente: ${orderData.name}\n` +
-      `📱 Teléfono: ${orderData.phone}\n` +
-      `📍 Dirección: ${orderData.address}\n\n` +
+      `👤 Cliente: ${custName}\n` +
+      `📱 Teléfono: ${custPhone}\n` +
+      `📍 Dirección: ${shipAddr}\n\n` +
       `🛒 Productos:\n${itemsText}\n\n` +
-      `💳 Total: $${Number(orderData.total).toLocaleString('es-MX')} MXN\n` +
+      `💳 Total: $${totalAmount.toLocaleString('es-MX')} MXN\n` +
       `🔑 MP: ${result.id}`
     )
 

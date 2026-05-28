@@ -572,7 +572,8 @@ async function proceedToPayment() {
     notes: document.getElementById('notes').value.trim(),
     address_fields: getAddressFields(),
     items: cart.map(i => ({ sku: i.sku, product_name: i.name, color: i.color, size: i.size, price: i.price, quantity: i.qty })),
-    shipping_cost: shippingResult.cost
+    shipping_cost: shippingResult.cost,
+    total
   }
 
   let publicKey = null
