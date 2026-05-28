@@ -304,6 +304,7 @@
           <div class="bspin"></div>
           <p style="font-size:.84rem;color:var(--gray);margin-top:.8rem">Cargando métodos de pago…</p>
         </div>
+        <div id="brickError" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:.7rem 1rem;border-radius:8px;margin-bottom:1rem;font-size:.84rem;word-break:break-all"></div>
         <div id="paymentBrick_container"></div>
         <button class="btn-logout" onclick="backToData()" style="margin-top:1rem;width:100%;text-align:center">← Cambiar datos de envío</button>
       </div>
@@ -623,7 +624,12 @@ async function proceedToPayment() {
         })
         .then(r => r.json())
         .then(data => {
-          if (!data.ok) { reject(data.error); return }
+          if (!data.ok) {
+            const errEl = document.getElementById('brickError')
+            errEl.textContent = 'Error MP: ' + data.error
+            errEl.style.display = 'block'
+            reject(data.error); return
+          }
           saveCart([])
           if (data.status === 'pending' && data.ticketUrl) {
             showPendingScreen(data)
