@@ -551,7 +551,15 @@ app.post('/api/payments/process', async (req, res) => {
       body.issuer_id = formData.issuer_id
     }
 
-    const result = await mp.create({ body })
+    let result
+    try {
+      result = await mp.create({ body })
+    } catch (mpErr) {
+      const causes = Array.isArray(mpErr?.cause) ? mpErr.cause : []
+      const mpMsg = causes[0]?.description || mpErr?.message || 'Error MercadoPago'
+      console.error('[MP create error]', mpErr?.status, mpMsg, JSON.stringify(causes))
+      return res.status(422).json({ ok: false, error: mpMsg })
+    }
 
     if (result.status === 'rejected') {
       const msgs = {
