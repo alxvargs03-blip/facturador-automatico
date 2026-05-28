@@ -112,6 +112,8 @@
     .success-msg{color:var(--gray);margin-bottom:1.5rem;font-size:.92rem;line-height:1.7}
     .btn-continue{display:inline-block;background:var(--primary);color:#fff;padding:.8rem 1.8rem;border-radius:10px;text-decoration:none;font-weight:600;font-size:.95rem}
     .btn-continue:hover{background:var(--gold);color:var(--primary)}
+    @keyframes bspin{to{transform:rotate(360deg)}}
+    .bspin{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:bspin .8s linear infinite;margin:0 auto}
   </style>
 </head>
 <body>
@@ -283,52 +285,28 @@
         </div>
       </div>
 
-      <!-- Payment -->
-      <div class="card">
-        <div class="step-header">
-          <span class="step-num">4</span>
-          <span class="step-label">Datos de tarjeta</span>
-        </div>
-        <div class="card-form-header">
-          <span style="font-size:.8rem;color:var(--gray)">Crédito o débito</span>
-          <div class="card-brands">
-            <span class="card-brand visa">VISA</span>
-            <span class="card-brand mc">MC</span>
-            <span class="card-brand amex">AMEX</span>
-          </div>
-        </div>
-        <div class="field">
-          <label for="cardName">Nombre en la tarjeta</label>
-          <input type="text" id="cardName" placeholder="Como aparece en la tarjeta" autocomplete="cc-name" style="text-transform:uppercase"/>
-        </div>
-        <div class="field">
-          <label for="cardNumber">Número de tarjeta</label>
-          <div class="card-num-wrap">
-            <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" autocomplete="cc-number" maxlength="19" oninput="fmtCardNum(this)"/>
-            <span class="card-chip">💳</span>
-          </div>
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label for="cardExpiry">Vencimiento</label>
-            <input type="text" id="cardExpiry" placeholder="MM / AA" autocomplete="cc-exp" maxlength="7" oninput="fmtExpiry(this)"/>
-          </div>
-          <div class="field">
-            <label for="cardCvv">CVV</label>
-            <input type="text" id="cardCvv" placeholder="123" autocomplete="cc-csc" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')"/>
-          </div>
-        </div>
-        <div class="secure-badge">🔒 Pago 100% seguro y encriptado — MercadoPago</div>
-      </div>
-
-      <!-- Notes + Submit -->
+      <!-- Notes + Continue -->
       <div class="field">
         <label for="notes">Notas para el pedido <span class="opt-label">(opcional)</span></label>
         <textarea id="notes" placeholder="Instrucciones especiales de entrega, etc."></textarea>
       </div>
-      <button class="btn-primary btn-submit" id="btnSubmit" onclick="submitOrder()">
-        Confirmar y pagar →
+      <button class="btn-primary btn-submit" id="btnContinue" onclick="proceedToPayment()">
+        Continuar al pago →
       </button>
+
+      <!-- Step 4: Payment Brick -->
+      <div class="card" id="stepPayment" style="display:none;margin-top:1.2rem">
+        <div class="step-header">
+          <span class="step-num">4</span>
+          <span class="step-label">Pago seguro</span>
+        </div>
+        <div id="brickLoading" style="text-align:center;padding:1.5rem 0">
+          <div class="bspin"></div>
+          <p style="font-size:.84rem;color:var(--gray);margin-top:.8rem">Cargando métodos de pago…</p>
+        </div>
+        <div id="paymentBrick_container"></div>
+        <button class="btn-logout" onclick="backToData()" style="margin-top:1rem;width:100%;text-align:center">← Cambiar datos de envío</button>
+      </div>
 
     </div>
   </div>
@@ -530,17 +508,6 @@ async function doLogout() {
   document.getElementById('navAuthLink').href = '/login.html'
 }
 
-/* ─── Card formatters ───────────────────────────────────────── */
-function fmtCardNum(input) {
-  let v = input.value.replace(/\D/g, '').slice(0, 16)
-  input.value = v.replace(/(.{4})/g, '$1 ').trim()
-}
-function fmtExpiry(input) {
-  let v = input.value.replace(/\D/g, '').slice(0, 4)
-  if (v.length >= 3) v = v.slice(0,2) + ' / ' + v.slice(2)
-  input.value = v
-}
-
 /* ─── Build address string ──────────────────────────────────── */
 function buildAddress() {
   const calle   = document.getElementById('addrCalle').value.trim()
@@ -569,16 +536,16 @@ function getAddressFields() {
   }
 }
 
-/* ─── Submit order ──────────────────────────────────────────── */
-async function submitOrder() {
+/* ─── Payment Brick ─────────────────────────────────────────── */
+let mpBrickInstance = null
+
+async function proceedToPayment() {
   const name  = document.getElementById('custName').value.trim()
   const phone = document.getElementById('custPhone').value.trim()
   const email = document.getElementById('custEmail').value.trim()
   const cart  = getCart()
-  const notes = document.getElementById('notes').value.trim()
 
-  const err = document.getElementById('formError')
-  err.style.display = 'none'
+  document.getElementById('formError').style.display = 'none'
 
   if (!name || !phone || !email) return showFormError('Completa todos los datos de contacto')
   if (!/\S+@\S+\.\S+/.test(email)) return showFormError('Ingresa un correo electrónico válido')
@@ -588,96 +555,157 @@ async function submitOrder() {
   }
   if (!cart.length) return showFormError('Tu carrito está vacío')
 
-  // Validate shipping
   const estadoVal = document.getElementById('addrEstado').value.trim()
   const shippingResult = getShipping(estadoVal)
-  if (!shippingResult) {
-    const cart2 = getCart()
-    const msg = encodeURIComponent(`Hola UNICUNA® 👋, quisiera cotizar envío internacional a: ${estadoVal}\n\nProductos:\n${cart2.map(i=>`• ${i.name} — ${i.color||''} ${i.size||''}`).join('\n')}`)
-    return showFormError(`Solo enviamos dentro de México. Para envíos internacionales escríbenos por WhatsApp: https://wa.me/525637725305?text=${encodeURIComponent('Hola, quiero cotizar envío a ' + estadoVal)}`)
+  if (!shippingResult) return showFormError('Solo enviamos dentro de México. Escríbenos por WhatsApp para envíos internacionales.')
+
+  document.getElementById('btnContinue').style.display = 'none'
+  document.getElementById('stepPayment').style.display = 'block'
+  document.getElementById('stepPayment').scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0)
+  const total = subtotal + shippingResult.cost
+
+  const orderData = {
+    customer_name: name, customer_email: email, customer_phone: phone,
+    shipping_address: buildAddress(),
+    notes: document.getElementById('notes').value.trim(),
+    address_fields: getAddressFields(),
+    items: cart.map(i => ({ sku: i.sku, product_name: i.name, color: i.color, size: i.size, price: i.price, quantity: i.qty })),
+    shipping_cost: shippingResult.cost
   }
 
-  // Validate card fields
-  const cardName   = document.getElementById('cardName').value.trim()
-  const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g,'')
-  const cardExpiry = document.getElementById('cardExpiry').value.replace(/\s/g,'')
-  const cardCvv    = document.getElementById('cardCvv').value.trim()
-  if (!cardName)               return showFormError('Ingresa el nombre que aparece en la tarjeta')
-  if (cardNumber.length < 15)  return showFormError('Número de tarjeta inválido')
-  if (cardExpiry.replace('/','').length < 4) return showFormError('Ingresa la fecha de vencimiento')
-  if (cardCvv.length < 3)      return showFormError('CVV inválido')
+  let publicKey = null
+  try {
+    const cfg = await fetch('/api/payments/config').then(r => r.json())
+    if (cfg.ok) publicKey = cfg.publicKey
+  } catch {}
 
-  const btn = document.getElementById('btnSubmit')
-  btn.disabled = true; btn.textContent = 'Procesando...'
+  if (!publicKey) {
+    document.getElementById('brickLoading').style.display = 'none'
+    await submitViaWhatsApp(name, phone, email, cart, shippingResult, orderData)
+    return
+  }
+
+  if (!window.MercadoPago) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script')
+      s.src = 'https://sdk.mercadopago.com/js/v2'
+      s.onload = res; s.onerror = rej
+      document.head.appendChild(s)
+    })
+  }
+
+  const mp = new window.MercadoPago(publicKey, { locale: 'es-MX' })
+  document.getElementById('brickLoading').style.display = 'none'
+
+  mpBrickInstance = await mp.bricks().create('payment', 'paymentBrick_container', {
+    initialization: { amount: total, payer: { email } },
+    customization: {
+      paymentMethods: {
+        creditCard: 'all', debitCard: 'all',
+        ticket: 'all', bankTransfer: 'all', maxInstallments: 12
+      },
+      visual: {
+        style: {
+          theme: 'default',
+          customVariables: { baseColor: '#1e2d52', buttonTextColor: '#ffffff' }
+        }
+      }
+    },
+    callbacks: {
+      onReady: () => {},
+      onSubmit: ({ formData }) => new Promise((resolve, reject) => {
+        fetch('/api/payments/process', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ formData, orderData })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (!data.ok) { reject(data.error); return }
+          saveCart([])
+          if (data.status === 'pending' && data.ticketUrl) {
+            showPendingScreen(data)
+          } else {
+            showSuccessScreen(data, email, total, shippingResult.cost, subtotal)
+          }
+          if (data.whatsappUrl) setTimeout(() => window.open(data.whatsappUrl, '_blank'), 1500)
+          resolve()
+        })
+        .catch(e => reject(e.message || 'Error al procesar el pago'))
+      }),
+      onError: err => console.error('MP Brick error:', err)
+    }
+  })
+}
+
+function backToData() {
+  if (mpBrickInstance) { try { mpBrickInstance.unmount() } catch {} mpBrickInstance = null }
+  document.getElementById('paymentBrick_container').innerHTML = ''
+  const loading = document.getElementById('brickLoading')
+  loading.style.display = 'block'
+  loading.innerHTML = '<div class="bspin"></div><p style="font-size:.84rem;color:var(--gray);margin-top:.8rem">Cargando métodos de pago…</p>'
+  document.getElementById('stepPayment').style.display = 'none'
+  document.getElementById('btnContinue').style.display = 'block'
+}
+
+function showSuccessScreen(data, email, total, shippingCost, subtotal) {
+  document.getElementById('checkoutWrap').style.display = 'none'
+  document.getElementById('successMsg').innerHTML =
+    `Tu pedido <strong>#${data.orderId}</strong> fue confirmado.<br>` +
+    `Subtotal: $${subtotal.toLocaleString('es-MX')} · Envío: $${shippingCost.toLocaleString('es-MX')} MXN<br>` +
+    `Total: <strong>$${total.toLocaleString('es-MX')} MXN</strong><br><br>` +
+    `Revisa tu correo — te enviamos la confirmación a <em>${email}</em>.`
+  document.getElementById('successScreen').style.display = 'block'
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+function showPendingScreen(data) {
+  document.getElementById('checkoutWrap').style.display = 'none'
+  document.getElementById('successScreen').querySelector('.success-icon').textContent = '⏳'
+  document.getElementById('successScreen').querySelector('.success-title').textContent = 'Pedido pendiente de pago'
+  document.getElementById('successMsg').innerHTML =
+    `Tu pedido <strong>#${data.orderId}</strong> fue generado.<br><br>` +
+    (data.ticketUrl ? `<a href="${data.ticketUrl}" target="_blank" style="color:var(--gold);font-weight:600">Ver ficha de pago →</a><br><br>` : '') +
+    `El pedido se confirmará automáticamente cuando se acredite el pago.`
+  document.getElementById('successScreen').style.display = 'block'
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+async function submitViaWhatsApp(name, phone, email, cart, shippingResult, orderData) {
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0)
+  const total = subtotal + (shippingResult?.cost || 0)
+  const itemsList = cart.map(i => `• ${i.name}${i.color ? ` (${i.color})` : ''} x${i.qty} — $${(i.price*i.qty).toLocaleString('es-MX')}`).join('\n')
+  const notes = orderData.notes ? `\n\n📝 Notas: ${orderData.notes}` : ''
+  const msg = encodeURIComponent(`🛒 Pedido UNICUNA®\n\n👤 ${name}\n📧 ${email}\n📱 ${phone}\n📦 ${orderData.shipping_address}\n\nProductos:\n${itemsList}\n\n💰 Total: $${total.toLocaleString('es-MX')} MXN${notes}`)
 
   try {
-    const addressFields = getAddressFields()
     const res = await fetch('/api/orders', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        customer_name: name, customer_email: email, customer_phone: phone,
-        shipping_address: buildAddress(), payment_method: 'tarjeta', notes,
-        address_fields: addressFields,
-        items: cart.map(i => ({
-          sku: i.sku, product_name: i.name,
-          color: i.color, size: i.size, price: i.price, quantity: i.qty
-        }))
-      })
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...orderData, payment_method: 'whatsapp' })
     })
-    const data = await res.json()
-    if (!data.ok) throw new Error(data.error)
+    const d = await res.json()
+    if (d.ok) saveCart([])
+  } catch {}
 
-    // Try MercadoPago
-    try {
-      const mpRes = await fetch('/api/payments/create', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-          orderId: data.orderId, customer_email: email,
-          items: cart.map(i => ({
-            product_name: i.name, color: i.color, size: i.size,
-            price: i.price, quantity: i.qty
-          }))
-        })
-      })
-      const mpData = await mpRes.json()
-      if (mpData.ok && mpData.initPoint) {
-        saveCart([])
-        location.href = mpData.initPoint
-        return
-      }
-    } catch {}
-
-    // MercadoPago not configured — show success + WhatsApp
-    saveCart([])
-    const subtotal = cart.reduce((s,i) => s+i.price*i.qty, 0)
-    const total = subtotal + (shippingResult?.cost || 0)
-    document.getElementById('checkoutWrap').style.display = 'none'
-    document.getElementById('successMsg').innerHTML =
-      `Tu pedido <strong>#${data.orderId.slice(0,8).toUpperCase()}</strong> fue registrado.<br>` +
-      `Subtotal: $${subtotal.toLocaleString('es-MX')} · Envío: $${(shippingResult?.cost||0).toLocaleString('es-MX')}<br>` +
-      `Total: <strong>$${total.toLocaleString('es-MX')} MXN</strong><br><br>` +
-      `<strong>Revisa tu correo</strong> — te enviamos la confirmación a <em>${email}</em>.<br>` +
-      `También puedes escribirnos por ` +
-      `<a href="${data.whatsappUrl}" target="_blank" style="color:var(--gold);font-weight:600">WhatsApp</a>.`
-    document.getElementById('successScreen').style.display = 'block'
-    window.scrollTo({top:0,behavior:'smooth'})
-  } catch(e) {
-    showFormError(e.message || 'Error al procesar. Intenta de nuevo.')
-    btn.disabled = false; btn.textContent = 'Confirmar y pagar →'
-  }
+  window.open(`https://wa.me/525637725305?text=${msg}`, '_blank')
+  document.getElementById('checkoutWrap').style.display = 'none'
+  document.getElementById('successMsg').innerHTML = 'Tu pedido fue enviado por WhatsApp. Te contactaremos para confirmar el pago.'
+  document.getElementById('successScreen').style.display = 'block'
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 function showFormError(msg) {
   const el = document.getElementById('formError')
   el.textContent = msg; el.style.display = 'block'
-  el.scrollIntoView({behavior:'smooth',block:'center'})
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 
 /* ─── Init ──────────────────────────────────────────────────── */
 async function init() {
   renderSummary()
   const cart = getCart()
-  if (!cart.length) document.getElementById('btnSubmit').disabled = true
+  if (!cart.length) document.getElementById('btnContinue').disabled = true
 
   // Enter key support in auth forms
   document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin() })

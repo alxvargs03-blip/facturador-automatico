@@ -468,54 +468,168 @@ app.get('/api/orders', requireAuth, async (req, res) => {
 
 // ─── MercadoPago ──────────────────────────────────────────────────────────────
 
-app.post('/api/payments/create', async (req, res) => {
+let _mpClient = null
+async function getMPClient() {
+  if (_mpClient) return _mpClient
+  if (!process.env.MP_ACCESS_TOKEN) throw new Error('MP_ACCESS_TOKEN no configurado')
+  const { MercadoPagoConfig } = await import('mercadopago')
+  _mpClient = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN })
+  return _mpClient
+}
+
+// Expose public key to frontend
+app.get('/api/payments/config', (req, res) => {
+  if (!process.env.MP_PUBLIC_KEY) return res.json({ ok: false, configured: false })
+  res.json({ ok: true, publicKey: process.env.MP_PUBLIC_KEY })
+})
+
+// Process payment from Bricks (Checkout API)
+app.post('/api/payments/process', async (req, res) => {
   if (!process.env.MP_ACCESS_TOKEN) {
     return res.status(503).json({ ok: false, error: 'MercadoPago no configurado' })
   }
   try {
-    const { createRequire } = await import('module')
-    const require = createRequire(import.meta.url)
-    const { MercadoPagoConfig, Preference } = require('mercadopago')
+    const { formData, orderData } = req.body
+    if (!formData || !orderData?.total) {
+      return res.status(400).json({ ok: false, error: 'Datos de pago incompletos' })
+    }
 
-    const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN })
-    const preference = new Preference(client)
+    const { Payment } = await import('mercadopago')
+    const client = await getMPClient()
+    const mp = new Payment(client)
 
-    const { items, orderId, customer_email } = req.body
-    const result = await preference.create({
-      body: {
-        items: items.map(i => ({
-          title: `${i.product_name} ${i.color ? '— ' + i.color : ''} ${i.size ? i.size : ''}`.trim(),
-          unit_price: i.price,
-          quantity: i.quantity,
-          currency_id: 'MXN'
+    const orderId = 'UC-' + Date.now().toString(36).toUpperCase()
+
+    const body = {
+      transaction_amount: Number(orderData.total),
+      description: `UNICUNA® — ${(orderData.items || []).map(i => i.name).join(', ').slice(0, 100)}`,
+      payment_method_id: formData.payment_method_id,
+      external_reference: orderId,
+      payer: {
+        email: formData.payer?.email || orderData.email || 'cliente@unicuna.mx',
+        first_name: (orderData.name || '').split(' ')[0],
+        last_name: (orderData.name || '').split(' ').slice(1).join(' ') || '',
+        identification: formData.payer?.identification,
+        address: {
+          zip_code: orderData.addressFields?.cp || '',
+          street_name: orderData.addressFields?.calle || '',
+          street_number: orderData.addressFields?.numExt || '',
+          city: orderData.addressFields?.ciudad || '',
+          federal_unit: orderData.addressFields?.estado || '',
+          neighborhood: orderData.addressFields?.colonia || ''
+        }
+      },
+      additional_info: {
+        items: (orderData.items || []).map(i => ({
+          id: String(i.sku || i.name),
+          title: i.name,
+          quantity: Number(i.qty),
+          unit_price: Number(i.price),
+          category_id: 'home'
         })),
-        payer: { email: customer_email },
-        external_reference: orderId,
-        back_urls: {
-          success: `${req.protocol}://${req.get('host')}/checkout-exito?order=${orderId}`,
-          failure: `${req.protocol}://${req.get('host')}/checkout-error?order=${orderId}`,
-          pending: `${req.protocol}://${req.get('host')}/checkout-pendiente?order=${orderId}`
-        },
-        auto_return: 'approved',
-        notification_url: `${req.protocol}://${req.get('host')}/api/payments/webhook`
+        payer: { phone: { number: orderData.phone || '' } },
+        shipments: {
+          receiver_address: {
+            zip_code:    orderData.addressFields?.cp      || '',
+            state_name:  orderData.addressFields?.estado  || '',
+            city_name:   orderData.addressFields?.ciudad  || '',
+            street_name: orderData.addressFields?.calle   || '',
+            street_number: orderData.addressFields?.numExt || ''
+          }
+        }
       }
+    }
+
+    // Card-specific fields
+    if (formData.token) {
+      body.token = formData.token
+      body.installments = Number(formData.installments) || 1
+      body.issuer_id = formData.issuer_id
+    }
+
+    const result = await mp.create({ body })
+
+    if (result.status === 'rejected') {
+      const msgs = {
+        cc_rejected_bad_filled_card_number: 'Número de tarjeta incorrecto',
+        cc_rejected_bad_filled_date:        'Fecha de vencimiento incorrecta',
+        cc_rejected_bad_filled_security_code: 'CVV incorrecto',
+        cc_rejected_bad_filled_other:       'Datos de tarjeta incorrectos',
+        cc_rejected_insufficient_amount:    'Fondos insuficientes',
+        cc_rejected_card_disabled:          'Tarjeta inactiva — actívala con tu banco',
+        cc_rejected_call_for_authorize:     'Tu banco necesita autorizar este pago',
+        cc_rejected_max_attempts:           'Demasiados intentos — espera o usa otra tarjeta',
+      }
+      return res.status(400).json({
+        ok: false,
+        error: msgs[result.status_detail] || 'Pago rechazado — verifica tus datos'
+      })
+    }
+
+    // Save order in DB
+    await createOrder({
+      id: orderId,
+      user_id: req.session?.userId || null,
+      name: orderData.name, phone: orderData.phone, email: orderData.email,
+      shipping_address: orderData.address,
+      address_fields: orderData.addressFields,
+      payment_method: formData.payment_method_id,
+      payment_status: result.status,
+      mp_payment_id: String(result.id),
+      shipping_cost: Number(orderData.shippingCost) || 0,
+      total: Number(orderData.total),
+      notes: orderData.notes || '',
+      status: result.status === 'approved' ? 'confirmada' : 'pendiente'
+    }, (orderData.items || []).map(i => ({
+      sku: i.sku, product_name: i.name,
+      color: i.color, size: i.size,
+      price: Number(i.price), quantity: Number(i.qty)
+    })))
+
+    // Build WhatsApp notification URL for Monserrat
+    const itemsText = (orderData.items || [])
+      .map(i => `• ${i.name} x${i.qty} — $${(i.price * i.qty).toLocaleString('es-MX')} MXN`).join('\n')
+    const statusEmoji = result.status === 'approved' ? '✅' : '⏳'
+    const waMsg = encodeURIComponent(
+      `${statusEmoji} *PAGO ${result.status === 'approved' ? 'APROBADO' : 'PENDIENTE'} — UNICUNA®*\n\n` +
+      `📦 Pedido: #${orderId}\n` +
+      `👤 Cliente: ${orderData.name}\n` +
+      `📱 Teléfono: ${orderData.phone}\n` +
+      `📍 Dirección: ${orderData.address}\n\n` +
+      `🛒 Productos:\n${itemsText}\n\n` +
+      `💳 Total: $${Number(orderData.total).toLocaleString('es-MX')} MXN\n` +
+      `🔑 MP: ${result.id}`
+    )
+
+    res.json({
+      ok: true,
+      status: result.status,
+      orderId,
+      ticketUrl: result.transaction_details?.external_resource_url || null,
+      whatsappUrl: `https://wa.me/525637725305?text=${waMsg}`
     })
-    res.json({ ok: true, initPoint: result.init_point })
   } catch (err) {
-    res.status(500).json({ ok: false, error: err.message })
+    console.error('[payments/process]', err?.message)
+    res.status(500).json({ ok: false, error: err?.message || 'Error al procesar el pago' })
   }
 })
 
-app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+// Webhook — MP notifies payment status changes
+app.post('/api/payments/webhook', express.raw({ type: '*/*' }), async (req, res) => {
   try {
-    const { type, data } = req.body
+    const raw = Buffer.isBuffer(req.body) ? req.body.toString() : JSON.stringify(req.body)
+    const { type, data } = JSON.parse(raw) || {}
     if (type === 'payment' && data?.id) {
-      await updateOrderPaymentStatus(data.external_reference, 'pagado', 'mercadopago')
+      const { Payment } = await import('mercadopago')
+      const client = await getMPClient()
+      const mp = new Payment(client)
+      const p = await mp.get({ id: String(data.id) })
+      if (p?.status === 'approved' && p.external_reference) {
+        await updateOrderPaymentStatus(p.external_reference, 'aprobado', p.payment_method_id)
+      }
     }
-    res.sendStatus(200)
-  } catch {
-    res.sendStatus(200)
-  }
+  } catch {}
+  res.sendStatus(200)
 })
 
 // ─── Facturador (preservado) ──────────────────────────────────────────────────
