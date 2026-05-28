@@ -601,11 +601,11 @@ async function proceedToPayment() {
   document.getElementById('brickLoading').style.display = 'none'
 
   mpBrickInstance = await mp.bricks().create('payment', 'paymentBrick_container', {
-    initialization: { amount: total, payer: { email } },
+    initialization: { amount: total, payer: { email, entityType: 'individual' } },
     customization: {
       paymentMethods: {
         creditCard: 'all', debitCard: 'all',
-        ticket: 'all', bankTransfer: 'all', maxInstallments: 12
+        ticket: 'all', maxInstallments: 12
       },
       visual: {
         style: {

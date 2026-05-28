@@ -518,17 +518,10 @@ app.post('/api/payments/process', async (req, res) => {
       external_reference: orderId,
       payer: {
         email: formData.payer?.email || custEmail || 'cliente@unicuna.mx',
-        first_name: custName.split(' ')[0],
-        last_name: custName.split(' ').slice(1).join(' ') || '',
-        identification: formData.payer?.identification,
-        address: {
-          zip_code:      addrFields.cp      || '',
-          street_name:   addrFields.calle   || '',
-          street_number: addrFields.numExt  || '',
-          city:          addrFields.ciudad  || '',
-          federal_unit:  addrFields.estado  || '',
-          neighborhood:  addrFields.colonia || ''
-        }
+        first_name: custName.split(' ')[0] || 'Cliente',
+        last_name: custName.split(' ').slice(1).join(' ') || 'UNICUNA',
+        ...(formData.payer?.identification?.number
+          ? { identification: formData.payer.identification } : {}),
       },
       additional_info: {
         items: items.map(i => ({
@@ -620,8 +613,10 @@ app.post('/api/payments/process', async (req, res) => {
       whatsappUrl: `https://wa.me/525637725305?text=${waMsg}`
     })
   } catch (err) {
-    console.error('[payments/process]', err?.message)
-    res.status(500).json({ ok: false, error: err?.message || 'Error al procesar el pago' })
+    const detail = err?.cause ?? err?.response ?? err
+    console.error('[payments/process]', err?.message, JSON.stringify(detail))
+    const mpMsg = detail?.message || detail?.error || err?.message
+    res.status(500).json({ ok: false, error: mpMsg || 'Error al procesar el pago' })
   }
 })
 
