@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LA LÍDER y DOS MÁS — Brand Collaboration Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Dancing+Script:wght@700&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --cream: #f0ebe2;
+  --blue:  #1d3a72;
+  --gray:  #b2c0ca;
+  --black: #0a0a0a;
+  --white: #ffffff;
+}
+
+/* ─── Diamond background patterns ─── */
+.bg-cream {
+  background-color: var(--cream);
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z' fill='none' stroke='rgba(0,0,0,0.09)' stroke-width='1'/%3E%3C/svg%3E");
+}
+.bg-blue {
+  background-color: var(--blue);
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z' fill='none' stroke='rgba(255,255,255,0.11)' stroke-width='1'/%3E%3C/svg%3E");
+}
+.bg-gray {
+  background-color: var(--gray);
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z' fill='none' stroke='rgba(255,255,255,0.28)' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+/* ─── Print setup ─── */
+@page { size: 297mm 167.0625mm; margin: 0; }
+
+body { font-family: 'Barlow Condensed', sans-serif; background:#333; }
+
+/* ─── Slide container ─── */
+.slide {
+  width: 297mm;
+  height: 167.0625mm;
+  position: relative;
+  overflow: hidden;
+  page-break-after: always;
+  break-after: page;
+}
+
+/* ─── Common footer ─── */
+.footer {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 7mm 4.5mm;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 6.5pt;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.footer.dark { color: var(--black); }
+.footer.light { color: var(--white); }
+
+
+/* ══════════════════════════════════════════════════
+   SLIDE 1 — COVER
+══════════════════════════════════════════════════ */
+.s1 { display: flex; flex-direction: column; align-items: center; }
+
+.s1-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 60pt;
+  letter-spacing: -0.01em;
+  color: var(--black);
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 0.95;
+  padding-top: 8mm;
+  padding-bottom: 1mm;
+  white-space: nowrap;
+}
+.s1-title em {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 52pt;
+  text-transform: none;
+}
+
+.s1-body {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  flex: 1;
+  padding: 0 7mm 14mm;
+  gap: 4mm;
+}
+.s1-left {
+  flex: 1;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 7.5pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1.6;
+}
+.s1-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3mm;
+}
+.s1-by {
+  font-family: 'Dancing Script', cursive;
+  font-size: 22pt;
+  color: var(--black);
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+}
+.s1-by span {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 8pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.s1-photo {
+  width: 42mm;
+  height: 55mm;
+  object-fit: cover;
+  display: block;
+}
+.s1-right {
+  flex: 1;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 400;
+  font-size: 6.5pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1.8;
+  text-align: right;
+}
+
+
+/* ══════════════════════════════════════════════════
+   SLIDE 2 — CONCEPTO
+══════════════════════════════════════════════════ */
+.s2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6mm 14mm 14mm;
+}
+.s2-header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 5mm 7mm;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+.s2-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 36pt;
+  color: var(--blue);
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  margin-top: 10mm;
+  margin-bottom: 5mm;
+  max-width: 220mm;
+}
+.s2-img {
+  height: 72mm;
+  object-fit: contain;
+}
+
+
+/* ══════════════════════════════════════════════════
+   SLIDE 3 — ¿POR QUÉ MIRARLO?
+══════════════════════════════════════════════════ */
+.s3 { display: flex; }
+
+.s3-left {
+  width: 52%;
+  display: flex;
+  flex-direction: column;
+  padding: 7mm 5mm 14mm 7mm;
+  gap: 3mm;
+}
+.s3-question {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 68pt;
+  color: var(--cream);
+  line-height: 0.88;
+  flex-shrink: 0;
+}
+.s3-whale {
+  flex: 1;
+  object-fit: cover;
+  width: 100%;
+  min-height: 0;
+  max-height: 62mm;
+}
+
+.s3-right {
+  width: 48%;
+  display: flex;
+  flex-direction: column;
+  padding: 5mm 7mm 14mm 3mm;
+  gap: 3.5mm;
+}
+.s3-woman-img {
+  width: 33mm;
+  height: 46mm;
+  object-fit: cover;
+  align-self: flex-end;
+}
+.s3-script {
+  font-family: 'Dancing Script', cursive;
+  font-size: 17pt;
+  color: var(--cream);
+}
+.s3-vision-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 12pt;
+  color: var(--cream);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.s3-vision-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 8.5pt;
+  color: var(--cream);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.7;
+}
+.s3-temas-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 11pt;
+  color: var(--cream);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 1mm;
+}
+.s3-temas-list {
+  list-style: disc;
+  padding-left: 4mm;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 8pt;
+  color: var(--cream);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.7;
+}
+
+
+/* ══════════════════════════════════════════════════
+   SLIDE 4 — LOS CONDUCTORES
+══════════════════════════════════════════════════ */
+.s4 { display: flex; padding: 12mm 7mm 13mm; gap: 3mm; }
+
+.s4-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.s4-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 22pt;
+  text-transform: uppercase;
+  color: var(--black);
+  letter-spacing: 0.03em;
+  margin-bottom: 1mm;
+}
+.s4-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #444;
+  margin-bottom: 2mm;
+}
+.s4-stat {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 1.5mm;
+}
+.s4-photo {
+  width: 100%;
+  flex: 1;
+  object-fit: cover;
+  min-height: 0;
+  max-height: 72mm;
+  margin-top: 2mm;
+}
+.s4-divider {
+  width: 1px;
+  background: rgba(0,0,0,0.12);
+  margin: 0;
+}
+
+
+/* ══════════════════════════════════════════════════
+   SLIDE 5 — PRIMERA TEMPORADA
+══════════════════════════════════════════════════ */
+.s5 { display: flex; }
+
+.s5-left {
+  width: 54%;
+  display: flex;
+  flex-direction: column;
+  padding: 8mm 4mm 14mm 7mm;
+  gap: 3mm;
+}
+.s5-season {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 44pt;
+  color: var(--cream);
+  line-height: 1;
+}
+.s5-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 11pt;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+  line-height: 1.3;
+}
+.s5-list {
+  list-style: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 9pt;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.8;
+}
+.s5-list li::before { content: '— '; }
+
+.s5-arjona {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 8pt;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1.7;
+  margin-top: 2mm;
+}
+
+.s5-right {
+  width: 46%;
+  display: flex;
+  flex-direction: column;
+  padding: 8mm 7mm 14mm 3mm;
+  gap: 3mm;
+}
+.s5-guest-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 22pt;
+  color: var(--cream);
+  text-align: right;
+}
+.s5-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2mm;
+  flex: 1;
+}
+.s5-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* ══════════════════════════════════════════════════
+   SLIDES 6, 7, 8 — HOST PROFILES
+══════════════════════════════════════════════════ */
+.s-host { display: flex; flex-direction: column; }
+
+.s-host-top {
+  display: flex;
+  align-items: flex-start;
+  padding: 6mm 7mm 0;
+  gap: 5mm;
+  flex-shrink: 0;
+}
+.s-host-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 68pt;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+}
+.s-host-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2mm;
+  padding-top: 1mm;
+}
+.s-host-hook {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 8pt;
+  color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1.55;
+}
+.s-host-note {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 8pt;
+  color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.55;
+}
+
+.s-host-middle {
+  display: flex;
+  padding: 2mm 7mm 2mm;
+  gap: 6mm;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+.s-host-stats {
+  min-width: 80mm;
+  list-style: disc;
+  padding-left: 4mm;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 7.5pt;
+  color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1.75;
+}
+
+.s-host-photos {
+  display: flex;
+  gap: 3mm;
+  padding: 0 7mm 2mm;
+  height: 58mm;
+  flex-shrink: 0;
+}
+.s-host-photos img {
+  flex: 1;
+  height: 100%;
+  object-fit: cover;
+  min-width: 0;
+}
+
+/* Placeholder photo for missing images */
+.photo-placeholder {
+  flex: 1;
+  height: 100%;
+  min-width: 0;
+  background-color: #ddd5c8;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z' fill='none' stroke='rgba(0,0,0,0.08)' stroke-width='1'/%3E%3C/svg%3E");
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2mm;
+}
+.photo-placeholder span {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 7pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a6e60;
+  text-align: center;
+  padding: 0 2mm;
+  line-height: 1.8;
+}
+.photo-placeholder .note {
+  font-size: 5.5pt;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  color: #a09080;
+  text-transform: none;
+}
+
+
+/* ══════════════════════════════════════════════════
+   SLIDE 9 — NUESTRO ALCANCE (NEW)
+══════════════════════════════════════════════════ */
+.s9 { display: flex; flex-direction: column; padding: 8mm 10mm 14mm; }
+
+.s9-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 36pt;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  margin-bottom: 5mm;
+}
+.s9-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5mm;
+  flex: 1;
+}
+.s9-card {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  flex-direction: column;
+  padding: 4mm;
+  gap: 2.5mm;
+}
+.s9-card-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 16pt;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 2mm;
+}
+.s9-card-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 500;
+  font-size: 7pt;
+  color: rgba(240,235,226,0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 1mm;
+}
+.s9-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.s9-stat-platform {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 7pt;
+  color: rgba(240,235,226,0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.s9-stat-number {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 12pt;
+  color: var(--cream);
+  letter-spacing: 0.02em;
+}
+.s9-total {
+  margin-top: 4mm;
+  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 9pt;
+  color: rgba(240,235,226,0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1.6;
+}
+.s9-total strong {
+  font-size: 14pt;
+  color: var(--cream);
+  font-weight: 900;
+}
+.s9-comedy {
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 8.5pt;
+  color: rgba(240,235,226,0.6);
+  margin-top: 1.5mm;
+  letter-spacing: 0.04em;
+}
+
+
+/* ══════════════════════════════════════════════════
+   SLIDE 10 — CIERRE / CONTACT (NEW)
+══════════════════════════════════════════════════ */
+.s10 { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+.s10-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4mm;
+  padding: 6mm 14mm 14mm;
+}
+.s10-pre {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 9pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(10,10,10,0.55);
+}
+.s10-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 82pt;
+  text-transform: uppercase;
+  color: var(--black);
+  letter-spacing: -0.01em;
+  line-height: 0.88;
+}
+.s10-script {
+  font-family: 'Dancing Script', cursive;
+  font-size: 24pt;
+  color: #555;
+  margin-top: -1mm;
+}
+.s10-divider {
+  width: 40mm;
+  height: 1px;
+  background: rgba(0,0,0,0.2);
+  margin: 1mm 0;
+}
+.s10-contact {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 8.5pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #333;
+  line-height: 2;
+}
+.s10-comedy {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 9pt;
+  color: rgba(10,10,10,0.45);
+  letter-spacing: 0.04em;
+  max-width: 160mm;
+  line-height: 1.7;
+  margin-top: 1mm;
+}
+
+/* ─── Screen preview wrapper ─── */
+@media screen {
+  body { padding: 10px; background: #1a1a1a; }
+  .slide {
+    margin: 8px auto;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.5);
+  }
+}
+@media print {
+  body { background: white; padding: 0; }
+}
+</style>
+</head>
+<body>
+
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 1 — COVER
+═══════════════════════════════════════════════ -->
+<div class="slide bg-gray s1">
+  <div class="s1-title">LA&nbsp;LÍDER &nbsp;<em>y</em>&nbsp; DOS&nbsp;MÁS</div>
+  <div class="s1-body">
+    <div class="s1-left">
+      LET'S&nbsp;&nbsp;&nbsp;CREATE&nbsp;&nbsp;&nbsp;MEANINGFUL,<br>
+      IMPACTFUL&nbsp;CONTENT&nbsp;—&nbsp;TOGETHER.
+    </div>
+    <div class="s1-center">
+      <div class="s1-by"><span>BY:</span> Julio Bracho</div>
+      <img class="s1-photo" src="./presentation_assets/p1_img1.jpeg" alt="Daniela del Amor">
+    </div>
+    <div class="s1-right">
+      THIS PROPOSAL OUTLINES OUR AUDIENCE INSIGHTS,<br>
+      PAST BRAND PARTNERSHIPS, CONTENT PACKAGES,<br>
+      AND HOW WE CAN BRING YOUR BRAND STORY<br>
+      TO LIFE THROUGH AUTHENTIC,<br>
+      CREATIVE STORYTELLING.
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 2 — CONCEPTO
+═══════════════════════════════════════════════ -->
+<div class="slide bg-cream s2">
+  <div class="s2-header">
+    <span>Brand Collaboration</span>
+    <span>La Líder y Dos Más</span>
+  </div>
+  <h1 class="s2-title">
+    DOS GENERACIONES, TRES PERSONALIDADES:<br>
+    UNA CONVERSACIÓN SIN FILTROS
+  </h1>
+  <img class="s2-img" src="./presentation_assets/p2_img1.jpeg" alt="Arte conceptual">
+  <div class="footer dark">
+    <span>Prepared by: Julio Bracho</span>
+    <span>11 / 06 / 2026</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 3 — ¿POR QUÉ MIRARLO?
+═══════════════════════════════════════════════ -->
+<div class="slide bg-blue s3">
+  <!-- Left column -->
+  <div class="s3-left">
+    <div class="s3-question">¿Porque<br>Mirarlo?</div>
+    <img class="s3-whale" src="./presentation_assets/p3_img2.jpeg" alt="Ballena">
+  </div>
+
+  <!-- Right column -->
+  <div class="s3-right">
+    <img class="s3-woman-img" src="./presentation_assets/p3_img1.jpeg" alt="Visión">
+    <div class="s3-script">The Heart Behind<br>the Brand</div>
+    <div class="s3-vision-label">Our Vision</div>
+    <p class="s3-vision-text">
+      Un podcast divertido, irreverente y espontáneo donde conviven<br>
+      distintas visiones del mundo para hablar de los temas que<br>
+      nos interesan, nos dividen y nos unen
+    </p>
+    <div class="s3-temas-label">Temas</div>
+    <ul class="s3-temas-list">
+      <li>La mujer hoy</li>
+      <li>Ecología y sostenibilidad</li>
+      <li>NFL y deportes</li>
+      <li>Entretenimiento y cultura pop</li>
+      <li>Tendencias y actualidad</li>
+      <li>Todo aquello que genera conversación</li>
+    </ul>
+  </div>
+
+  <div class="footer light">
+    <span>Brand Collaboration</span>
+    <span>Prepared by: Julio Bracho</span>
+    <span>La Líder y Dos Más</span>
+    <span>11 / 06 / 2026</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 4 — LOS CONDUCTORES
+═══════════════════════════════════════════════ -->
+<div class="slide bg-cream s4">
+  <!-- El Piporro -->
+  <div class="s4-col">
+    <div class="s4-name">El Piporro</div>
+    <div class="s4-tag">Arjona Lover / Gen X</div>
+    <div class="s4-stat">
+      TikTok @gerardovaldes69<br>
+      3 seguidores &nbsp;·&nbsp; 2 likes ❤️<br>
+      <br>
+      IG @piporro / arjonalover69<br>
+      5 seguidores
+    </div>
+    <img class="s4-photo" src="./presentation_assets/p4_img2.jpeg" alt="El Piporro">
+  </div>
+
+  <div class="s4-divider"></div>
+
+  <!-- Julio Bracho -->
+  <div class="s4-col">
+    <div class="s4-name">Julio Bracho</div>
+    <div class="s4-tag">Actor y Director / Gen X</div>
+    <div class="s4-stat">
+      TikTok @juliobrachoactor<br>
+      27.8 K seguidores &nbsp;·&nbsp; 153.1 K likes ❤️<br>
+      <br>
+      IG @juliobracho<br>
+      109 K seguidores
+    </div>
+    <img class="s4-photo" src="./presentation_assets/p4_img3.jpeg" alt="Julio Bracho">
+  </div>
+
+  <div class="s4-divider"></div>
+
+  <!-- Dani del Amor -->
+  <div class="s4-col">
+    <div class="s4-name">Dani del Amor</div>
+    <div class="s4-tag">Influencer / Gen Z</div>
+    <div class="s4-stat">
+      TikTok @danieladelamorr_<br>
+      1.1 M seguidores &nbsp;·&nbsp; 48.8 M likes ❤️<br>
+      <br>
+      IG @danieladelamorr_<br>
+      304 K seguidores
+    </div>
+    <img class="s4-photo" src="./presentation_assets/p4_img1.jpeg" alt="Dani del Amor">
+  </div>
+
+  <div class="footer dark">
+    <span>Brand Collaboration</span>
+    <span>Prepared by: Julio Bracho</span>
+    <span>La Líder y Dos Más</span>
+    <span>11 / 06 / 2026</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 5 — PRIMERA TEMPORADA
+═══════════════════════════════════════════════ -->
+<div class="slide bg-blue s5">
+  <div class="s5-left">
+    <div class="s5-season">Primera<br>Temporada</div>
+    <div class="s5-sub">¡ 8 Episodios con Invitados Especiales<br>en Distintos Ámbitos !</div>
+    <ul class="s5-list">
+      <li>Artistas</li>
+      <li>Especialistas y líderes de opinión</li>
+      <li>Emprendedores</li>
+      <li>Deportistas</li>
+      <li>Médicos y cirujanos</li>
+    </ul>
+    <p class="s5-arjona">
+      Quizá algún día logremos tener a Ricardo Arjona como invitado.<br>
+      (Sobre el cadáver de Dani y Julio, que son rockeros 🤣)<br><br>
+      Ese sería el sueño del Piporro y, sobre todo, la oportunidad de que<br>
+      por fin pueda cantar en el podcast — algo que ni Dani ni Julio<br>
+      le permiten hacer.
+    </p>
+  </div>
+
+  <div class="s5-right">
+    <div class="s5-guest-title">¡Invitados<br>Especiales!</div>
+    <div class="s5-grid">
+      <img src="./presentation_assets/p5_img2.jpeg" alt="Invitado deportes">
+      <img src="./presentation_assets/p5_img1.jpeg" alt="Invitada especial">
+      <img src="./presentation_assets/p5_img3.jpeg" alt="Próximo invitado">
+      <img src="./presentation_assets/p5_img3.jpeg" alt="Próximo invitado">
+    </div>
+  </div>
+
+  <div class="footer light">
+    <span>Brand Collaboration</span>
+    <span>Prepared by: Julio Bracho</span>
+    <span>La Líder y Dos Más</span>
+    <span>11 / 06 / 2026</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 6 — DANI
+═══════════════════════════════════════════════ -->
+<div class="slide bg-cream s-host">
+  <div class="s-host-top">
+    <div class="s-host-name">Dani</div>
+    <div class="s-host-meta">
+      <p class="s-host-hook">
+        Humor, reflexión y conversaciones auténticas para una gran<br>
+        audiencia debido a los perfiles de los conductores.
+      </p>
+      <p class="s-host-note">
+        Nota: No va a permitir que Piporro cante algo de Arjona.
+      </p>
+    </div>
+  </div>
+
+  <div class="s-host-middle">
+    <ul class="s-host-stats">
+      <li>Música: Rock, Heavy Metal y Trash Metal</li>
+      <li>Look: Rockero</li>
+      <li>Mood: Familiar</li>
+      <li>Date favorito: Concierto de rock</li>
+      <li>Status: Soltera</li>
+      <li>Comida: Japonesa</li>
+      <li>Deporte: NFL — Equipo: Raiders</li>
+    </ul>
+  </div>
+
+  <div class="s-host-photos">
+    <img src="./presentation_assets/p6_img1.jpeg" alt="Dani en evento">
+    <img src="./presentation_assets/p6_img2.jpeg" alt="Dani Raiders">
+    <img src="./presentation_assets/p6_img3.jpeg" alt="Dani editorial">
+  </div>
+
+  <div class="footer dark">
+    <span>Brand Collaboration</span>
+    <span>Prepared by: Julio Bracho</span>
+    <span>La Líder y Dos Más</span>
+    <span>11 / 06 / 2026</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 7 — JULIO
+═══════════════════════════════════════════════ -->
+<div class="slide bg-cream s-host">
+  <div class="s-host-top">
+    <div class="s-host-name">Julio</div>
+    <div class="s-host-meta">
+      <p class="s-host-hook">
+        Actor, director y la voz de la generación X que dice lo que piensa<br>
+        — pero con mucho más estilo que el Piporro.
+      </p>
+      <p class="s-host-note">
+        Nota: No va a permitir que el Piporro cante alguna canción de Arjona en el podcast.
+      </p>
+    </div>
+  </div>
+
+  <div class="s-host-middle">
+    <ul class="s-host-stats">
+      <li>Música: Jazz, Rock y Ópera</li>
+      <li>Look: Fachas onda Adam Sandler</li>
+      <li>Mood: Felizmente divorciado</li>
+      <li>Date favorito: Autódromo</li>
+      <li>Status: Soltero</li>
+      <li>Comida: Mexicana y Japonesa</li>
+      <li>Deporte: Automovilismo y NFL — Raiders #TeamChecoPérez</li>
+    </ul>
+  </div>
+
+  <div class="s-host-photos">
+    <img src="./presentation_assets/p7_img1.jpeg" alt="Julio Bracho 1">
+    <img src="./presentation_assets/p7_img2.png" alt="Julio Bracho 2">
+    <img src="./presentation_assets/p7_img3.png" alt="Julio Bracho 3">
+  </div>
+
+  <div class="footer dark">
+    <span>Brand Collaboration</span>
+    <span>Prepared by: Julio Bracho</span>
+    <span>La Líder y Dos Más</span>
+    <span>11 / 06 / 2026</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 8 — PIPORRO
+═══════════════════════════════════════════════ -->
+<div class="slide bg-cream s-host">
+  <div class="s-host-top">
+    <div class="s-host-name">Piporro</div>
+    <div class="s-host-meta">
+      <p class="s-host-hook">
+        El corazón del podcast. El alma del grupo. El único que piensa<br>
+        que Ricardo Arjona debería estar en el Salón de la Fama del rock.
+      </p>
+      <p class="s-host-note">
+        Nota: Hará todo lo posible por cantar una rola de Arjona.
+      </p>
+    </div>
+  </div>
+
+  <div class="s-host-middle">
+    <ul class="s-host-stats">
+      <li>Música: #ArjonaLover (es un estilo de vida)</li>
+      <li>Look: Casual, pero con botas</li>
+      <li>Mood: Siempre en familia</li>
+      <li>Date favorito: En un karaoke</li>
+      <li>Status: Casado</li>
+      <li>Comida: 🌮 Tacos</li>
+      <li>Deporte: NFL y aprender todo de Arjona — Equipo: Vaqueros de Dallas</li>
+    </ul>
+  </div>
+
+  <div class="s-host-photos">
+    <img src="./presentation_assets/p8_img1.jpeg" alt="El Piporro" style="object-position: center top;">
+    <img src="./presentation_assets/p8_img1.jpeg" alt="El Piporro" style="object-position: center center;">
+    <img src="./presentation_assets/p8_img1.jpeg" alt="El Piporro" style="object-position: center bottom;">
+  </div>
+
+  <div class="footer dark">
+    <span>Brand Collaboration</span>
+    <span>Prepared by: Julio Bracho</span>
+    <span>La Líder y Dos Más</span>
+    <span>11 / 06 / 2026</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 9 — NUESTRO ALCANCE (NUEVO)
+═══════════════════════════════════════════════ -->
+<div class="slide bg-blue s9">
+  <div class="s9-title">Nuestro Alcance</div>
+
+  <div class="s9-grid">
+    <!-- Dani -->
+    <div class="s9-card">
+      <div class="s9-card-name">Dani del Amor</div>
+      <div class="s9-card-tag">Gen Z · Influencer</div>
+      <div class="s9-stat-row">
+        <span class="s9-stat-platform">TikTok Seguidores</span>
+        <span class="s9-stat-number">1.1 M</span>
+      </div>
+      <div class="s9-stat-row">
+        <span class="s9-stat-platform">TikTok Likes</span>
+        <span class="s9-stat-number">48.8 M</span>
+      </div>
+      <div class="s9-stat-row">
+        <span class="s9-stat-platform">Instagram</span>
+        <span class="s9-stat-number">304 K</span>
+      </div>
+    </div>
+
+    <!-- Julio -->
+    <div class="s9-card">
+      <div class="s9-card-name">Julio Bracho</div>
+      <div class="s9-card-tag">Gen X · Actor &amp; Director</div>
+      <div class="s9-stat-row">
+        <span class="s9-stat-platform">TikTok Seguidores</span>
+        <span class="s9-stat-number">27.8 K</span>
+      </div>
+      <div class="s9-stat-row">
+        <span class="s9-stat-platform">TikTok Likes</span>
+        <span class="s9-stat-number">153.1 K</span>
+      </div>
+      <div class="s9-stat-row">
+        <span class="s9-stat-platform">Instagram</span>
+        <span class="s9-stat-number">109 K</span>
+      </div>
+    </div>
+
+    <!-- Piporro -->
+    <div class="s9-card">
+      <div class="s9-card-name">El Piporro</div>
+      <div class="s9-card-tag">Gen X · Arjona Lover</div>
+      <div class="s9-stat-row">
+        <span class="s9-stat-platform">TikTok Seguidores</span>
+        <span class="s9-stat-number">3</span>
+      </div>
+      <div class="s9-stat-row">
+        <span class="s9-stat-platform">TikTok Likes</span>
+        <span class="s9-stat-number">2 ❤️</span>
+      </div>
+      <div class="s9-stat-row">
+        <span class="s9-stat-platform">Instagram</span>
+        <span class="s9-stat-number">5</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="s9-total">
+    Alcance combinado real:&nbsp; <strong>+1.4 M seguidores</strong> &nbsp;·&nbsp; <strong>+49 M likes en TikTok</strong>
+    &nbsp;·&nbsp; Audiencia de Gen Z a Gen X
+  </div>
+  <div class="s9-comedy">
+    * El Piporro sigue trabajando en sus métricas. Va muy bien.
+  </div>
+
+  <div class="footer light">
+    <span>Brand Collaboration</span>
+    <span>Prepared by: Julio Bracho</span>
+    <span>La Líder y Dos Más</span>
+    <span>11 / 06 / 2026</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 10 — HABLEMOS (NUEVO)
+═══════════════════════════════════════════════ -->
+<div class="slide bg-gray s10">
+  <div class="s10-inner">
+    <div class="s10-pre">Brand Collaboration &nbsp;·&nbsp; La Líder y Dos Más</div>
+    <div class="s10-title">¿Hablemos?</div>
+    <div class="s10-script">Hagamos algo increíble juntos</div>
+    <div class="s10-divider"></div>
+    <div class="s10-contact">
+      @juliobrachoactor &nbsp;·&nbsp; @danieladelamorr_ &nbsp;·&nbsp; @piporro / arjonalover69<br>
+      TikTok &nbsp;·&nbsp; Instagram &nbsp;·&nbsp; Podcast
+    </div>
+    <p class="s10-comedy">
+      Advertencia legal: El Piporro podría intentar cantar el jingle de tu marca.<br>
+      Dani y Julio ya tienen el veto listo. Tu marca está en buenas manos.
+    </p>
+  </div>
+</div>
+
+
+</body>
+</html>
