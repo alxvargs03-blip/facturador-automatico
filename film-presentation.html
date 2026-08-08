@@ -154,8 +154,9 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
 }
 .s02-right {
   flex: 1; padding: 7mm 8mm 7mm 6mm;
+  padding-top: 28mm;
   display: flex; flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   border-left: 1pt solid var(--beige2);
 }
 .s02-heading {
@@ -166,7 +167,7 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   margin-bottom: 3mm;
 }
 .s02-body {
-  font-size: 9.5pt; line-height: 1.7;
+  font-size: 12.5pt; line-height: 1.65;
   color: var(--ink); text-align: center;
 }
 
@@ -178,7 +179,7 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   padding: 5mm 6mm 5mm 6mm;
   display: flex; flex-direction: column; gap: 3mm;
 }
-.s03-images { display: flex; gap: 5mm; height: 50mm; flex-shrink: 0; }
+.s03-images { display: flex; gap: 5mm; height: 65mm; flex-shrink: 0; }
 .s03-img {
   flex: 1; overflow: hidden;
   border-radius: var(--r);
@@ -190,7 +191,7 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   color: var(--darkred); margin-bottom: 1mm;
 }
 .s03-para {
-  font-size: 8pt; line-height: 1.6;
+  font-size: 10.5pt; line-height: 1.6;
   color: var(--ink); text-align: center;
   margin-bottom: 2mm;
 }
@@ -288,8 +289,8 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
 }
 .s07-body {
   position: absolute; top: 27mm; left: 5mm; width: 45%;
-  font-size: 10pt; font-weight: 600;
-  line-height: 1.65; color: var(--ink);
+  font-size: 10.5pt; font-weight: 600;
+  line-height: 1.58; color: var(--ink);
   text-align: center;
 }
 /* img1 horizontal (687×340) — contenedor horizontal, altura reducida para no solapar img3 */
@@ -339,7 +340,7 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   margin-bottom: 4mm;
 }
 .s08-body {
-  font-size: 9pt; line-height: 1.7;
+  font-size: 12pt; line-height: 1.65;
   color: var(--ink); text-align: center;
 }
 .s08-img {
@@ -357,25 +358,22 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
 .s09 { position: relative; }
 .s09-text {
   position: absolute; top: 5mm; left: 0; right: 0;
-  padding: 0 8mm;
-  font-size: 9pt; line-height: 1.68;
+  padding: 0 9mm;
+  font-size: 12pt; line-height: 1.62;
   color: var(--ink); text-align: center;
   z-index: 2;
 }
 .s09-img {
-  position: absolute; bottom: 0;
-  left: 50%; transform: translateX(-50%);
-  width: 68%; height: 50%;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   overflow: hidden;
-  border-radius: var(--r) var(--r) 0 0;
+  border-radius: 0;
   z-index: 1;
-  box-shadow: 0 -2px 18px rgba(26,15,5,0.22);
 }
-.s09-img img { object-position: top; }
+.s09-img img { object-position: top center; }
 .s09-img::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0;
-  height: 40%;
+  height: 55%;
   background: linear-gradient(to bottom, var(--beige) 0%, rgba(242,232,208,0) 100%);
   z-index: 2;
 }
@@ -401,7 +399,7 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   flex-shrink: 0;
 }
 .s10-body {
-  font-size: 9.5pt; line-height: 1.7;
+  font-size: 11pt; line-height: 1.65;
   color: var(--ink); text-align: center;
   margin-bottom: 4mm; flex-shrink: 0;
 }
@@ -418,27 +416,24 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
 ══════════════════════════════════════════ */
 .s11 { position: relative; }
 .s11-img {
-  position: absolute; top: 0;
-  left: 50%; transform: translateX(-50%);
-  width: 66%; height: 52%;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   overflow: hidden;
-  border-radius: 0 0 var(--r) var(--r);
+  border-radius: 0;
   z-index: 1;
-  box-shadow: 0 3px 18px rgba(26,15,5,0.22);
 }
 .s11-img::after {
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0;
-  height: 35%;
+  height: 50%;
   background: linear-gradient(to top, var(--beige) 0%, rgba(242,232,208,0) 100%);
   z-index: 2;
 }
 .s11-text {
-  position: absolute; top: 47%; left: 0; right: 0; bottom: 0;
-  padding: 3mm 9mm 5mm 9mm;
-  font-size: 9.5pt; line-height: 1.68;
+  position: absolute; bottom: 8mm; left: 0; right: 0;
+  padding: 0 9mm;
+  font-size: 12.5pt; line-height: 1.65;
   color: var(--ink); text-align: center;
-  z-index: 2;
+  z-index: 3;
 }
 
 
@@ -470,8 +465,8 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   margin-bottom: 3mm; flex-shrink: 0;
 }
 .s12-body {
-  font-size: 9pt; font-weight: 600;
-  line-height: 1.72; color: var(--ink);
+  font-size: 11pt; font-weight: 600;
+  line-height: 1.62; color: var(--ink);
   text-align: center;
 }
 
@@ -491,8 +486,8 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   margin-bottom: 4mm; position: relative; z-index: 2;
 }
 .s13-body {
-  font-size: 9pt; font-weight: 600;
-  line-height: 1.7; color: var(--ink);
+  font-size: 11pt; font-weight: 600;
+  line-height: 1.62; color: var(--ink);
   text-align: center; width: 53%;
   position: relative; z-index: 2;
 }
@@ -522,8 +517,8 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
 }
 .s14-body {
   position: absolute; top: 5mm; left: 38%; right: 5mm;
-  font-size: 8.5pt; font-weight: 600;
-  line-height: 1.68; color: var(--ink);
+  font-size: 10.5pt; font-weight: 600;
+  line-height: 1.62; color: var(--ink);
   text-align: center; z-index: 2;
 }
 .s14-img {
@@ -563,8 +558,8 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
 .s15-text {
   flex: 1; display: flex; flex-direction: column;
   justify-content: center;
-  font-size: 9.5pt; font-weight: 600;
-  line-height: 1.75; color: var(--ink);
+  font-size: 11.5pt; font-weight: 600;
+  line-height: 1.65; color: var(--ink);
   text-align: center;
 }
 
@@ -576,8 +571,8 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
 .s16-col {
   flex: 1; display: flex; flex-direction: column;
   justify-content: center;
-  font-size: 7.7pt; font-weight: 600;
-  line-height: 1.68; color: var(--ink);
+  font-size: 9pt; font-weight: 600;
+  line-height: 1.62; color: var(--ink);
   text-align: center;
 }
 .s16-images { flex: 1.2; display: flex; flex-direction: column; gap: 4mm; }
@@ -600,7 +595,7 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   flex-shrink: 0;
 }
 .s17-body {
-  font-size: 9pt; line-height: 1.72;
+  font-size: 11pt; line-height: 1.65;
   color: var(--ink); text-align: center;
 }
 .s17-img {
