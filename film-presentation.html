@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>En Búsqueda de la Sombra del Caudillo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Barlow+Condensed:wght@400;600;700;900&display=swap');
+
+:root {
+  --beige: #f2e8d0;
+  --beige2: #e8d9b8;
+  --gold: #c9a76b;
+  --gold2: #a8834a;
+  --darkred: #7a1c1c;
+  --ink: #1a0f05;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+@page { size: 297mm 167.0625mm; margin: 0; }
+body { background: #1a1a1a; }
+.slide {
+  width: 297mm; height: 167.0625mm;
+  position: relative; overflow: hidden;
+  page-break-after: always;
+  background-color: var(--beige);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--ink);
+}
+@media screen { .slide { margin-bottom: 24px; box-shadow: 0 6px 30px rgba(0,0,0,0.6); } }
+img { display: block; object-fit: cover; width: 100%; height: 100%; }
+.gold-sep { height: 1pt; background: var(--gold); margin: 2.5mm 0; }
+.gold-sep-c { height: 1pt; background: var(--gold); margin: 2.5mm auto; width: 40mm; }
+
+/* ══════════════════════════════
+   SLIDE 1 — COVER
+══════════════════════════════ */
+.s01 { display: flex; }
+.s01-poster { width: 41%; height: 100%; background: #080808; flex-shrink: 0; }
+.s01-poster img { object-position: center top; }
+.s01-text {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 7mm 10mm; text-align: center;
+  background: var(--beige);
+  border-left: 2pt solid var(--gold);
+}
+.s01-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 19pt; font-weight: 900;
+  color: var(--darkred); letter-spacing: 2pt;
+  text-transform: uppercase; line-height: 1.1;
+  margin-bottom: 2mm;
+}
+.s01-subtitle {
+  font-style: italic; font-size: 9pt;
+  color: var(--gold2); letter-spacing: 1pt;
+  margin-bottom: 4mm;
+}
+.s01-quote {
+  font-style: italic; font-size: 11.5pt;
+  color: var(--ink); line-height: 1.6;
+  padding: 0 4mm; margin: 2mm 0;
+  border-left: 2pt solid var(--gold);
+  text-align: left;
+}
+.s01-attr {
+  font-size: 8.5pt; color: var(--gold2);
+  font-weight: 700; letter-spacing: 0.5pt;
+  margin-top: 3mm; text-align: center;
+  font-style: normal;
+}
+.s01-author {
+  font-size: 17pt; font-style: italic;
+  color: var(--darkred); margin-top: 5mm;
+}
+
+/* ══════════════════════════════
+   SLIDE 2 — SINOPSIS
+══════════════════════════════ */
+.s02 { display: flex; }
+.s02-left {
+  width: 41%; display: flex;
+  flex-direction: column;
+  padding: 5mm 4mm 5mm 5mm;
+  border-right: 1pt solid var(--gold);
+}
+.s02-img { flex: 1; overflow: hidden; border: 1pt solid var(--gold); }
+.s02-tagline {
+  font-style: italic; font-size: 10pt;
+  color: var(--darkred); margin-top: 4mm;
+  line-height: 1.5; text-align: center;
+}
+.s02-right {
+  flex: 1; padding: 7mm 7mm 7mm 6mm;
+  display: flex; flex-direction: column;
+  justify-content: center;
+}
+.s02-heading {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 26pt; font-weight: 700;
+  color: var(--darkred); letter-spacing: 2pt;
+  margin-bottom: 4mm;
+}
+.s02-body {
+  font-size: 9pt; line-height: 1.65;
+  color: var(--ink); text-align: center;
+}
+
+/* ══════════════════════════════
+   SLIDE 3 — DE QUÉ VA
+══════════════════════════════ */
+.s03 {
+  padding: 4mm 5mm 4mm 5mm;
+  display: flex; flex-direction: column; gap: 3mm;
+}
+.s03-images { display: flex; gap: 6mm; height: 48mm; flex-shrink: 0; }
+.s03-img { flex: 1; overflow: hidden; border: 1.5pt solid var(--gold); }
+.s03-heading {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 19pt; font-weight: 700;
+  color: var(--darkred);
+}
+.s03-para {
+  font-size: 8pt; line-height: 1.55;
+  color: var(--ink); text-align: center;
+  margin-bottom: 2mm;
+}
+
+/* ══════════════════════════════
+   SLIDE 4 — EL UNIVERSO
+══════════════════════════════ */
+.s04 {
+  padding: 4mm 5mm 5mm 5mm;
+  display: flex; flex-direction: column;
+}
+.s04-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 30pt; font-weight: 900;
+  color: var(--darkred); letter-spacing: 5pt;
+  text-align: center; margin-bottom: 4mm;
+  flex-shrink: 0;
+}
+.s04-body { display: flex; gap: 4mm; flex: 1; }
+.s04-main { flex: 2.3; overflow: hidden; border: 1.5pt solid var(--gold); }
+.s04-stack { flex: 1; display: flex; flex-direction: column; gap: 4mm; }
+.s04-stack-img { flex: 1; overflow: hidden; border: 1.5pt solid var(--gold); }
+
+/* ══════════════════════════════
+   SLIDE 5 — 3 IMAGES (no text)
+══════════════════════════════ */
+.s05 {
+  background: var(--darkred);
+  padding: 4mm; display: flex;
+  flex-direction: column; gap: 4mm;
+}
+.s05-top { display: flex; gap: 4mm; height: 47%; }
+.s05-top-img { flex: 1; overflow: hidden; }
+.s05-bottom { flex: 1; overflow: hidden; margin: 0 12mm; }
+
+/* ══════════════════════════════
+   SLIDE 6 — 9-IMAGE MOODBOARD
+══════════════════════════════ */
+.s06 {
+  background: var(--darkred);
+  padding: 3.5mm;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 51mm 51mm 51mm;
+  gap: 2.5mm;
+  overflow: hidden;
+  max-height: 167.0625mm;
+}
+.s06 div { overflow: hidden; max-height: 51mm; }
+
+/* ══════════════════════════════
+   SLIDE 7 — 1- LA PELÍCULA Y LA DIVA
+══════════════════════════════ */
+.s07 { position: relative; overflow: hidden; }
+.s07-title {
+  position: absolute; top: 4mm; left: 5mm; width: 54%;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 26pt; font-weight: 900; color: var(--darkred);
+  line-height: 1.0;
+}
+.s07-body {
+  position: absolute; top: 24mm; left: 5mm; width: 53%;
+  font-size: 8.5pt; font-weight: 600;
+  line-height: 1.6; color: var(--ink); text-align: center;
+}
+.s07-img1 {
+  position: absolute; top: 4mm; right: 4mm;
+  width: 40%; height: 52%;
+  overflow: hidden; border: 1.5pt solid var(--gold);
+}
+.s07-img2 {
+  position: absolute; bottom: 4mm; left: 8mm;
+  width: 44%; height: 42%;
+  overflow: hidden; border: 1.5pt solid var(--gold);
+}
+.s07-img3 {
+  position: absolute; bottom: 4mm; right: 4mm;
+  width: 30%; height: 42%;
+  overflow: hidden; border: 1.5pt solid var(--gold);
+}
+
+/* ══════════════════════════════
+   SLIDE 8 — 2- EL RODAJE
+══════════════════════════════ */
+.s08 { display: flex; padding: 5mm 5mm 5mm 6mm; gap: 5mm; }
+.s08-content {
+  flex: 1.6; display: flex;
+  flex-direction: column; justify-content: center;
+}
+.s08-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18pt; font-weight: 900;
+  color: var(--darkred); line-height: 1.1;
+  margin-bottom: 5mm;
+}
+.s08-body {
+  font-size: 8.5pt; line-height: 1.65;
+  color: var(--ink); text-align: center;
+}
+.s08-img {
+  flex: 1; overflow: hidden;
+  border: 1.5pt solid var(--gold);
+  align-self: center; max-height: 82%;
+}
+
+/* ══════════════════════════════
+   SLIDE 9 — TEXT + IMAGE (diffuse overlap)
+══════════════════════════════ */
+.s09 { position: relative; }
+.s09-text {
+  position: absolute; top: 4mm; left: 0; right: 0;
+  padding: 0 7mm;
+  font-size: 8.8pt; line-height: 1.62;
+  color: var(--ink); text-align: center;
+  z-index: 2;
+}
+.s09-img {
+  position: absolute; bottom: 0;
+  left: 50%; transform: translateX(-50%);
+  width: 69%; height: 51%;
+  overflow: hidden; z-index: 1;
+}
+.s09-img img { object-position: top; }
+.s09-img::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 38%;
+  background: linear-gradient(to bottom, var(--beige) 0%, rgba(242,232,208,0) 100%);
+  z-index: 2;
+}
+
+/* ══════════════════════════════
+   SLIDE 10 — 3- ANTECEDENTES
+══════════════════════════════ */
+.s10 {
+  padding: 5mm 6mm 5mm 6mm;
+  display: flex; flex-direction: column;
+}
+.s10-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22pt; font-weight: 900;
+  color: var(--darkred); margin-bottom: 3mm;
+  flex-shrink: 0;
+}
+.s10-body {
+  font-size: 9pt; line-height: 1.65;
+  color: var(--ink); text-align: center;
+  margin-bottom: 4mm; flex-shrink: 0;
+}
+.s10-img {
+  flex: 1; overflow: hidden;
+  border: 1.5pt solid var(--gold);
+  margin: 0 8mm;
+}
+
+/* ══════════════════════════════
+   SLIDE 11 — IMAGE TOP, TEXT BELOW (overlap)
+══════════════════════════════ */
+.s11 { position: relative; }
+.s11-img {
+  position: absolute; top: 0;
+  left: 50%; transform: translateX(-50%);
+  width: 66%; height: 52%;
+  overflow: hidden; z-index: 1;
+}
+.s11-img::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 35%;
+  background: linear-gradient(to top, var(--beige) 0%, rgba(242,232,208,0) 100%);
+  z-index: 2;
+}
+.s11-text {
+  position: absolute; top: 46%; left: 0; right: 0; bottom: 0;
+  padding: 3mm 8mm 5mm 8mm;
+  font-size: 9pt; line-height: 1.65;
+  color: var(--ink); text-align: center;
+  z-index: 2;
+}
+
+/* ══════════════════════════════
+   SLIDE 12 — CAP: 4 / LA SOMBRA DEL DESTIERRO
+══════════════════════════════ */
+.s12 { display: flex; padding: 5mm; gap: 5mm; }
+.s12-left { width: 44%; display: flex; flex-direction: column; }
+.s12-cap {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20pt; font-weight: 700;
+  color: var(--gold2); margin-bottom: 3mm;
+  flex-shrink: 0;
+}
+.s12-img {
+  flex: 1; overflow: hidden;
+  border: 1.5pt solid var(--gold);
+}
+.s12-right {
+  flex: 1; display: flex;
+  flex-direction: column; justify-content: center;
+}
+.s12-subtitle {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12pt; font-weight: 700;
+  color: var(--darkred); letter-spacing: 1.5pt;
+  text-align: center; margin-bottom: 4mm;
+  flex-shrink: 0;
+}
+.s12-body {
+  font-size: 8.5pt; font-weight: 600;
+  line-height: 1.7; color: var(--ink);
+  text-align: center;
+}
+
+/* ══════════════════════════════
+   SLIDE 13 — SIN EMBARGO (text + image diffuse)
+══════════════════════════════ */
+.s13 { position: relative; overflow: hidden; padding: 5mm 0 5mm 6mm; }
+.s13-heading {
+  font-style: italic; font-size: 12.5pt;
+  color: var(--gold2); font-weight: 600;
+  margin-bottom: 4mm;
+  position: relative; z-index: 2;
+}
+.s13-body {
+  font-size: 8.5pt; font-weight: 600;
+  line-height: 1.68; color: var(--ink);
+  text-align: center; width: 54%;
+  position: relative; z-index: 2;
+}
+.s13-img {
+  position: absolute; top: 0; right: 0;
+  width: 58%; height: 100%;
+  overflow: hidden; z-index: 1;
+}
+.s13-img::before {
+  content: '';
+  position: absolute; top: 0; left: 0; bottom: 0;
+  width: 42%;
+  background: linear-gradient(to right, var(--beige) 0%, rgba(242,232,208,0) 100%);
+  z-index: 2;
+}
+
+/* ══════════════════════════════
+   SLIDE 14 — CAP: 5 (image bottom-left diffuse)
+══════════════════════════════ */
+.s14 { position: relative; padding: 4mm; }
+.s14-cap {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24pt; font-weight: 900;
+  color: var(--ink); position: relative; z-index: 2;
+}
+.s14-body {
+  position: absolute; top: 4mm; left: 37%; right: 4mm;
+  font-size: 8.5pt; font-weight: 600;
+  line-height: 1.65; color: var(--ink);
+  text-align: center; z-index: 2;
+}
+.s14-img {
+  position: absolute; bottom: 0; left: 0;
+  width: 43%; height: 61%;
+  overflow: hidden; z-index: 1;
+}
+.s14-img::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 32%;
+  background: linear-gradient(to bottom, var(--beige) 0%, rgba(242,232,208,0) 100%);
+  z-index: 2;
+}
+.s14-img::after {
+  content: '';
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 28%;
+  background: linear-gradient(to right, rgba(242,232,208,0) 0%, var(--beige) 100%);
+  z-index: 2;
+}
+
+/* ══════════════════════════════
+   SLIDE 15 — IMAGE LEFT, TEXT RIGHT
+══════════════════════════════ */
+.s15 { display: flex; padding: 5mm; gap: 5mm; }
+.s15-img {
+  width: 43%; overflow: hidden;
+  border: 1.5pt solid var(--gold);
+  flex-shrink: 0;
+}
+.s15-text {
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: center;
+  font-size: 9.5pt; font-weight: 700;
+  line-height: 1.7; color: var(--ink);
+  text-align: center;
+}
+
+/* ══════════════════════════════
+   SLIDE 16 — 3 COLUMNS
+══════════════════════════════ */
+.s16 { display: flex; padding: 5mm; gap: 4mm; }
+.s16-col {
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: center;
+  font-size: 7.8pt; font-weight: 700;
+  line-height: 1.65; color: var(--ink);
+  text-align: center;
+}
+.s16-images { flex: 1.2; display: flex; flex-direction: column; gap: 4mm; }
+.s16-img { flex: 1; overflow: hidden; border: 1.5pt solid var(--gold); }
+
+/* ══════════════════════════════
+   SLIDE 17 — EPÍLOGO
+══════════════════════════════ */
+.s17 { display: flex; padding: 5mm; gap: 5mm; }
+.s17-content { flex: 1.2; display: flex; flex-direction: column; }
+.s17-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 26pt; font-weight: 900;
+  color: var(--darkred); margin-bottom: 4mm;
+  flex-shrink: 0;
+}
+.s17-body {
+  font-size: 8.5pt; line-height: 1.7;
+  color: var(--ink); text-align: center;
+}
+.s17-img {
+  flex: 1; overflow: hidden;
+  border: 1.5pt solid var(--gold);
+}
+
+/* ══════════════════════════════
+   SLIDE 18 — CAST (4 photos)
+══════════════════════════════ */
+.s18 { padding: 4mm 5mm 5mm 5mm; display: flex; flex-direction: column; }
+.s18-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28pt; font-weight: 900;
+  color: var(--darkred); margin-bottom: 3mm;
+  flex-shrink: 0;
+}
+.s18-layout {
+  flex: 1; display: flex; gap: 4mm;
+}
+.s18-left { width: 29%; display: flex; flex-direction: column; gap: 4mm; }
+.s18-left-img { flex: 1; overflow: hidden; border: 1.5pt solid var(--gold); }
+.s18-center {
+  flex: 1.3; overflow: hidden;
+  border: 2pt solid var(--gold);
+}
+.s18-center img { object-position: top center; }
+.s18-right {
+  width: 27%; overflow: hidden;
+  border: 1.5pt solid var(--gold);
+}
+.s18-right img { object-position: top center; }
+
+/* ══════════════════════════════
+   SLIDE 19 — CAST (6 scattered)
+══════════════════════════════ */
+.s19 { position: relative; background: var(--beige); }
+.s19-title {
+  position: absolute; top: 3mm;
+  left: 50%; transform: translateX(-50%);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28pt; font-weight: 900;
+  color: var(--darkred); z-index: 10;
+  white-space: nowrap;
+}
+.s19-img {
+  position: absolute; overflow: hidden;
+  border: 1.5pt solid var(--gold);
+}
+.s19-img img { object-position: top center; }
+.s19-i1 { top: 5mm; left: 5mm; width: 27%; height: 50%; }
+.s19-i2 { bottom: 4mm; left: 4mm; width: 22%; height: 46%; }
+.s19-i3 { top: 19mm; left: 31%; width: 19%; height: 62%; }
+.s19-i4 { top: 17mm; left: 52%; width: 21%; height: 53%; }
+.s19-i5 { top: 3mm; right: 4mm; width: 26%; height: 47%; }
+.s19-i6 { bottom: 3mm; right: 3mm; width: 23%; height: 47%; }
+
+/* ══════════════════════════════
+   SLIDE 20 — BLANK (dark red)
+══════════════════════════════ */
+.s20 {
+  background: var(--darkred);
+  display: flex; align-items: center; justify-content: center;
+}
+.slide:last-child { page-break-after: auto; }
+.s20-mark {
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 18pt;
+  opacity: 0.5; letter-spacing: 3pt;
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SLIDE 1 — COVER ══ -->
+<div class="slide s01">
+  <div class="s01-poster">
+    <img src="pres2_assets/s01_img1.jpeg" alt="Póster">
+  </div>
+  <div class="s01-text">
+    <div class="s01-title">EN BÚSQUEDA DE LA SOMBRA<br>DEL CAUDILLO</div>
+    <div class="s01-subtitle">— Basado en hechos reales —</div>
+    <div class="gold-sep-c"></div>
+    <blockquote class="s01-quote">
+      "Sr. Presidente, si usted permite que el pueblo mexicano vea esta película, no cuente con nosotros"
+    </blockquote>
+    <div class="s01-attr">
+      General Olachea<br>Secretario de Defensa
+    </div>
+    <div class="gold-sep-c" style="margin-top:4mm;"></div>
+    <div class="s01-author">By Julio Bracho</div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 2 — SINOPSIS ══ -->
+<div class="slide s02">
+  <div class="s02-left">
+    <div class="s02-img">
+      <img src="pres2_assets/s02_img1.jpeg" alt="">
+    </div>
+    <div class="s02-tagline">
+      —Un artista, su obra maestra<br>y un gobierno que lo quiere callar—
+    </div>
+  </div>
+  <div class="s02-right">
+    <div class="s02-heading">Sinopsis</div>
+    <div class="gold-sep"></div>
+    <p class="s02-body">
+      Un cineasta consagrado decide llevar a la pantalla una obra literaria que habla del caudillismo en México. Una traición dentro del ejército mexicano. Apoyado por el propio gobierno filma <em>La sombra del Caudillo</em>. En la función con el Presidente de la República y todo el gabinete de gobierno surge la incomodidad del Secretario de las fuerzas armadas, quien amenaza con no apoyar al presidente si permite el estreno de la película en México. Romance, persecución, intrigas y huida del protagonista a la República Checa, ganando varios premios en un festival de cine. Una historia de acción, drama, romances e intriga en el México de los años sesentas.
+    </p>
+  </div>
+</div>
+
+<!-- ══ SLIDE 3 — DE QUÉ VA ══ -->
+<div class="slide s03">
+  <div class="s03-images">
+    <div class="s03-img"><img src="pres2_assets/s03_img1.jpeg" alt=""></div>
+    <div class="s03-img"><img src="pres2_assets/s03_img2.jpeg" alt=""></div>
+  </div>
+  <div class="s03-content" style="padding-top:3mm;">
+    <div class="s03-heading">De qué va:</div>
+    <div class="gold-sep" style="width:40mm;margin-bottom:2.5mm;"></div>
+    <p class="s03-para">Visualmente, quiero sumergir al espectador en un México que se está reinventando: un país que se moldea entre el poder, la modernidad y las heridas de la Revolución. También quiero retratar el glamour de la época: sus grandes estrellas, la elegancia de sus escenarios, el esplendor de las fiestas y el contraste entre el brillo de una nación que busca proyectarse al mundo y las intrigas que se tejen en los pasillos del poder.</p>
+    <p class="s03-para">A partir de un romance con la diva más importante de esa época, surge esta historia llena de vida; que el espectador experimente la fascinación, el vértigo y las contradicciones de un momento histórico que definió el rumbo de México.</p>
+    <p class="s03-para">Nuestro protagonista no es un héroe. Es un ser humano atrapado en un sistema donde la verdad tiene un precio y el poder decide qué merece sobrevivir. Su única ambición no es cambiar el curso de la historia, sino salvar la obra de su vida. Cuando una gran estrella del cine mexicano, unida a él por una relación tan íntima como peligrosa, arriesga todo para impedir su captura, comienza una huida en la que preservar esa obra maestra se convierte en un acto de resistencia frente al olvido.</p>
+  </div>
+</div>
+
+<!-- ══ SLIDE 4 — EL UNIVERSO ══ -->
+<div class="slide s04">
+  <div class="s04-title">EL UNIVERSO</div>
+  <div class="s04-body">
+    <div class="s04-main"><img src="pres2_assets/s04_img1.jpeg" alt=""></div>
+    <div class="s04-stack">
+      <div class="s04-stack-img"><img src="pres2_assets/s04_img2.jpeg" alt=""></div>
+      <div class="s04-stack-img"><img src="pres2_assets/s04_img3.jpeg" alt=""></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 5 — 3 IMAGES ══ -->
+<div class="slide s05">
+  <div class="s05-top">
+    <div class="s05-top-img"><img src="pres2_assets/s05_img1.jpeg" alt=""></div>
+    <div class="s05-top-img"><img src="pres2_assets/s05_img2.jpeg" alt=""></div>
+  </div>
+  <div class="s05-bottom">
+    <img src="pres2_assets/s05_img3.jpeg" alt="">
+  </div>
+</div>
+
+<!-- ══ SLIDE 6 — 9-IMAGE MOODBOARD ══ -->
+<div class="slide s06">
+  <div><img src="pres2_assets/s06_img1.jpeg" alt=""></div>
+  <div><img src="pres2_assets/s06_img2.jpeg" alt=""></div>
+  <div><img src="pres2_assets/s06_img3.jpeg" alt=""></div>
+  <div><img src="pres2_assets/s06_img4.jpeg" alt=""></div>
+  <div><img src="pres2_assets/s06_img5.jpeg" alt=""></div>
+  <div><img src="pres2_assets/s06_img6.jpeg" alt=""></div>
+  <div><img src="pres2_assets/s06_img7.jpeg" alt=""></div>
+  <div><img src="pres2_assets/s06_img8.jpeg" alt=""></div>
+  <div><img src="pres2_assets/s06_img9.jpeg" alt=""></div>
+</div>
+
+<!-- ══ SLIDE 7 — 1- LA PELÍCULA Y LA DIVA ══ -->
+<div class="slide s07">
+  <div class="s07-title">1- La película y la diva</div>
+  <div class="s07-body">
+    Filma <em>Distinto amanecer</em> con Andrea Palma, en un rodaje imbuido por la intensa pasión y complicidad que unía al director con la fascinante diva; poco después, cautivado por la novela <em>La sombra del caudillo</em> de Martín Luis Guzmán, decide llevar al cine esta delicada historia. Así, en los años cincuenta, entre el glamour de la época y el eco de ese torbellino personal y creativo, logra el respaldo del Ejército, el Banco Cinematográfico y el sindicato para iniciar en Morelos una filmación de gran envergadura, tan complicada como maravillosa, con un despliegue técnico y de extras monumental.
+  </div>
+  <div class="s07-img1"><img src="pres2_assets/s07_img1.jpeg" alt=""></div>
+  <div class="s07-img2"><img src="pres2_assets/s07_img2.jpeg" alt=""></div>
+  <div class="s07-img3"><img src="pres2_assets/s07_img3.jpeg" alt=""></div>
+</div>
+
+<!-- ══ SLIDE 8 — 2- EL RODAJE, LA FUNCIÓN Y LA CENSURA ══ -->
+<div class="slide s08">
+  <div class="s08-content">
+    <div class="s08-title">2- El rodaje, la función y la censura</div>
+    <div class="gold-sep" style="width:50mm;margin-bottom:4mm;"></div>
+    <p class="s08-body">El rodaje de <em>La sombra del caudillo</em> avanza en Morelos entre complicaciones técnicas que el equipo resuelve sobre la marcha, en una filmación imbuida por el tórrido romance entre el director de la película y la fascinante diva. A mitad de la filmación, el proyecto alcanza un momento clave con un claquetazo oficial ante la plana mayor del Ejército y el general Olachea, mostrando un fuerte respaldo institucional. Sin embargo, la falta de recursos pronto pone en grave duda la conclusión de la película. Es en este momento crítico donde la diva sale al rescate del proyecto: gracias a su enorme influencia y encanto, logra convencer al Presidente de la República para que le otorgue más dinero a Pablo para continuar con la producción, logrando así un primer corte al finalizar el rodaje.</p>
+  </div>
+  <div class="s08-img"><img src="pres2_assets/s08_img1.jpeg" alt=""></div>
+</div>
+
+<!-- ══ SLIDE 9 — TEXTO + IMAGEN (difuminado) ══ -->
+<div class="slide s09">
+  <div class="s09-text">
+    En marzo de 1960, la película se presenta en una función privada ante el presidente Adolfo López Mateos, Gustavo Díaz Ordaz y el general Olachea, transformándose en un punto de quiebre cuando el general sentencia: <em>"Señor presidente, si usted permite que esta película la vea el pueblo de México no cuente con las Fuerzas Armadas"</em>. Esa misma noche se desata la censura: gracias a sus contactos, la diva logra llamar a Pablo para avisarle urgentemente que oficiales de Gobernación y soldados van en camino a confiscar y destruir su película. Alertado por ella, Pablo corre a los almacenes de Churubusco y alcanza a salvar una única copia. En medio de una frenética persecución nocturna, logra evadir a los agentes y poner a resguardo la cinta en la embajada de Checoslovaquia justo antes de ser detenido.
+    <br><br>
+    <strong>El rodaje ha terminado, pero la verdadera historia apenas comienza.</strong>
+  </div>
+  <div class="s09-img">
+    <img src="pres2_assets/s09_img1.jpeg" alt="">
+  </div>
+</div>
+
+<!-- ══ SLIDE 10 — 3- LOS ANTECEDENTES Y LA TRAICIÓN ══ -->
+<div class="slide s10">
+  <div class="s10-title">3- Los antecedentes y la traición</div>
+  <div class="gold-sep" style="width:55mm;margin-bottom:3mm;"></div>
+  <p class="s10-body">En 1926, el presidente Plutarco Elías Calles cambió las reglas del juego al impulsar una reforma que permitía la reelección, pavimentando el regreso de Álvaro Obregón. En una reunión que sepultó los principios de la Revolución Mexicana, ambos líderes pactaron una nueva candidatura. Este acuerdo no solo fue una traición a los ideales de la lucha armada, sino el banderazo de salida para un nuevo orden político: el nacimiento del priismo.</p>
+  <div class="s10-img"><img src="pres2_assets/s10_img1.jpeg" alt=""></div>
+</div>
+
+<!-- ══ SLIDE 11 — IMAGEN TOP, TEXTO ABAJO (overlap) ══ -->
+<div class="slide s11">
+  <div class="s11-img">
+    <img src="pres2_assets/s11_img1.jpeg" alt="">
+  </div>
+  <div class="s11-text">
+    Mientras el poder se concentraba, Francisco R. Serrano alzó la voz y lanzó su candidatura bajo el lema original de "Sufragio efectivo, no reelección", desafiando abiertamente las órdenes de Calles. La respuesta del presidente no se hizo esperar: convocó a su cúpula militar —el general Joaquín Amaro y el teniente coronel Olachea— con una urgencia letal. De ese encuentro secreto, Olachea salió con una misión tan clara como implacable: eliminar a Serrano.
+  </div>
+</div>
+
+<!-- ══ SLIDE 12 — CAP: 4 / LA SOMBRA DEL DESTIERRO ══ -->
+<div class="slide s12">
+  <div class="s12-left">
+    <div class="s12-cap">Cap: 4</div>
+    <div class="s12-img"><img src="pres2_assets/s12_img1.jpeg" alt=""></div>
+  </div>
+  <div class="s12-right">
+    <div class="s12-subtitle">LA SOMBRA DEL DESTIERRO</div>
+    <div class="gold-sep-c" style="margin-bottom:4mm;"></div>
+    <p class="s12-body">Al volver, la maquinaria del Estado lo aplastó sin piedad. Tras un violento interrogatorio bajo el mando del general Olachea, el sistema activó su protocolo de olvido. Le negaron el presupuesto, lo vetaron de los estudios y congelaron su nombre. El miedo fue más fuerte que la lealtad. Su protectora, la diva, fue silenciada por una llamada presidencial. Su gran amigo Gabriel Figueroa prefirió el exilio de la distancia antes que hundirse con él. En la época de oro del cine, Pablo descubrió el peor de los castigos: estar vivo, pero haber sido completamente borrado.</p>
+  </div>
+</div>
+
+<!-- ══ SLIDE 13 — SIN EMBARGO (difuminado) ══ -->
+<div class="slide s13">
+  <div class="s13-heading">Sin embargo, la gloria fue el prólogo de su ruina.</div>
+  <div class="gold-sep" style="width:60mm;margin-bottom:4mm;"></div>
+  <p class="s13-body">Al volver, la maquinaria del Estado lo aplastó sin piedad. Tras un violento interrogatorio bajo el mando del general Olachea, el sistema activó su protocolo de olvido. Le negaron el presupuesto, lo vetaron de los estudios y congelaron su nombre. El miedo fue más fuerte que la lealtad. Su protectora, la diva, fue silenciada por una llamada presidencial. Su gran amigo Gabriel Figueroa prefirió el exilio de la distancia antes que hundirse con él. En la época de oro del cine, Pablo descubrió el peor de los castigos: estar vivo, pero haber sido completamente borrado.</p>
+  <div class="s13-img">
+    <img src="pres2_assets/s13_img1.jpeg" alt="">
+  </div>
+</div>
+
+<!-- ══ SLIDE 14 — CAP: 5 (difuminado) ══ -->
+<div class="slide s14">
+  <div class="s14-cap">Cap: 5</div>
+  <div class="s14-body">
+    Cuando las puertas de la industria se cerraron de golpe, Pablo encontró a su musa Meche Carreño, motivo para resistir. Entre 1960 y 1964, mientras filmar en México se convertía en una vía crucis de financiamientos independientes y apoyos aislados, entre ambos surgió un vínculo intenso y cerrado. No era un romance idílico; era la unión de dos personas que se necesitaban para sobrevivir al peso del sistema. Meche se convirtió en su aliada más radical.<br><br>
+    Para 1964, el bloqueo oficial sobre Pablo era asfixiante. Meche decidió intervenir y, asumiendo el riesgo, utilizó los recursos del entorno de su esposo —un empresario— para financiar <em>En busca de un muro</em>. Más que un rescate financiero, fue un golpe de autoridad y una declaración de lealtad absoluta hacia el director.
+  </div>
+  <div class="s14-img">
+    <img src="pres2_assets/s14_img1.jpeg" alt="">
+  </div>
+</div>
+
+<!-- ══ SLIDE 15 — IMAGEN IZQUIERDA, TEXTO DERECHA ══ -->
+<div class="slide s15">
+  <div class="s15-img"><img src="pres2_assets/s15_img1.jpeg" alt=""></div>
+  <div class="s15-text">
+    El rodaje en Austria funcionó como una tregua necesaria. Durante ocho semanas en Europa, lejos del acoso y la censura mexicana, Pablo y Meche vivieron su último periodo de verdadera libertad. En ese viaje, compartiendo el set con Guillermo Murray y la intimidad de saberse proscritos, la complicidad entre ambos se consolidó. Fue una etapa de plenitud creativa y personal, un oasis antes de que el muro se volviera definitivo.
+  </div>
+</div>
+
+<!-- ══ SLIDE 16 — 3 COLUMNAS ══ -->
+<div class="slide s16">
+  <div class="s16-col">
+    Al regresar a México, la realidad fue implacable. El sistema los arrinconó y filmar se volvió una misión casi imposible. Pablo terminó recluido en su estudio de la colonia Anzures, anotando los nombres de sus censores y tachando diariamente los obituarios del periódico en una espera estéril.
+  </div>
+  <div class="s16-images">
+    <div class="s16-img"><img src="pres2_assets/s16_img1.jpeg" alt=""></div>
+    <div class="s16-img"><img src="pres2_assets/s16_img2.jpeg" alt=""></div>
+  </div>
+  <div class="s16-col">
+    El recuerdo de Meche permaneció intacto como lo único que el veto no pudo corromper. Ella fue el contrapeso al olvido. El 26 de abril de 1978, cuando su corazón falló en un hospital de la Ciudad de México, Pablo murió sin ver el estreno de su gran obra, pero con la certeza de que, en los años más difíciles, Meche Carreño se había jugado el todo por el todo para mantenerlo en pie.
+  </div>
+</div>
+
+<!-- ══ SLIDE 17 — EPÍLOGO ══ -->
+<div class="slide s17">
+  <div class="s17-content">
+    <div class="s17-title">Epílogo:</div>
+    <div class="gold-sep" style="width:45mm;margin-bottom:4mm;"></div>
+    <div class="s17-body">
+      <strong>EPÍLOGO — 1990</strong><br>
+      Cine Gabriel Figueroa, colonia Roma, Ciudad de México.<br><br>
+      Julio Bracho Castillo, de 20 años, entra a la sala para ver el estreno oficial en México de <em>La sombra del caudillo</em>.<br><br>
+      Tres décadas después del veto, el gobierno de Carlos Salinas de Gortari levanta la prohibición como parte de un gesto político para "limpiar" la imagen del sistema.<br><br>
+      La película finalmente es vista en su propio país.<br><br>
+      <em>Pero el hombre que la filmó nunca alcanzó a verla estrenada en México.</em>
+    </div>
+  </div>
+  <div class="s17-img"><img src="pres2_assets/s17_img1.jpeg" alt=""></div>
+</div>
+
+<!-- ══ SLIDE 18 — CAST ══ -->
+<div class="slide s18">
+  <div class="s18-title">Cast</div>
+  <div class="s18-layout">
+    <div class="s18-left">
+      <div class="s18-left-img"><img src="pres2_assets/s18_img3.jpeg" alt=""></div>
+      <div class="s18-left-img"><img src="pres2_assets/s18_img4.jpeg" alt=""></div>
+    </div>
+    <div class="s18-center"><img src="pres2_assets/s18_img1.jpeg" alt=""></div>
+    <div class="s18-right"><img src="pres2_assets/s18_img2.jpeg" alt=""></div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 19 — CAST (6 fotos) ══ -->
+<div class="slide s19">
+  <div class="s19-title">Cast</div>
+  <div class="s19-img s19-i1"><img src="pres2_assets/s19_img1.jpeg" alt=""></div>
+  <div class="s19-img s19-i2"><img src="pres2_assets/s19_img2.jpeg" alt=""></div>
+  <div class="s19-img s19-i3"><img src="pres2_assets/s19_img3.jpeg" alt=""></div>
+  <div class="s19-img s19-i4"><img src="pres2_assets/s19_img4.jpeg" alt=""></div>
+  <div class="s19-img s19-i5"><img src="pres2_assets/s19_img5.jpeg" alt=""></div>
+  <div class="s19-img s19-i6"><img src="pres2_assets/s19_img6.jpeg" alt=""></div>
+</div>
+
+<!-- ══ SLIDE 20 — BLANK ══ -->
+<div class="slide s20">
+  <div class="s20-mark">En Búsqueda de la Sombra del Caudillo</div>
+</div>
+
+</body>
+</html>
