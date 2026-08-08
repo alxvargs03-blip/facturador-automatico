@@ -754,6 +754,31 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   z-index: 4;
 }
 
+/* ══════════════════════════════════════════
+   DARK BACKGROUND SLIDES: 7, 9, 11, 12, 18, 19
+══════════════════════════════════════════ */
+.s07, .s09, .s11, .s12, .s18, .s19 { background: var(--ink); }
+
+/* Títulos → dorado, cuerpo → beige */
+.s07-title, .s12-subtitle { color: var(--gold); }
+.s07-body, .s09-text, .s11-text, .s12-body { color: var(--beige); }
+.s18-title, .s19-title { color: var(--gold3); }
+
+/* s09: el fade superior ahora va de oscuro a transparente */
+.s09-img::before {
+  background: linear-gradient(to bottom, var(--ink) 0%, rgba(26,15,5,0) 100%);
+}
+
+/* s11: el fade inferior ahora va de oscuro a transparente */
+.s11-img::after {
+  background: linear-gradient(to top, var(--ink) 0%, rgba(26,15,5,0) 100%);
+}
+
+/* s11: la viñeta también oscura (reemplaza la beige) */
+.s11-img::before {
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(26,15,5,0.45) 100%);
+}
+
 .slide:last-child { page-break-after: auto; }
 </style>
 </head>
