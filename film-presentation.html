@@ -788,6 +788,72 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   background: radial-gradient(ellipse at center, transparent 45%, rgba(26,15,5,0.45) 100%);
 }
 
+/* ══════════════════════════════════════════
+   SLIDE 12 — cinematic full-bleed redesign
+══════════════════════════════════════════ */
+.s12 { display: block; padding: 0; }
+.s12-left {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%; display: block;
+}
+.s12-cap {
+  position: absolute; top: 5mm; left: 7mm; z-index: 4;
+  margin-bottom: 0;
+}
+.s12-img {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 0; z-index: 1; flex: none;
+}
+.s12-img::after { border-radius: 0; }
+.s12-img::before {
+  content: '';
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 72%;
+  background: linear-gradient(to left, var(--ink) 28%, rgba(26,15,5,0) 100%);
+  z-index: 2;
+}
+.s12-right {
+  position: absolute; right: 0; top: 0; bottom: 0;
+  width: 58%; padding: 8mm 9mm 8mm 5mm;
+  display: flex; flex-direction: column; justify-content: center;
+  flex: none; z-index: 2;
+}
+
+/* ══════════════════════════════════════════
+   SLIDE 16 — cinematic full-bleed redesign
+══════════════════════════════════════════ */
+.s16 { display: block; padding: 0; background: var(--ink); }
+.s16-images {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column;
+  z-index: 1;
+}
+.s16-img { border-radius: 0; }
+.s16-img::after { border-radius: 0; }
+.s16::before {
+  content: '';
+  position: absolute; top: 0; left: 0; bottom: 0;
+  width: 40%;
+  background: linear-gradient(to right, var(--ink) 48%, rgba(26,15,5,0) 100%);
+  z-index: 2;
+}
+.s16::after {
+  content: '';
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 40%;
+  background: linear-gradient(to left, var(--ink) 48%, rgba(26,15,5,0) 100%);
+  z-index: 2;
+}
+.s16-col {
+  position: absolute; top: 0; bottom: 0;
+  width: 30%; padding: 8mm 6mm;
+  display: flex; flex-direction: column; justify-content: center;
+  font-size: 10.5pt; line-height: 1.65; color: var(--beige); text-align: center;
+  flex: none; z-index: 3;
+}
+.s16-col:first-child { left: 0; }
+.s16-col:last-child { right: 0; }
+
 .slide:last-child { page-break-after: auto; }
 </style>
 </head>
