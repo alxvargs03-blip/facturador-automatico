@@ -685,6 +685,75 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   opacity: 0.55;
 }
 
+/* ══════════════════════════════════════════
+   CINEMATIC VIGNETTE & DIFFUSE EFFECTS
+══════════════════════════════════════════ */
+/* position:relative for flex/grid image containers needing pseudo-elements */
+.s02-img, .s03-img, .s04-main, .s04-stack-img,
+.s05-top-img, .s05-bottom,
+.s06 div,
+.s08-img, .s10-img, .s12-img, .s15-img, .s16-img, .s17-img,
+.s18-left-img, .s18-center, .s18-right { position: relative; }
+
+/* Beige slides: warm edge vignette */
+.s02-img::after, .s03-img::after, .s15-img::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 52%, rgba(242,232,208,0.55) 100%);
+  z-index: 3; border-radius: var(--r);
+}
+
+/* Dark slides: cinematic edge vignette */
+.s04-main::after, .s04-stack-img::after,
+.s07-img1::after, .s07-img2::after, .s07-img3::after,
+.s08-img::after, .s10-img::after, .s12-img::after,
+.s16-img::after, .s17-img::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 48%, rgba(26,15,5,0.28) 100%);
+  z-index: 3; border-radius: var(--r);
+}
+
+/* Dark red bg slides: deep red edge vignette */
+.s05-top-img::after, .s05-bottom::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 38%, rgba(90,20,20,0.72) 100%);
+  z-index: 3; border-radius: var(--r);
+}
+.s06 div::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(90,20,20,0.65) 100%);
+  z-index: 3;
+}
+
+/* Cast portraits: cinematic vignette + warm gold tint */
+.s18-left-img::after, .s18-center::after, .s18-right::after, .s19-img::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 44%, rgba(26,15,5,0.32) 100%),
+    linear-gradient(rgba(201,167,107,0.06), rgba(201,167,107,0.06));
+  z-index: 3; border-radius: var(--r);
+}
+
+/* s11: edge vignette using ::before (::after taken by bottom-fade) */
+.s11-img::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(242,232,208,0.4) 100%);
+  z-index: 1;
+}
+
+/* s13: edge vignette using ::after (::before taken by left-fade) */
+.s13-img::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(26,15,5,0.22) 100%);
+  z-index: 3;
+}
+
+/* s10: top fade where text flows into image */
+.s10-img::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 25%;
+  background: linear-gradient(to bottom, var(--beige) 0%, rgba(242,232,208,0) 100%);
+  z-index: 4;
+}
+
 .slide:last-child { page-break-after: auto; }
 </style>
 </head>
