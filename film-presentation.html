@@ -60,7 +60,7 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   background: #060606; flex-shrink: 0;
   position: relative;
 }
-.s01-poster img { object-position: center top; }
+.s01-poster img { object-fit: contain; object-position: center center; }
 /* Soft shadow on right edge of poster */
 .s01-poster::after {
   content: '';
@@ -555,6 +555,7 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   box-shadow: 0 3px 18px rgba(26,15,5,0.22);
   flex-shrink: 0;
 }
+.s15-img img { object-position: 35% center; }
 .s15-text {
   flex: 1; display: flex; flex-direction: column;
   justify-content: center;
@@ -603,6 +604,7 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   border-radius: var(--r);
   box-shadow: 0 3px 18px rgba(26,15,5,0.22);
 }
+.s17-img img { object-position: left center; }
 
 
 /* ══════════════════════════════════════════
