@@ -292,23 +292,26 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   line-height: 1.65; color: var(--ink);
   text-align: center;
 }
+/* img1 horizontal (687×340) — contenedor horizontal, altura reducida para no solapar img3 */
 .s07-img1 {
   position: absolute; top: 4mm; right: 4mm;
-  width: 51%; height: 57%;
+  width: 51%; height: 37%;
   overflow: hidden; border-radius: var(--r);
   box-shadow: 0 3px 15px rgba(26,15,5,0.22);
 }
-.s07-img1 img { object-position: center top; }
+.s07-img1 img { object-position: center center; }
+/* img2 casi cuadrada (594×456) — contenedor amplio abajo izquierda */
 .s07-img2 {
   position: absolute; bottom: 4mm; left: 4mm;
-  width: 45%; height: 40%;
+  width: 60%; height: 57%;
   overflow: hidden; border-radius: var(--r);
   box-shadow: 0 3px 15px rgba(26,15,5,0.22);
 }
 .s07-img2 img { object-position: center top; }
+/* img3 vertical/portrait (354×474) — contenedor más alto y estrecho */
 .s07-img3 {
   position: absolute; bottom: 4mm; right: 4mm;
-  width: 45%; height: 40%;
+  width: 33%; height: 57%;
   overflow: hidden; border-radius: var(--r);
   box-shadow: 0 3px 15px rgba(26,15,5,0.22);
 }
