@@ -492,15 +492,16 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   position: relative; z-index: 2;
 }
 .s13-img {
-  position: absolute; top: 0; right: 0;
-  width: 57%; height: 100%;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%; height: 100%;
   overflow: hidden; z-index: 1;
 }
+.s13-img img { object-position: 68% center; }
 .s13-img::before {
   content: '';
   position: absolute; top: 0; left: 0; bottom: 0;
-  width: 45%;
-  background: linear-gradient(to right, var(--beige) 10%, rgba(242,232,208,0) 100%);
+  width: 72%;
+  background: linear-gradient(to right, var(--ink) 22%, rgba(26,15,5,0) 100%);
   z-index: 2;
 }
 
@@ -522,25 +523,25 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   text-align: center; z-index: 2;
 }
 .s14-img {
-  position: absolute; bottom: 0; left: 0;
-  width: 43%; height: 62%;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%; height: 100%;
   overflow: hidden;
-  border-radius: 0 var(--r) 0 0;
+  border-radius: 0;
   z-index: 1;
-  box-shadow: 0 -2px 15px rgba(26,15,5,0.22);
 }
+.s14-img img { object-position: 35% center; }
 .s14-img::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0;
-  height: 30%;
-  background: linear-gradient(to bottom, var(--beige) 0%, rgba(242,232,208,0) 100%);
+  height: 58%;
+  background: linear-gradient(to bottom, var(--ink) 0%, rgba(26,15,5,0) 100%);
   z-index: 2;
 }
 .s14-img::after {
   content: '';
-  position: absolute; top: 0; right: 0; bottom: 0;
-  width: 28%;
-  background: linear-gradient(to right, rgba(242,232,208,0) 0%, var(--beige) 100%);
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 20%;
+  background: linear-gradient(to top, var(--ink) 0%, rgba(26,15,5,0) 100%);
   z-index: 2;
 }
 
@@ -558,9 +559,10 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
 .s15-img img { object-position: 35% center; }
 .s15-text {
   flex: 1; display: flex; flex-direction: column;
-  justify-content: center;
-  font-size: 11.5pt; font-weight: 600;
-  line-height: 1.65; color: var(--ink);
+  justify-content: flex-start;
+  padding-top: 22mm;
+  font-size: 13pt; font-weight: 600;
+  line-height: 1.7; color: var(--ink);
   text-align: center;
 }
 
@@ -596,7 +598,7 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
   flex-shrink: 0;
 }
 .s17-body {
-  font-size: 11pt; line-height: 1.65;
+  font-size: 13pt; line-height: 1.7;
   color: var(--ink); text-align: center;
 }
 .s17-img {
@@ -758,13 +760,17 @@ img { display: block; object-fit: cover; width: 100%; height: 100%; }
 }
 
 /* ══════════════════════════════════════════
-   DARK BACKGROUND SLIDES: 7, 9, 11, 12, 18, 19
+   DARK BACKGROUND SLIDES: 7, 9, 11, 12, 13, 14, 18, 19
 ══════════════════════════════════════════ */
-.s07, .s09, .s11, .s12, .s18, .s19 { background: var(--ink); }
+.s07, .s09, .s11, .s12, .s13, .s14, .s18, .s19 { background: var(--ink); }
 
 /* Títulos → dorado, cuerpo → beige */
 .s07-title, .s12-subtitle { color: var(--gold); }
 .s07-body, .s09-text, .s11-text, .s12-body { color: var(--beige); }
+.s13-heading { color: var(--gold3); }
+.s13-body { color: var(--beige); }
+.s14-cap { color: var(--gold); }
+.s14-body { color: var(--beige); }
 .s18-title, .s19-title { color: var(--gold3); }
 
 /* s09: el fade superior ahora va de oscuro a transparente */
